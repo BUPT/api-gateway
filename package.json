@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/lym152898/API-Gateway-v3#readme",
   "devDependencies": {
-    "@types/node": "^8.0.51"
+    "@types/node": "^8.0.51",
+    "mysql": "^2.15.0",
+    "orm": "^4.0.1"
   }
 }
