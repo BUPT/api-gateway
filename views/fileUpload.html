@@ -1,0 +1,22 @@
+<html>
+<head>
+    <title>文件上传表单</title>
+    <script src="/static/jquery-3.2.1.min.js"> </script>
+    <script>
+        function submit(){
+            $(".btn").click(function(){
+                $(".form").submit();
+            });
+        }
+    </script>
+</head>
+<body>
+<h3>文件上传：</h3>
+<form action="/apis/uploads" enctype="multipart/form-data" method="post" class="form">
+    swagger配置文件名称:<input type="text" name="fileName" id="fileName"><br />
+    <input type="file" name="upload" multiple="multiple"><br>
+    <input type="button" class="btn" value="提交" onclick="submit()"/>
+</form>
+
+</body>
+</html>
