@@ -16,7 +16,7 @@ class DBConnect{
         return this._db;
     }
 
-    async createConnect(): Promise<any>{
+    private async createConnect(): Promise<any>{
         return new Promise(function(resolve, reject){
             let config = new Config();
             let storage = config.getStorage();

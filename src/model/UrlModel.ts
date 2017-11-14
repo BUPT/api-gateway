@@ -6,7 +6,7 @@ class UrlModel{
     constructor(db: any){
         this._URL = db.define("url", {
             id: { type: 'serial', key: true },
-            appId: String,
+            APPId: String,
             from: String,
             to: String,
             status: String,
@@ -22,21 +22,21 @@ class UrlModel{
 		this._URL = value;
 	}
     // 查找数据
-    public query(data: {[key:string]: string}, callback: (err: Error, results: {[key:string]:string}[]) => void){
+    public async query(data: {[key:string]: string}, callback: (err: Error, results: {[key:string]:string}[]) => void): Promise<void>{
         this._URL.find(data, callback);
     }
     // 插入多条数据
-    public insert(data: { [key: string]: string }[], callback: (err: Error) => void){
+    public async insert(data: { [key: string]: string }[], callback: (err: Error) => void):Promise<void>{
         this._URL.create(data, callback);
     }
 
     // 删除数据
-    public remove(data:{[key: string]: string}, callback: (err: Error) => void){
+    public async remove(data:{[key: string]: string}, callback: (err: Error) => void): Promise<void>{
         this._URL.find(data).remove(callback);
     }
 
     // 更改数据
-    public update(data: { [key: string]: string }, eachCallback: (err: Error) => void, saveCallback: (err: Error) => void){
+    public async update(data: { [key: string]: string }, eachCallback: (err: Error) => void, saveCallback: (err: Error) => void): Promise<void>{
         this._URL.find(data).each(eachCallback).save(saveCallback);
     }
 }
