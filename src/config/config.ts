@@ -19,14 +19,14 @@ class Config{
     }
     private _path = {
         // API的swagger配置文件存放目录
-        "swaggerDir": this._baseDir + "/src/views/uploads/swagger/",
+        "swaggerDir": this._baseDir + "/views/uploads/swagger/",
         // 初始化注册API数据的swagger配置文件路径
-        "swaggerFile": this._baseDir + "/src/views/uploads/swagger/swagger.yaml",
+        "swaggerFile": this._baseDir + "/views/uploads/swagger/swagger.yaml",
         // xml流程文件的存放目录
-        "flowXMLDir": this._baseDir + "/src/views/uploads/xml/",
-        "flowXMLFile": this._baseDir + "/src/views/uploads/xml/test.xml",
+        "flowXMLDir": this._baseDir + "/views/uploads/xml/",
+        "flowXMLFile": this._baseDir + "/views/uploads/xml/test.xml",
         // 管理员API的swagger配置文件路径
-        "adminAPIsFile": this._baseDir + "/src/views/uploads/json/file.json",
+        "adminAPIsFile": this._baseDir + "/views/uploads/json/file.json",
         // 注册API的swagger UI的首页html路径
         "swaggerUIURL": "http://www.linyimin.club:8001/static/index.html",
         // 管理员API的swagger UI的首页HTML路径
