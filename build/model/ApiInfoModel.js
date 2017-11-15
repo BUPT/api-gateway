@@ -14,8 +14,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class ApiInfoModel {
     constructor(db) {
         this._apiInfo = null;
-        this._apiInfo = db.define("url", {
-            ID: { type: "serial", key: true },
+        this._apiInfo = db.define("API_info", {
+            ID: String,
             appId: String,
             name: String,
             type: String,

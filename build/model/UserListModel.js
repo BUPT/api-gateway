@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class UserListModel {
     constructor(db) {
         this._userList = null;
-        this._userList = db.define("url", {
+        this._userList = db.define("user_list", {
             ID: { type: 'serial', key: true },
             user_name: String,
             email: String,

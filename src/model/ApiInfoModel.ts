@@ -4,8 +4,8 @@
 class ApiInfoModel {
     private _apiInfo: any = null;
     constructor(db: any) {
-        this._apiInfo = db.define("url", {
-            ID: { type: "serial", key: true },
+        this._apiInfo = db.define("API_info", {
+            ID: String,
             appId: String,
             name: String,
             type: String,
