@@ -17,6 +17,29 @@ class UserListService{
             });
         });
     }
+    /**
+     * 查询数据
+     * @param data 查询条件
+     */
+    public query(data: {[key: string]: string}): Promise<any>{
+        let _this = this;
+        return new Promise(function(resolve, reject){
+            _this._db.then(function(db){
+                let userListModel: UserListModel = new UserListModel(db);
+                userListModel.query(data, function(err, results){
+                    if(err){
+                        console.log(err);
+                        reject(err);
+                    }else{
+                        resolve(results);
+                    }
+                });
+            }).catch(function(err){
+                console.log(err);
+                reject(err);
+            });
+        });
+    }
     // 删除数据
     public remove(data: {[key:string]: string}): void{
         this._db.then(function(db){
@@ -32,3 +55,4 @@ class UserListService{
         });
     }
 }
+export {UserListService};
