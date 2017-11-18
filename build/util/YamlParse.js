@@ -1,54 +1,54 @@
+"use strict";
 /**
  * @author: 林贻民
  * @description: 将swagger配置的yaml文件解析，返回url和API_info表字段对应的数组
  */
-
-import fs = require("fs");
-import yaml = require("yamljs");
-
-class YamlParse{
-    private _METHOD: string[] = ["get", "post", "put", "delete", "GET", "POST", "PUT", "DELETE"];
-    
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
+const yaml = require("yamljs");
+class YamlParse {
+    constructor() {
+        this._METHOD = ["get", "post", "put", "delete", "GET", "POST", "PUT", "DELETE"];
+    }
     /**
      * 加载yaml文件，并解析成JSON字符串
      * @param filePath yaml文件的路径
      */
-    public loadFile(filePath: string): {[key: string]: any}{
+    loadFile(filePath) {
         return yaml.parse(fs.readFileSync(filePath).toString());
     }
-
     /**
      * 解析JSON字段，构造API_info和url表批量插入数据数组
-     * @param filePath 
+     * @param filePath
      */
-    public parse(filePath: string): {[key:string]: any}[][]{
+    parse(filePath) {
         // 存储批量数据的二维数组
-        let API_info: {[key:string]: string}[] = [];
-        let url: {[key: string]: string}[] = [];
-        let data: {[key: string]: any} = this.loadFile(filePath);
+        let API_info = [];
+        let url = [];
+        let data = this.loadFile(filePath);
         // 真实服务器地址"www.linyimin.club:10010"
         let realHost = "www.linyimin.club:10010";
         // 基础URL
-        let basePath: string = data.basePath;
+        let basePath = data.basePath;
         // 公司对应的ID
-        let appId: string = data.info["x-appId"];
+        let appId = data.info["x-appId"];
         // API的ID
-        let ID: string = "";
+        let ID = "";
         // API名称
-        let name: string = "";
+        let name = "";
         // API的类型
-        let type: string = "";
+        let type = "";
         // API的参数
-        let argument: string = "";
+        let argument = "";
         // API触发的事件
-        let event: string = "";
+        let event = "";
         // API的url
-        let API: string = "";
+        let API = "";
         // API的状态，0正常服务，1暂停服务
-        let status: string = "";
+        let status = "";
         // API是否加载进内存,0表示未加载，1表示已加载
-        let is_new: string = "1";
-        let paths:{[key: string]: any} = Object.keys(data.paths);
+        let is_new = "1";
+        let paths = Object.keys(data.paths);
         for (let i = 0; i < paths.length; i++) {
             // 过滤"/swagger"路径
             if (paths[i] == "/swagger") {
@@ -62,7 +62,8 @@ class YamlParse{
                     type = pathsObject[this._METHOD[j]].tags[0];
                     if (pathsObject[this._METHOD[j]].parameters) {
                         argument = JSON.stringify(pathsObject[this._METHOD[j]].parameters);
-                    } else {
+                    }
+                    else {
                         argument = null;
                     }
                     status = (pathsObject[this._METHOD[j]].deprecated == true) ? "1" : "0";
@@ -78,4 +79,4 @@ class YamlParse{
         return [url, API_info];
     }
 }
-export{YamlParse};
+exports.YamlParse = YamlParse;

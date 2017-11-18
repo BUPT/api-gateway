@@ -1,11 +1,13 @@
-import {Config} from "../config/config";
-import swaggerJsDoc = require("swagger-jsdoc");
-import fs = require("fs");
-class SwaggerFile{
-    public generateFile(): void{
-        let config: Config = new Config();
-        let adminServer: {[key: string]: string} = config.getAdminServer();
-        let swaggerDefinition: {[key: string]: any} = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_1 = require("../config/config");
+const swaggerJsDoc = require("swagger-jsdoc");
+const fs = require("fs");
+class SwaggerFile {
+    generateFile() {
+        let config = new config_1.Config();
+        let adminServer = config.getAdminServer();
+        let swaggerDefinition = {
             info: {
                 title: 'Node Swagger API',
                 version: '1.0.0',
@@ -15,16 +17,15 @@ class SwaggerFile{
             host: adminServer.host + ":" + adminServer.port,
             basePath: '/'
         };
-        let options: {} = {
+        let options = {
             // import swaggerDefinitions
             swaggerDefinition: swaggerDefinition,
             // path to the API docs
             apis: [config.getPath().defineSwaggerFile]
-        }
-
+        };
         let swaggerSpec = swaggerJsDoc(options);
         fs.writeFileSync(config.getPath().adminAPIsFile, JSON.stringify(swaggerSpec));
         fs.writeFileSync(config.getPath().adminAPIsFile, JSON.stringify(swaggerSpec));
     }
 }
-export{SwaggerFile};
+exports.SwaggerFile = SwaggerFile;

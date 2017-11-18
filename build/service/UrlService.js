@@ -41,13 +41,27 @@ class UrlService {
                 urlModel.remove(data, function (err) {
                     if (err) {
                         console.log("DELETE DATA FROM url FAIL!");
-                        throw err;
+                        return;
                     }
                     else {
                         console.log("DELETE DATA FROM url SUCCESS!");
+                        return;
                     }
                 });
             });
+        });
+    }
+    // 先清空数据库在插入新的数据
+    loadData(data) {
+        // this上下文传递
+        let _this = this;
+        // 删除数据
+        let result = this.remove({});
+        // 插入新数据
+        result.then(function () {
+            _this.insert(data);
+        }).catch(function (err) {
+            throw err;
         });
     }
 }

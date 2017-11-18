@@ -25,7 +25,7 @@ paths:
     x-ID: "001"
     x-name: "airlineBookTo"
     get:
-      description: 预订往航   班机票
+      description: 预订往航班机票
       deprecated: false
       tags:
         - "机票"

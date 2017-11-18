@@ -36,7 +36,7 @@ class Config {
             // 文件上传页面的HTML页面路径
             "uploadFileURL": this._baseDir + "/views/fileUpload.html",
             // 定义swagger注释的文件路径
-            "defineSwaggerFile": this._baseDir + "/src/router/*.js",
+            "defineSwaggerFile": this._baseDir + "/build/router/*.js",
             // 静态文件目录
             "static": this._baseDir + "/views/",
             // 组合API流程文件目录
