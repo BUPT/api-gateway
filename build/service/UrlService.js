@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const DBConnect_1 = require("../util/DBConnect");
 const UrlModel_1 = require("../model/UrlModel");
+const GeneralResult_1 = require("../general/GeneralResult");
 class UrlService {
     constructor() {
         // 连接数据库
@@ -21,47 +22,71 @@ class UrlService {
      */
     insert(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._db.then(function (db) {
-                let urlModel = new UrlModel_1.UrlModel(db);
-                urlModel.insert(data, function (err) {
-                    if (err) {
-                        console.log("INSERT DATA INTO url FAIL!");
-                        throw err;
-                    }
-                    console.log("INSERT DATA INTO url SUCCESS!");
+            // 传递上下文
+            let _this = this;
+            return new Promise(function (resolve) {
+                _this._db.then(function (db) {
+                    let urlModel = new UrlModel_1.UrlModel(db);
+                    urlModel.insert(data, function (err) {
+                        if (err) {
+                            console.log("INSERT DATA INTO url FAIL!");
+                            resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
+                        }
+                        else {
+                            console.log("INSERT DATA INTO url SUCCESS!");
+                            resolve(new GeneralResult_1.GeneralResult(true, null, data));
+                        }
+                    });
+                }).catch(function (err) {
+                    console.log("INSERT DATA INTO url FAIL!");
+                    resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
                 });
             });
         });
     }
-    // 删除数据
+    /**
+     * 删除数据
+     * @param data
+     */
     remove(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._db.then(function (db) {
-                let urlModel = new UrlModel_1.UrlModel(db);
-                urlModel.remove(data, function (err) {
-                    if (err) {
-                        console.log("DELETE DATA FROM url FAIL!");
-                        return;
-                    }
-                    else {
-                        console.log("DELETE DATA FROM url SUCCESS!");
-                        return;
-                    }
+            // 传递上下文
+            let _this = this;
+            return new Promise(function (resolve) {
+                _this._db.then(function (db) {
+                    let urlModel = new UrlModel_1.UrlModel(db);
+                    urlModel.remove(data, function (err) {
+                        if (err) {
+                            console.log("DELETE DATA FROM url FAIL!");
+                            resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
+                        }
+                        else {
+                            console.log("DELETE DATA FROM url SUCCESS!");
+                            resolve(new GeneralResult_1.GeneralResult(true, null, null));
+                        }
+                    });
+                }).catch(function (err) {
+                    console.log("DELETE DATA FROM url FALI!");
+                    resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
                 });
             });
         });
     }
-    // 先清空数据库在插入新的数据
+    /**
+     * 先清空数据库在插入新的数据
+     * @param data
+     */
     loadData(data) {
-        // this上下文传递
-        let _this = this;
-        // 删除数据
-        let result = this.remove({});
-        // 插入新数据
-        result.then(function () {
-            _this.insert(data);
-        }).catch(function (err) {
-            throw err;
+        return __awaiter(this, void 0, void 0, function* () {
+            // 删除数据
+            let result = yield this.remove({});
+            // 如果删除成功，则插入新的数据
+            if (result.getResult() == true) {
+                this.insert(data);
+            }
+            else {
+                console.log(result.getReason());
+            }
         });
     }
 }

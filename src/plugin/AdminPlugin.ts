@@ -11,6 +11,7 @@ import crypto = require("crypto");
 import formidable = require("formidable");
 import fs = require("fs");
 import {SwaggerFile} from "../util/SwaggerFile";
+import { GeneralResult } from "../general/GeneralResult";
 class AdminPlugin{
     /**
      * 基于basic-auth的身份认证
@@ -31,28 +32,51 @@ class AdminPlugin{
         // 查询条件
         let data: {[key: string]: string} = { user_name: user.name };
         let userListService: UserListService = new UserListService();
-        let result: Promise<any> = userListService.query(data);
-        result.then(function(result){
-            // 对用户输入的密码进行加密运算
-            var password = null;
-            if (result.length > 0) {
-                password = crypto.createHmac('sha256', user.pass).update(result[0].salt).digest('hex');
-                if (password === result[0].password) {
-                    next();
-                    return;
-                }else{
-                    console.log("用户名或密码错误");
+        (async () => {
+            let result: GeneralResult = await userListService.query(data);
+            if(result.getResult() == true){
+                let results = result.getDatum();
+                var password = null;
+                if (results.length > 0) {
+                    password = crypto.createHmac('sha256', user.pass).update(results[0].salt).digest('hex');
+                    if (password === results[0].password) {
+                        next();
+                        return;
+                    } else {
+                        console.log("用户名或密码错误");
+                        return unauthorized(res);
+                    }
+                } else {
+                    console.log("未能登录");
                     return unauthorized(res);
                 }
             }else{
                 console.log("未能登录");
                 return unauthorized(res);
             }
-        }).catch(function(err){
-            console.log(err);
-            console.log("未能登录");
-            return unauthorized(res);
-        });
+        })();
+        // let result: Promise<GeneralResult> = userListService.query(data);
+        // result.then(function(result){
+        //     // 对用户输入的密码进行加密运算
+        //     var password = null;
+        //     if (result.length > 0) {
+        //         password = crypto.createHmac('sha256', user.pass).update(result[0].salt).digest('hex');
+        //         if (password === result[0].password) {
+        //             next();
+        //             return;
+        //         }else{
+        //             console.log("用户名或密码错误");
+        //             return unauthorized(res);
+        //         }
+        //     }else{
+        //         console.log("未能登录");
+        //         return unauthorized(res);
+        //     }
+        // }).catch(function(err){
+        //     console.log(err);
+        //     console.log("未能登录");
+        //     return unauthorized(res);
+        // });
     }
 
     /**
@@ -130,23 +154,32 @@ class AdminPlugin{
                 let apiInfoService: ApiInfoService = new ApiInfoService();
                 let urlService: UrlService = new UrlService();
                 registerPlugin.addData(url);
-                let removeUrl: Promise<any> = urlService.remove({ "APPId": url[0].APPId });
-                removeUrl.then(function(){
-                    urlService.insert(url);
-                }).catch(function(err){
-                    console.log(err);
-                });
-                let removeApiInfo: Promise<any> = apiInfoService.remove({ "appId": api_info[0].appId});
-                removeApiInfo.then(function(){
-                    apiInfoService.insert(api_info);
-                }).catch(function(err){
-                    console.log(err);
-                });
-                // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
-                res.cookie("fileName", fileName);
-                console.log(fileName);
-                res.redirect(config.getPath().swaggerUIURL);
-                console.log(config.getPath().swaggerUIURL);
+                // let removeUrl: Promise<any> = urlService.remove({ "APPId": url[0].APPId });
+                // removeUrl.then(function(){
+                //     urlService.insert(url);
+                // }).catch(function(err){
+                //     console.log(err);
+                // });
+                // let removeApiInfo: Promise<any> = apiInfoService.remove({ "appId": api_info[0].appId});
+                // removeApiInfo.then(function(){
+                //     apiInfoService.insert(api_info);
+                // }).catch(function(err){
+                //     console.log(err);
+                // });
+                (async () => {
+                    let removeUrl: GeneralResult = await urlService.remove({ "APPId": url[0].APPId });
+                    let removeApiInfo: GeneralResult = await apiInfoService.remove({"appId": api_info[0].appId});
+                    if(removeUrl.getResult() == true && removeApiInfo.getResult() == true){
+                        // 插入新数据
+                        urlService.insert(url);
+                        apiInfoService.insert(api_info);
+                        // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
+                        res.cookie("fileName", fileName);
+                        res.redirect(config.getPath().swaggerUIURL);
+                    }else{
+                        res.json((removeUrl.getResult() == true ? removeUrl : removeApiInfo).getReturn());
+                    }
+                })();
             }
         });
     }

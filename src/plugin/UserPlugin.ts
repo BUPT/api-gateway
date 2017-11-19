@@ -2,6 +2,7 @@ import crypto = require("crypto");
 import {DBConnect} from "../util/DBConnect";
 import {RandomSalt} from "../util/RandomSalt";
 import { UserListService } from "../service/UserListService";
+import {GeneralResult} from "../general/GeneralResult";
 
 class UserPlugin{
     /**
@@ -26,12 +27,17 @@ class UserPlugin{
         }
         // 将数据插入数据库
         let userListService: UserListService = new UserListService();
-        let result: Promise<any> = userListService.insert([data]);
-        result.then(function(){
-            res.json({"result": true});
-        }).catch(function(err){
-            res.json({"result": false, "reason": err});
-        });
+        (async () => {
+            let result = await userListService.insert([data]);
+            res.json(result.getReturn());
+            return;
+        })();
+        // let result: Promise<GeneralResult> = userListService.insert([data]);
+        // result.then(function(){
+        //     res.json({"result": true});
+        // }).catch(function(err){
+        //     res.json({"result": false, "reason": err});
+        // });
     }
 
     /**
@@ -46,22 +52,36 @@ class UserPlugin{
         // 构造查询条件
         let data: {[key: string]: string} = {"user_name": userName};
         let userListService: UserListService = new UserListService();
-        let result: Promise<any> = userListService.query(data);
-        result.then(function(results){
-            // 若用户存在对用户输入的密码进行加密运算
-            if(results.length > 0){
-                password = crypto.createHmac('sha256', password).update(results[0].salt).digest('hex');
-                if(password === results[0].password){
-                    res.json({result: true, reason: null});
-                }else{
-                    res.json({ datum: { result: false, reason: "用户名或密码不正确!" } });
+        (async () =>{
+            let result: GeneralResult = await userListService.query(data);
+            let userLists = result.getDatum();
+            if (userLists.length > 0) {
+                password = crypto.createHmac('sha256', password).update(userLists[0].salt).digest('hex');
+                if (password === userLists[0].password) {
+                    res.json(new GeneralResult(true, null, null).getReturn());
+                } else {
+                    res.json(new GeneralResult(false, "用户名或密码不正确!", null).getReturn());
                 }
-            }else{
-                res.json({ datum: { result: false, reason: "用户名或密码不正确!" } });
+            } else {
+                res.json(new GeneralResult(false, "用户名或密码不正确!", null).getReturn());
             }
-        }).catch(function(err){
-            res.json({result: false, reason: err});
-        });
+        })();
+        // let result: Promise<any> = userListService.query(data);
+        // result.then(function(results){
+        //     // 若用户存在对用户输入的密码进行加密运算
+        //     if(results.length > 0){
+        //         password = crypto.createHmac('sha256', password).update(results[0].salt).digest('hex');
+        //         if(password === results[0].password){
+        //             res.json({result: true, reason: null});
+        //         }else{
+        //             res.json({ datum: { result: false, reason: "用户名或密码不正确!" } });
+        //         }
+        //     }else{
+        //         res.json({ datum: { result: false, reason: "用户名或密码不正确!" } });
+        //     }
+        // }).catch(function(err){
+        //     res.json({result: false, reason: err});
+        // });
     }
 }
 
