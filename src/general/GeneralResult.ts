@@ -1,7 +1,13 @@
 class GeneralResult{
     private _result: boolean;
     private _reason: string;
-    private _datum: { [key: string]: any };
+    private _datum: any;
+
+    constructor(result: boolean, reason: string, datum: any){
+        this._result = result;
+        this._reason = reason;
+        this._datum = datum;
+    }
 
     public setResult(result: boolean): void{
         this._result = result;
@@ -18,11 +24,11 @@ class GeneralResult{
         return this._reason;
     }
 
-    public setDatum(datum: {[key: string]: any}): void{
+    public setDatum(datum: any): void{
         this._datum = datum;
     }
 
-    public getDatum(): {[key: string]: string}{
+    public getDatum(): any{
         return this._datum;
     }
 
