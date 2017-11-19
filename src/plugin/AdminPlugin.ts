@@ -75,6 +75,7 @@ class AdminPlugin{
      * @param res 
      */
     public APIRegister(req, res): void{
+        // 根据JSdoc产生swagger的API配置文件
         let swaggerFile: SwaggerFile = new SwaggerFile();
         swaggerFile.generateFile();
         let path = new Config().getPath();
