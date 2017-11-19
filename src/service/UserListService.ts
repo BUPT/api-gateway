@@ -7,17 +7,19 @@ class UserListService{
     public async insert(data: {[key:string]: string}[]): Promise<any>{
         let _this = this;
         return new Promise(function (resolve, reject) {
-            this._db.then(function (db) {
+            _this._db.then(function (db) {
                 let userListModel: UserListModel = new UserListModel(db);
                 userListModel.insert(data, function (err) {
                     if (err) {
                         console.log("INSERT DATA INTO user_list FAIL!");
-                        reject(0)
+                        reject(err);
                     } else {
                         console.log("INSERT DATA INTO user_list SUCCESS");
-                        resolve(1);
+                        resolve(data);
                     }
                 });
+            }).catch(function(err){
+                reject(err);
             });
         });
     }

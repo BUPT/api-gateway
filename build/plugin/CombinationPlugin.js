@@ -25,7 +25,7 @@ class CombinationPlugin {
         // 获取组合API的URL
         let serviceName = req.query.serviceName;
         // 将xml流程的内容转成JSON格式
-        xml2js.parse(flowData, function (err, result) {
+        xml2js.parseString(flowData, function (err, result) {
             if (err) {
                 console.log(err);
                 throw err;
@@ -42,15 +42,15 @@ class CombinationPlugin {
                 }
                 // 将xml文件转换成JSON，并写入文件
                 let config = new config_1.Config();
-                let writeStream = fs.createWriteStream(config.getPath().combinationFileDir + fileName + "json");
+                let writeStream = fs.createWriteStream(config.getPath().combinationFileDir + fileName + ".json");
                 writeStream.end(JSON.stringify(result));
                 // 将JSON格式的数据转换成yaml
                 let yamlText = json2yaml.stringify(result);
                 // 注册
                 let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
                 let registerApp = registerPlugin.getRegisterApp();
-                // let combinationPlugin: CombinationPlugin = new CombinationPlugin();
-                registerApp.use(serviceName, this.combinationService);
+                let combinationPlugin = new CombinationPlugin();
+                registerApp.use(serviceName, combinationPlugin.combinationService);
                 // 插入数据库
                 let url = {
                     from: serviceName, appId: "001", to: config.getApiServer().host + ":" + config.getApiServer().port, status: "0", is_new: "1"
@@ -100,12 +100,14 @@ class CombinationPlugin {
                 id[i] = urls.next[0].block[0].statement[i - 1].block[0].$.id;
             }
         }
-        let apiInfo = this.getApiInfo();
+        let combinationPlugin = new CombinationPlugin();
+        let apiInfo = combinationPlugin.getApiInfo();
         // 存储原子API的url
         let url = [];
-        apiInfo.then(function (apiInfo) {
+        apiInfo.then(function (apiInfos) {
+            console.log(apiInfos);
             for (let i = 0; i < id.length; i++) {
-                url[i] = "http://" + config.getApiServer().host + ":" + config.getApiServer().port + apiInfo.get(id[i]);
+                url[i] = "http://" + config.getApiServer().host + ":" + config.getApiServer().port + apiInfos.get(id[i]);
             }
             // 开始按顺序访问原子Api
             // 保存每个原子API执行的返回值
@@ -136,6 +138,8 @@ class CombinationPlugin {
                     });
                 }
             });
+        }).catch(function (err) {
+            console.log(err);
         });
     }
 }

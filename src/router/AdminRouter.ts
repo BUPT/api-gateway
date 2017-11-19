@@ -136,7 +136,7 @@ class AdminRouter{
         this._router.use("/static", express.static(config.getPath().static));
 
         // 组合API
-        this._router.post("/combination/getFlowXML", adminPlugin.jsonParser, combinationPlugin.getFloWXMLFile);
+        this._router.post("/combination/getFlowXML", combinationPlugin.getFloWXMLFile);
     }
 }
 export{AdminRouter};

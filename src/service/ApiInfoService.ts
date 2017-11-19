@@ -56,7 +56,11 @@ class ApiInfoService{
                     if (err) {
                         reject(err);
                     }else{
-                        resolve(results);
+                        let apiInfo: Map<string, string> = new Map();
+                        for(let i = 0; i < results.length; i++){
+                            apiInfo.set(results[i].ID, results[i].URL);
+                        }
+                        resolve(apiInfo);
                     }
                 });
             }).catch(function(err){
