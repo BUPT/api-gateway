@@ -3,7 +3,7 @@
 ##运行程序
 ```
 cd API-Gateway
-node ./src/app.js
+node ./build/app.js
 ```
 
 ## 查看管理员接口
