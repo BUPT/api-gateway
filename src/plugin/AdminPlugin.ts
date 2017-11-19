@@ -96,6 +96,11 @@ class AdminPlugin{
         res.redirect(config.getPath().swaggerUIURL);
     }
 
+    /**
+     * 上传文件并完成注册
+     * @param req 
+     * @param res 
+     */
     public upload(req, res): void{
         let config: Config = new Config();
         // 创建表单上传
