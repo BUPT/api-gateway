@@ -18,11 +18,21 @@ class CombinationPlugin{
     public getApiInfo(){
         return this._ApiInfo;
     }
+
+    /**
+     * 获取流程文件的内容，并加以解析注册
+     * @param req 
+     * @param res 
+     */
     public getFloWXMLFile(req, res): void {
         // 获取流程文件的内容
         let flowData: string = req.query.fileContent;
         // 获取组合API的URL
         let serviceName: string = req.query.serviceName;
+        // 获取组合API的参数
+        let argument: string = req.query.argument;
+        // 获取组合API的事件
+        let event: string = req.query.event;
         // 将xml流程的内容转成JSON格式
         xml2js.parseString(flowData, function(err, result){
             if(err){
@@ -47,14 +57,14 @@ class CombinationPlugin{
                 // 注册
                 let registerPlugin: RegisterPlugin = new RegisterPlugin();
                 let registerApp = registerPlugin.getRegisterApp();
-                 let combinationPlugin: CombinationPlugin = new CombinationPlugin();
+                let combinationPlugin: CombinationPlugin = new CombinationPlugin();
                 registerApp.use(serviceName, combinationPlugin.combinationService);
                 // 插入数据库
                 let url: {[key: string]: string} = {
-                    from: serviceName, appId: "001", to: config.getApiServer().host + ":" + config.getApiServer().port, status: "0", is_new:"1"
+                    from: serviceName, APPId: "001", to: config.getApiServer().host + ":" + config.getApiServer().port, status: "0", is_new:"1"
                 };
                 let apiInfo: {[key: string]: string} = {
-                    ID: "0a00" + (count++), appId: "001", name: serviceName, type:null, argument:null, event: null, URL:serviceName
+                    ID: "0a00" + (count++), appId: "001", name: fileName, type:"组合", argument:argument, event: event, URL:serviceName
                 };
                 let urlService: UrlService = new UrlService();
                 let apiInfoService: ApiInfoService = new ApiInfoService();
