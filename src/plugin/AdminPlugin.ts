@@ -262,8 +262,8 @@ class AdminPlugin{
 
     public debugAPI(req, res){
         let url: string = req.query.url;
-        console.log(url)
-        request("http://www.linyimin.club:8000/index", function (error, response, body) {
+        let host: string = "http://www.linyimin.club:8000";
+        request(host + url, function (error, response, body) {
             // 访问成功
             if (!error && response.statusCode == 200) {
                 res.json(new GeneralResult(true, null, null).getReturn());
