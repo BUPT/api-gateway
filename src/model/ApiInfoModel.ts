@@ -37,8 +37,8 @@ class ApiInfoModel {
     }
 
     // 更改数据
-    public async update(data: { [key: string]: string }, eachCallback: (err: Error) => void, saveCallback: (err: Error) => void): Promise<void> {
-        this._apiInfo.find(data).each(eachCallback).save(saveCallback);
+    public async update(condition: { [key: string]: string }, data: string,  eachCallback: (apiInfo: {[key: string]: string}) => void, saveCallback: (err: Error) => void): Promise<void> {
+        this._apiInfo.find(condition).each(eachCallback).save(saveCallback);
     }
 }
 

@@ -12,6 +12,7 @@ import formidable = require("formidable");
 import fs = require("fs");
 import {SwaggerFile} from "../util/SwaggerFile";
 import { GeneralResult } from "../general/GeneralResult";
+import request = require("request");
 class AdminPlugin{
     /**
      * 基于basic-auth的身份认证
@@ -232,6 +233,44 @@ class AdminPlugin{
     //获取JSON解析器中间件  
     public jsonParser(){
         require("body-parser").json();
+    }
+
+
+    /**
+     * 返回所有API数据
+     * @param req 
+     * @param res 
+     */
+    public async getAllAPI(req, res): Promise<void>{
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let apiInfos: GeneralResult = await apiInfoService.query({});
+        res.json(apiInfos.getReturn());
+    }
+
+    /**
+     * 修改组合API名字
+     * @param req 
+     * @param res 
+     */
+    public async renameServiceName(req, res): Promise<void>{
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let url: string = req.query.url;
+        let serviceName: string = req.query.serviceName;
+        let updateResult: GeneralResult = await apiInfoService.update({URL: url}, serviceName);
+        res.json(updateResult.getReturn());
+    }
+
+    public debugAPI(req, res){
+        let url: string = req.query.url;
+        console.log(url)
+        request("http://www.linyimin.club:8000/index", function (error, response, body) {
+            // 访问成功
+            if (!error && response.statusCode == 200) {
+                res.json(new GeneralResult(true, null, null).getReturn());
+            }else{
+                res.json(new GeneralResult(false, error, null).getReturn());
+            }
+        });
     }
 }
 export{AdminPlugin};
