@@ -24,6 +24,7 @@ const GeneralResult_1 = require("../general/GeneralResult");
 const rq = require("request-promise");
 const CombinationUrlService_1 = require("../service/CombinationUrlService");
 const events = require("events");
+const CombinationPlugin_1 = require("./CombinationPlugin");
 class AdminPlugin {
     /**
      * 基于basic-auth的身份认证
@@ -145,18 +146,6 @@ class AdminPlugin {
                 let apiInfoService = new ApiInfoService_1.ApiInfoService();
                 let urlService = new UrlService_1.UrlService();
                 registerPlugin.addData(url);
-                // let removeUrl: Promise<any> = urlService.remove({ "APPId": url[0].APPId });
-                // removeUrl.then(function(){
-                //     urlService.insert(url);
-                // }).catch(function(err){
-                //     console.log(err);
-                // });
-                // let removeApiInfo: Promise<any> = apiInfoService.remove({ "appId": api_info[0].appId});
-                // removeApiInfo.then(function(){
-                //     apiInfoService.insert(api_info);
-                // }).catch(function(err){
-                //     console.log(err);
-                // });
                 (() => __awaiter(this, void 0, void 0, function* () {
                     let removeUrl = yield urlService.remove({ "APPId": url[0].APPId });
                     let removeApiInfo = yield apiInfoService.remove({ "appId": api_info[0].appId });
@@ -245,7 +234,32 @@ class AdminPlugin {
             let combinationUrlService = new CombinationUrlService_1.CombinationUrlService();
             let url = req.query.url;
             let serviceName = req.query.serviceName;
-            let updateResult = yield apiInfoService.update({ URL: url }, serviceName);
+            // 更新内存
+            let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
+            let registerApp = registerPlugin.getRegisterApp();
+            if (registerApp._router && registerApp._router.stack) {
+                for (let i = 2; i < registerApp._router.stack.length; i++) {
+                    if (registerApp._router.stack[i].url == url) {
+                        // 删除原url对应的中间件
+                        registerApp._router.stack.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            // 向内存中注册新的url
+            let combinationPlugin = new CombinationPlugin_1.CombinationPlugin();
+            registerApp.use(serviceName, combinationPlugin.combinationService);
+            // 更新数据库
+            //将URL转换成小驼峰类型的文件名
+            let adminPlugin = new AdminPlugin();
+            let config = new config_1.Config();
+            let originName = adminPlugin.urlToUppercase(url);
+            let fileName = adminPlugin.urlToUppercase(serviceName);
+            // 更改流程文件的名称
+            let dir = config.getPath().combinationFileDir;
+            fs.renameSync(dir + originName + ".json", dir + fileName + ".json");
+            // 更新数据库
+            let updateResult = yield apiInfoService.update({ URL: url }, fileName, serviceName);
             let updataCombinnationResult = yield combinationUrlService.update({ url: url }, serviceName);
             res.json(updateResult.getReturn());
         });
@@ -265,6 +279,26 @@ class AdminPlugin {
             });
         });
     }
+    /**
+     * 将URL转换成小驼峰类型的文件名
+     * @param url
+     */
+    urlToUppercase(url) {
+        if (url[0] != '/') {
+            url = "/" + url;
+        }
+        let data = url.split("/");
+        let fileName = data[1];
+        for (let i = 2; i < data.length; i++) {
+            fileName += data[i].toLowerCase().replace(/[a-z]/, function (c) { return c.toUpperCase(); });
+        }
+        return fileName;
+    }
+    /**
+     * 组合API调试
+     * @param req
+     * @param res
+     */
     debugAPI(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let eventEmitter = new events.EventEmitter();
@@ -288,7 +322,7 @@ class AdminPlugin {
             let flag = true;
             let adminPlugin = new AdminPlugin();
             for (let i = 0; i < urls.length; i++) {
-                let result = yield adminPlugin._request("http://www.linyimin.club:10010" + urls[i]);
+                let result = yield adminPlugin._request("http://www.linyimin.club:8000" + urls[i]);
                 if (result !== true) {
                     flag = false;
                     data.set(urls[i], "fail");
@@ -310,8 +344,9 @@ class AdminPlugin {
                 }
             }
             else {
+                data.set(url, "fail");
+                res.json(new GeneralResult_1.GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
             }
-            res.json(new GeneralResult_1.GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
         });
     }
     /**

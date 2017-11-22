@@ -70,7 +70,6 @@ class ApiInfoService{
                     if (err) {
                         resolve(new GeneralResult(false, err.message, null));
                     } else {
-                        console.log(results[0]);
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
@@ -142,16 +141,29 @@ class ApiInfoService{
         
     }
 
-    public async update(condition: {[key: string]: string}, serviceName: string): Promise<GeneralResult>{
+    /**
+     * 
+     * @param condition 
+     * @param name 
+     * @param serviceName 
+     */
+    public async update(condition: {[key: string]: string}, name: string, URL: string): Promise<GeneralResult>{
         let apiInfoService: ApiInfoService = new ApiInfoService();
         let queryResult: GeneralResult = await apiInfoService.query(condition);
-        let removeResult: GeneralResult = await apiInfoService.remove(condition);
-        if(queryResult.getResult() == true && removeResult.getResult() == true){
+        let removeResult: GeneralResult = null;
+        if(queryResult.getResult() == true){
+            removeResult = await apiInfoService.remove(condition);;
+        }else{
+            return new GeneralResult(false, "该服务不存在", null);
+        }
+        
+        if(removeResult.getResult() == true){
             let dataum: {[key: string]: string}[] = queryResult.getDatum();
-            if(dataum.length == 0){
+            if(dataum == null || dataum.length == 0){
                 return new GeneralResult(false,"该服务不存在", null);
             }
-            dataum[0]["URL"] = serviceName;
+            dataum[0]["name"] = name;
+            dataum[0]["URL"] = URL;
             let data:{[key: string]: string} = {};
             data.ID = dataum[0].ID;
             data.appId = dataum[0].appId;
@@ -163,7 +175,7 @@ class ApiInfoService{
             let insertResult: GeneralResult = await apiInfoService.insert([data]);
             return insertResult;
         }else{
-            return (queryResult.getResult() == true) ? queryResult : removeResult;
+            return removeResult;
         }
     }
 }  

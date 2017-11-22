@@ -53,12 +53,12 @@ class CombinationUrlService {
                     let combinationUrlModel = new CombinationUrlModel_1.CombinationUrlModel(db);
                     combinationUrlModel.remove(data, function (err) {
                         if (err) {
-                            console.log("DELETE DATA FROM API_info FAIL!");
+                            console.log("DELETE DATA FROM combination_url FAIL!");
                             console.log(err);
                             reslove(new GeneralResult_1.GeneralResult(false, err.message, null));
                         }
                         else {
-                            console.log("DELETE DATA FROM API_info SUCCESS!");
+                            console.log("DELETE DATA FROM combination_url SUCCESS!");
                             reslove(new GeneralResult_1.GeneralResult(true, null, null));
                         }
                     });
@@ -85,7 +85,7 @@ class CombinationUrlService {
                             resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
                         }
                         else {
-                            resolve(new GeneralResult_1.GeneralResult(true, null, results[0]));
+                            resolve(new GeneralResult_1.GeneralResult(true, null, results));
                         }
                     });
                 }).catch(function (err) {
@@ -98,22 +98,27 @@ class CombinationUrlService {
         return __awaiter(this, void 0, void 0, function* () {
             let combinationUrlService = new CombinationUrlService();
             let queryResult = yield combinationUrlService.query(condition);
-            let removeResult = yield combinationUrlService.remove(condition);
-            if (queryResult.getResult() == true && removeResult.getResult() == true) {
+            let removeResult = null;
+            if (queryResult.getResult() == true) {
+                removeResult = yield combinationUrlService.remove(condition);
+            }
+            else {
+                return new GeneralResult_1.GeneralResult(false, "该服务不存在", null);
+            }
+            if (removeResult.getResult() == true) {
                 let dataum = queryResult.getDatum();
-                if (dataum.length == 0) {
+                if (dataum == null || dataum.length == 0) {
                     return new GeneralResult_1.GeneralResult(false, "该服务不存在", null);
                 }
-                dataum[0]["URL"] = serviceName;
                 let data = {};
                 data.id = dataum[0].id;
-                data.url = dataum[0].url;
+                data.url = serviceName;
                 data.atom_url = dataum[0].atom_url;
                 let insertResult = yield combinationUrlService.insert([data]);
                 return insertResult;
             }
             else {
-                return (queryResult.getResult() == true) ? queryResult : removeResult;
+                return removeResult;
             }
         });
     }

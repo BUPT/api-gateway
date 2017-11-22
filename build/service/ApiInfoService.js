@@ -83,7 +83,6 @@ class ApiInfoService {
                             resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
                         }
                         else {
-                            console.log(results[0]);
                             resolve(new GeneralResult_1.GeneralResult(true, null, results));
                         }
                     });
@@ -159,17 +158,31 @@ class ApiInfoService {
     }
     eachCallback(data) {
     }
-    update(condition, serviceName) {
+    /**
+     *
+     * @param condition
+     * @param name
+     * @param serviceName
+     */
+    update(condition, name, URL) {
         return __awaiter(this, void 0, void 0, function* () {
             let apiInfoService = new ApiInfoService();
             let queryResult = yield apiInfoService.query(condition);
-            let removeResult = yield apiInfoService.remove(condition);
-            if (queryResult.getResult() == true && removeResult.getResult() == true) {
+            let removeResult = null;
+            if (queryResult.getResult() == true) {
+                removeResult = yield apiInfoService.remove(condition);
+                ;
+            }
+            else {
+                return new GeneralResult_1.GeneralResult(false, "该服务不存在", null);
+            }
+            if (removeResult.getResult() == true) {
                 let dataum = queryResult.getDatum();
-                if (dataum.length == 0) {
+                if (dataum == null || dataum.length == 0) {
                     return new GeneralResult_1.GeneralResult(false, "该服务不存在", null);
                 }
-                dataum[0]["URL"] = serviceName;
+                dataum[0]["name"] = name;
+                dataum[0]["URL"] = URL;
                 let data = {};
                 data.ID = dataum[0].ID;
                 data.appId = dataum[0].appId;
@@ -182,7 +195,7 @@ class ApiInfoService {
                 return insertResult;
             }
             else {
-                return (queryResult.getResult() == true) ? queryResult : removeResult;
+                return removeResult;
             }
         });
     }

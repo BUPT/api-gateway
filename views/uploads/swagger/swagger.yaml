@@ -87,7 +87,7 @@ paths:
         - name: isBuy
           in: query
           description: 机票购买是否成功，true为成功，false为失败
-          required: false
+          required: true
           type: boolean
       responses:
         "200":

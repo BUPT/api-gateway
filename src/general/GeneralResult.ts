@@ -7,7 +7,6 @@ class GeneralResult{
         this._result = result;
         this._reason = reason;
         this._datum = datum;
-        console.log(datum);
     }
 
     public setResult(result: boolean): void{

@@ -43,11 +43,11 @@ class CombinationUrlService{
                 let combinationUrlModel: CombinationUrlModel = new CombinationUrlModel(db);
                 combinationUrlModel.remove(data, function (err) {
                     if (err) {
-                        console.log("DELETE DATA FROM API_info FAIL!");
+                        console.log("DELETE DATA FROM combination_url FAIL!");
                         console.log(err);
                         reslove(new GeneralResult(false, err.message, null));
                     } else {
-                        console.log("DELETE DATA FROM API_info SUCCESS!");
+                        console.log("DELETE DATA FROM combination_url SUCCESS!");
                         reslove(new GeneralResult(true, null, null));
                     }
                 });
@@ -72,7 +72,7 @@ class CombinationUrlService{
                     if (err) {
                         resolve(new GeneralResult(false, err.message, null));
                     } else {
-                        resolve(new GeneralResult(true, null, results[0]));
+                        resolve(new GeneralResult(true, null, results));
                     }
                 });
             }).catch(function(err){
@@ -84,21 +84,25 @@ class CombinationUrlService{
     public async update(condition: { [key: string]: string }, serviceName: string): Promise<GeneralResult> {
         let combinationUrlService: CombinationUrlService = new CombinationUrlService();
         let queryResult: GeneralResult = await combinationUrlService.query(condition);
-        let removeResult: GeneralResult = await combinationUrlService.remove(condition);
-        if (queryResult.getResult() == true && removeResult.getResult() == true) {
+        let removeResult: GeneralResult = null;
+        if(queryResult.getResult() == true){
+            removeResult = await combinationUrlService.remove(condition);
+        }else{
+            return new GeneralResult(false, "该服务不存在", null);
+        }
+        if (removeResult.getResult() == true) {
             let dataum: { [key: string]: string }[] = queryResult.getDatum();
-            if (dataum.length == 0) {
+            if (dataum == null || dataum.length == 0) {
                 return new GeneralResult(false, "该服务不存在", null);
             }
-            dataum[0]["URL"] = serviceName;
             let data: { [key: string]: string } = {};
             data.id = dataum[0].id;
-            data.url = dataum[0].url;
+            data.url = serviceName;
             data.atom_url = dataum[0].atom_url;
             let insertResult: GeneralResult = await combinationUrlService.insert([data]);
             return insertResult;
         } else {
-            return (queryResult.getResult() == true) ? queryResult : removeResult;
+            return removeResult;
         }
     }
 }

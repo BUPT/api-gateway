@@ -27,7 +27,8 @@ class RegisterPlugin{
                     }
                 }));
                 // 为相关的API标注，以便后期注销
-                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[0].appId;
+                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[0].APPId;
+                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url[0].from;
             }
         }
         console.log(data);
@@ -36,7 +37,7 @@ class RegisterPlugin{
     public addData(url): void{
         let data = new Map();
         // 先清空之前已经注册公司的数据，再重新重新注册改公司的API数据
-        let appId: string = url[0].appId;
+        let appId: string = url[0].APPId;
         if(this._registerApp._router && this._registerApp.stack){
             for(let i = 2; i < this._registerApp._router.satck.length; i++){
                 if(this._registerApp._router.stack[i].appId === appId){
@@ -58,6 +59,7 @@ class RegisterPlugin{
                 }));
                 // 为相关的API标注，以便后期注销
                 this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[0].appId;
+                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url[0].from;
             }
         }
         console.log(data);

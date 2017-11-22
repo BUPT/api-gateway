@@ -70,6 +70,9 @@ class CombinationPlugin {
                 let registerApp = registerPlugin.getRegisterApp();
                 let combinationPlugin = new CombinationPlugin();
                 registerApp.use(serviceName, combinationPlugin.combinationService);
+                // 为相关的API标注，以便后期注销
+                registerApp._router.stack[registerApp._router.stack.length - 1].appId = "001";
+                registerApp._router.stack[registerApp._router.stack.length - 1].url = serviceName;
                 // 插入数据库
                 let url = {
                     from: serviceName, APPId: "001", to: config.getApiServer().host + ":" + config.getApiServer().port, status: "0", is_new: "1"

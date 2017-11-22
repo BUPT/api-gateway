@@ -15,6 +15,8 @@ import { GeneralResult } from "../general/GeneralResult";
 import rq = require("request-promise");
 import {CombinationUrlService} from "../service/CombinationUrlService";
 import events = require("events");
+import { CombinationPlugin } from "./CombinationPlugin";
+import { config } from "bluebird";
 class AdminPlugin{
 
     /**
@@ -136,18 +138,6 @@ class AdminPlugin{
                 let apiInfoService: ApiInfoService = new ApiInfoService();
                 let urlService: UrlService = new UrlService();
                 registerPlugin.addData(url);
-                // let removeUrl: Promise<any> = urlService.remove({ "APPId": url[0].APPId });
-                // removeUrl.then(function(){
-                //     urlService.insert(url);
-                // }).catch(function(err){
-                //     console.log(err);
-                // });
-                // let removeApiInfo: Promise<any> = apiInfoService.remove({ "appId": api_info[0].appId});
-                // removeApiInfo.then(function(){
-                //     apiInfoService.insert(api_info);
-                // }).catch(function(err){
-                //     console.log(err);
-                // });
                 (async () => {
                     let removeUrl: GeneralResult = await urlService.remove({ "APPId": url[0].APPId });
                     let removeApiInfo: GeneralResult = await apiInfoService.remove({"appId": api_info[0].appId});
@@ -238,7 +228,34 @@ class AdminPlugin{
         let combinationUrlService: CombinationUrlService = new CombinationUrlService();
         let url: string = req.query.url;
         let serviceName: string = req.query.serviceName;
-        let updateResult: GeneralResult = await apiInfoService.update({URL: url}, serviceName);
+
+        // 更新内存
+        let registerPlugin: RegisterPlugin = new RegisterPlugin();
+        let registerApp = registerPlugin.getRegisterApp();
+        if(registerApp._router && registerApp._router.stack){
+            for(let i = 2; i < registerApp._router.stack.length; i++){
+                if(registerApp._router.stack[i].url == url){
+                    // 删除原url对应的中间件
+                    registerApp._router.stack.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        // 向内存中注册新的url
+        let combinationPlugin: CombinationPlugin = new CombinationPlugin();
+        registerApp.use(serviceName, combinationPlugin.combinationService);
+
+        // 更新数据库
+        //将URL转换成小驼峰类型的文件名
+        let adminPlugin: AdminPlugin = new AdminPlugin();
+        let config: Config = new Config();
+        let originName = adminPlugin.urlToUppercase(url);
+        let fileName = adminPlugin.urlToUppercase(serviceName);
+        // 更改流程文件的名称
+        let dir: string = config.getPath().combinationFileDir;
+        fs.renameSync(dir + originName + ".json", dir + fileName + ".json");
+        // 更新数据库
+        let updateResult: GeneralResult = await apiInfoService.update({URL: url}, fileName, serviceName);
         let updataCombinnationResult: GeneralResult = await combinationUrlService.update({url: url}, serviceName);
         res.json(updateResult.getReturn());
     }
@@ -256,6 +273,28 @@ class AdminPlugin{
             }); 
         });
     }
+
+    /**
+     * 将URL转换成小驼峰类型的文件名
+     * @param url 
+     */
+    private urlToUppercase(url: string): string{
+        if (url[0] != '/') {
+            url = "/" + url;
+        }
+        let data: string[] = url.split("/");
+        let fileName = data[1];
+        for (let i = 2; i < data.length; i++) {
+            fileName += data[i].toLowerCase().replace(/[a-z]/, function (c) { return c.toUpperCase() });
+        }
+        return fileName;
+    }
+
+    /**
+     * 组合API调试
+     * @param req 
+     * @param res 
+     */
     public async debugAPI(req, res){
         let eventEmitter = new events.EventEmitter();
         let url: string = req.query.url;
@@ -278,7 +317,7 @@ class AdminPlugin{
         let flag: boolean = true;
         let adminPlugin: AdminPlugin = new AdminPlugin();
         for(let i = 0; i < urls.length; i++){
-            let result: boolean = await adminPlugin._request("http://www.linyimin.club:10010" + urls[i]);
+            let result: boolean = await adminPlugin._request("http://www.linyimin.club:8000" + urls[i]);
             if(result !== true){
                 flag = false;
                 data.set(urls[i], "fail");
@@ -297,9 +336,9 @@ class AdminPlugin{
                 res.json(new GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
             }
         }else{
-            
+            data.set(url, "fail");
+            res.json(new GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
         }
-        res.json(new GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
     }
 
     /**
