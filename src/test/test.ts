@@ -86,13 +86,6 @@
 
 // let t = getCount(1);
 // console.log(t.next());
-export default class GeneratorClass {
-    constructor() {
-        const iterator = this.generator(10);
-        iterator.next();
-    }
-    *generator(count: number): IterableIterator<number> {
-        while (true)
-            yield count++;
-    }
-}
+let name = "test"
+let js = require("../../views/uploads/json/"+ name);
+console.log(js);

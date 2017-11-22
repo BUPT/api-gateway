@@ -130,6 +130,68 @@ class AdminRouter {
         this._router.use("/static", express.static(config.getPath().static));
         // 组合API
         this._router.post("/combination/getFlowXML", combinationPlugin.getFloWXMLFile);
+        /**
+         * @swagger
+         * /apis/getAllAPI:
+         *   get:
+         *       description: 获取全部API数据
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getAllAPI", adminPlugin.getAllAPI);
+        /**
+         * @swagger
+         * /apis/renameServiceName:
+         *   get:
+         *       description: 组合API重命名
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: url
+         *           in: query
+         *           description: API对应的url
+         *           required: true
+         *           type: string
+         *         - name: serviceName
+         *           in: query
+         *           description: 组合API的新名字
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/renameServiceName", adminPlugin.renameServiceName);
+        /**
+         * @swagger
+         * /apis/debugAPI:
+         *   get:
+         *       description: 组合API测试
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: url
+         *           in: query
+         *           description: API对应的ID
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/debugAPI", adminPlugin.debugAPI);
     }
 }
 exports.AdminRouter = AdminRouter;

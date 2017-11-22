@@ -1,7 +1,7 @@
 /**
  * 定义combination_url表模型
  */
-class CombinationUrl{
+class CombinationUrlModel{
     private _combinationUrl: any = null;
     constructor(db: any) {
         this._combinationUrl = db.define("combination_url", {
@@ -38,4 +38,4 @@ class CombinationUrl{
     }
 }
 
-export{CombinationUrl};
+export{CombinationUrlModel};

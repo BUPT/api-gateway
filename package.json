@@ -25,16 +25,19 @@
     "@types/node": "^8.0.51",
     "basic-auth": "^2.0.0",
     "express": "^4.16.2",
+    "express-http-proxy": "^1.1.0",
     "mysql": "^2.15.0",
     "orm": "^4.0.1",
+    "request": "^2.34.0",
     "swagger-jsdoc": "^1.9.7",
     "yamljs": "^0.3.0"
   },
   "dependencies": {
-    "express-http-proxy": "^1.1.0",
+    "@types/bluebird": "^3.5.18",
+    "bluebird": "^3.5.1",
     "formidable": "^1.1.1",
     "json2yaml": "^1.1.0",
-    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
     "xml2js": "^0.4.19"
   }
 }

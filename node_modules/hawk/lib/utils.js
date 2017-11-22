@@ -1,47 +1,61 @@
-'use strict';
-
 // Load modules
 
-const Sntp = require('sntp');
-const Boom = require('boom');
+var Hoek = require('hoek');
+var Sntp = require('sntp');
+var Boom = require('boom');
 
 
 // Declare internals
 
-const internals = {};
+var internals = {};
 
+
+// Import Hoek Utilities
+
+internals.import = function () {
+
+    for (var i in Hoek) {
+        if (Hoek.hasOwnProperty(i)) {
+            exports[i] = Hoek[i];
+        }
+    }
+};
+
+internals.import();
+
+
+// Hawk version
 
 exports.version = function () {
 
-    return require('../package.json').version;
-};
-
-
-exports.limits = {
-    maxMatchLength: 4096            // Limit the length of uris and headers to avoid a DoS attack on string matching
+    return exports.loadPackage(__dirname + '/..').version;
 };
 
 
 // Extract host and port from request
 
-//                                            $1                            $2
-internals.hostHeaderRegex = /^(?:(?:\r\n)?\s)*((?:[^:]+)|(?:\[[^\]]+\]))(?::(\d+))?(?:(?:\r\n)?\s)*$/;              // (IPv4, hostname)|(IPv6)
-
-
 exports.parseHost = function (req, hostHeaderName) {
 
     hostHeaderName = (hostHeaderName ? hostHeaderName.toLowerCase() : 'host');
-    const hostHeader = req.headers[hostHeaderName];
+    var hostHeader = req.headers[hostHeaderName];
     if (!hostHeader) {
         return null;
     }
 
-    if (hostHeader.length > exports.limits.maxMatchLength) {
-        return null;
+    var hostHeaderRegex;
+    if (hostHeader[0] === '[') {
+        hostHeaderRegex = /^(?:(?:\r\n)?\s)*(\[[^\]]+\])(?::(\d+))?(?:(?:\r\n)?\s)*$/;      // IPv6
     }
+    else {
+        hostHeaderRegex = /^(?:(?:\r\n)?\s)*([^:]+)(?::(\d+))?(?:(?:\r\n)?\s)*$/;           // IPv4, hostname
+    }
+    
+    var hostParts = hostHeader.match(hostHeaderRegex);
 
-    const hostParts = hostHeader.match(internals.hostHeaderRegex);
-    if (!hostParts) {
+    if (!hostParts ||
+        hostParts.length !== 3 ||
+        !hostParts[1]) {
+
         return null;
     }
 
@@ -71,20 +85,17 @@ exports.parseRequest = function (req, options) {
     if (!req.headers) {
         return req;
     }
-
+    
     // Obtain host and port information
 
-    let host;
-    if (!options.host ||
-        !options.port) {
-
-        host = exports.parseHost(req, options.hostHeaderName);
+    if (!options.host || !options.port) {
+        var host = exports.parseHost(req, options.hostHeaderName);
         if (!host) {
             return new Error('Invalid Host header');
         }
     }
 
-    const request = {
+    var request = {
         method: req.method,
         url: req.url,
         host: options.host || host.name,
@@ -97,20 +108,10 @@ exports.parseRequest = function (req, options) {
 };
 
 
-exports.now = function (localtimeOffsetMsec) {
+exports.now = function () {
 
-    return Sntp.now() + (localtimeOffsetMsec || 0);
+    return Sntp.now();
 };
-
-
-exports.nowSecs = function (localtimeOffsetMsec) {
-
-    return Math.floor(exports.now(localtimeOffsetMsec) / 1000);
-};
-
-
-internals.authHeaderRegex = /^(\w+)(?:\s+(.*))?$/;                                      // Header: scheme[ something]
-internals.attributeRegex = /^[ \w\!#\$%&'\(\)\*\+,\-\.\/\:;<\=>\?@\[\]\^`\{\|\}~]+$/;   // !#$%&'()*+,-./:;<=>?@[]^_`{|}~ and space, a-z, A-Z, 0-9
 
 
 // Parse Hawk HTTP Authorization header
@@ -123,28 +124,24 @@ exports.parseAuthorizationHeader = function (header, keys) {
         return Boom.unauthorized(null, 'Hawk');
     }
 
-    if (header.length > exports.limits.maxMatchLength) {
-        return Boom.badRequest('Header length too long');
-    }
-
-    const headerParts = header.match(internals.authHeaderRegex);
+    var headerParts = header.match(/^(\w+)(?:\s+(.*))?$/);       // Header: scheme[ something]
     if (!headerParts) {
         return Boom.badRequest('Invalid header syntax');
     }
 
-    const scheme = headerParts[1];
+    var scheme = headerParts[1];
     if (scheme.toLowerCase() !== 'hawk') {
         return Boom.unauthorized(null, 'Hawk');
     }
 
-    const attributesString = headerParts[2];
+    var attributesString = headerParts[2];
     if (!attributesString) {
         return Boom.badRequest('Invalid header syntax');
     }
 
-    const attributes = {};
-    let errorMessage = '';
-    const verify = attributesString.replace(/(\w+)="([^"\\]*)"\s*(?:,\s*|$)/g, ($0, $1, $2) => {
+    var attributes = {};
+    var errorMessage = '';
+    var verify = attributesString.replace(/(\w+)="([^"\\]*)"\s*(?:,\s*|$)/g, function ($0, $1, $2) {
 
         // Check valid attribute names
 
@@ -153,9 +150,9 @@ exports.parseAuthorizationHeader = function (header, keys) {
             return;
         }
 
-        // Allowed attribute value characters
+        // Allowed attribute value characters: !#$%&'()*+,-./:;<=>?@[]^_`{|}~ and space, a-z, A-Z, 0-9
 
-        if ($2.match(internals.attributeRegex) === null) {
+        if ($2.match(/^[ \w\!#\$%&'\(\)\*\+,\-\.\/\:;<\=>\?@\[\]\^`\{\|\}~]+$/) === null) {
             errorMessage = 'Bad attribute value: ' + $1;
             return;
         }
@@ -179,8 +176,8 @@ exports.parseAuthorizationHeader = function (header, keys) {
 };
 
 
-exports.unauthorized = function (message, attributes) {
+exports.unauthorized = function (message) {
 
-    return Boom.unauthorized(message || null, 'Hawk', attributes);
+    return Boom.unauthorized(message, 'Hawk');
 };
 

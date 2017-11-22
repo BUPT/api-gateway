@@ -1,17 +1,15 @@
-'use strict';
-
 // Load modules
 
-const Url = require('url');
-const Hoek = require('hoek');
-const Cryptiles = require('cryptiles');
-const Crypto = require('./crypto');
-const Utils = require('./utils');
+var Url = require('url');
+var Hoek = require('hoek');
+var Cryptiles = require('cryptiles');
+var Crypto = require('./crypto');
+var Utils = require('./utils');
 
 
 // Declare internals
 
-const internals = {};
+var internals = {};
 
 
 // Generate an Authorization header for a given request
@@ -32,7 +30,7 @@ const internals = {};
         // Optional
 
         ext: 'application-specific',                        // Application specific data sent via the ext attribute
-        timestamp: Date.now() / 1000,                       // A pre-calculated timestamp in seconds
+        timestamp: Date.now(),                              // A pre-calculated timestamp
         nonce: '2334f34f',                                  // A pre-generated nonce
         localtimeOffsetMsec: 400,                           // Time offset to sync with server time (ignored if timestamp provided)
         payload: '{"some":"payload"}',                      // UTF-8 encoded string for body hash generation (ignored if hash provided)
@@ -45,7 +43,7 @@ const internals = {};
 
 exports.header = function (uri, method, options) {
 
-    const result = {
+    var result = {
         field: '',
         artifacts: {}
     };
@@ -56,28 +54,26 @@ exports.header = function (uri, method, options) {
         !method || typeof method !== 'string' ||
         !options || typeof options !== 'object') {
 
-        result.err = 'Invalid argument type';
         return result;
     }
 
     // Application time
 
-    const timestamp = options.timestamp || Utils.nowSecs(options.localtimeOffsetMsec);
+    var timestamp = options.timestamp || Math.floor((Utils.now() + (options.localtimeOffsetMsec || 0)) / 1000)
 
     // Validate credentials
 
-    const credentials = options.credentials;
+    var credentials = options.credentials;
     if (!credentials ||
         !credentials.id ||
         !credentials.key ||
         !credentials.algorithm) {
 
-        result.err = 'Invalid credential object';
+        // Invalid credential object
         return result;
     }
 
     if (Crypto.algorithms.indexOf(credentials.algorithm) === -1) {
-        result.err = 'Unknown algorithm';
         return result;
     }
 
@@ -89,10 +85,10 @@ exports.header = function (uri, method, options) {
 
     // Calculate signature
 
-    const artifacts = {
+    var artifacts = {
         ts: timestamp,
         nonce: options.nonce || Cryptiles.randomString(6),
-        method,
+        method: method,
         resource: uri.pathname + (uri.search || ''),                            // Maintain trailing '?'
         host: uri.hostname,
         port: uri.port || (uri.protocol === 'http:' ? 80 : 443),
@@ -107,25 +103,25 @@ exports.header = function (uri, method, options) {
     // Calculate payload hash
 
     if (!artifacts.hash &&
-        (options.payload || options.payload === '')) {
+        options.hasOwnProperty('payload')) {
 
         artifacts.hash = Crypto.calculatePayloadHash(options.payload, credentials.algorithm, options.contentType);
     }
 
-    const mac = Crypto.calculateMac('header', credentials, artifacts);
+    var mac = Crypto.calculateMac('header', credentials, artifacts);
 
     // Construct header
 
-    const hasExt = artifacts.ext !== null && artifacts.ext !== undefined && artifacts.ext !== '';       // Other falsey values allowed
-    let header = 'Hawk id="' + credentials.id +
+    var hasExt = artifacts.ext !== null && artifacts.ext !== undefined && artifacts.ext !== '';       // Other falsey values allowed
+    var header = 'Hawk id="' + credentials.id +
                  '", ts="' + artifacts.ts +
                  '", nonce="' + artifacts.nonce +
                  (artifacts.hash ? '", hash="' + artifacts.hash : '') +
-                 (hasExt ? '", ext="' + Hoek.escapeHeaderAttribute(artifacts.ext) : '') +
+                 (hasExt ? '", ext="' + Utils.escapeHeaderAttribute(artifacts.ext) : '') +
                  '", mac="' + mac + '"';
 
     if (artifacts.app) {
-        header = header + ', app="' + artifacts.app +
+        header += ', app="' + artifacts.app +
                   (artifacts.dlg ? '", dlg="' + artifacts.dlg : '') + '"';
     }
 
@@ -139,51 +135,31 @@ exports.header = function (uri, method, options) {
 
 /*
     res:        node's response object
-    artifacts:  object received from header().artifacts
+    artifacts:  object recieved from header().artifacts
     options: {
         payload:    optional payload received
         required:   specifies if a Server-Authorization header is required. Defaults to 'false'
     }
 */
 
-exports.authenticate = function (res, credentials, artifacts, options, callback) {
+exports.authenticate = function (res, credentials, artifacts, options) {
 
     artifacts = Hoek.clone(artifacts);
     options = options || {};
-
-    let wwwAttributes = null;
-    let serverAuthAttributes = null;
-
-    const finalize = function (err) {
-
-        if (callback) {
-            const headers = {
-                'www-authenticate': wwwAttributes,
-                'server-authorization': serverAuthAttributes
-            };
-
-            return callback(err, headers);
-        }
-
-        return !err;
-    };
 
     if (res.headers['www-authenticate']) {
 
         // Parse HTTP WWW-Authenticate header
 
-        wwwAttributes = Utils.parseAuthorizationHeader(res.headers['www-authenticate'], ['ts', 'tsm', 'error']);
-        if (wwwAttributes instanceof Error) {
-            wwwAttributes = null;
-            return finalize(new Error('Invalid WWW-Authenticate header'));
+        var attributes = Utils.parseAuthorizationHeader(res.headers['www-authenticate'], ['ts', 'tsm', 'error']);
+        if (attributes instanceof Error) {
+            return false;
         }
 
-        // Validate server timestamp (not used to update clock since it is done via the SNPT client)
-
-        if (wwwAttributes.ts) {
-            const tsm = Crypto.calculateTsMac(wwwAttributes.ts, credentials);
-            if (tsm !== wwwAttributes.tsm) {
-                return finalize(new Error('Invalid server timestamp hash'));
+        if (attributes.ts) {
+            var tsm = Crypto.calculateTsMac(attributes.ts, credentials);
+            if (tsm !== attributes.tsm) {
+                return false;
             }
         }
     }
@@ -193,44 +169,41 @@ exports.authenticate = function (res, credentials, artifacts, options, callback)
     if (!res.headers['server-authorization'] &&
         !options.required) {
 
-        return finalize();
+        return true;
     }
 
-    serverAuthAttributes = Utils.parseAuthorizationHeader(res.headers['server-authorization'], ['mac', 'ext', 'hash']);
-    if (serverAuthAttributes instanceof Error) {
-        serverAuthAttributes = null;
-        return finalize(new Error('Invalid Server-Authorization header'));
+    var attributes = Utils.parseAuthorizationHeader(res.headers['server-authorization'], ['mac', 'ext', 'hash']);
+    if (attributes instanceof Error) {
+        return false;
     }
 
-    artifacts.ext = serverAuthAttributes.ext;
-    artifacts.hash = serverAuthAttributes.hash;
+    artifacts.ext = attributes.ext;
+    artifacts.hash = attributes.hash;
 
-    const mac = Crypto.calculateMac('response', credentials, artifacts);
-    if (mac !== serverAuthAttributes.mac) {
-        return finalize(new Error('Bad response mac'));
+    var mac = Crypto.calculateMac('response', credentials, artifacts);
+    if (mac !== attributes.mac) {
+        return false;
     }
 
-    if (!options.payload &&
-        options.payload !== '') {
-
-        return finalize();
+    if (!options.hasOwnProperty('payload')) {
+        return true;
     }
 
-    if (!serverAuthAttributes.hash) {
-        return finalize(new Error('Missing response hash attribute'));
+    if (!attributes.hash) {
+        return false;
     }
 
-    const calculatedHash = Crypto.calculatePayloadHash(options.payload, credentials.algorithm, res.headers['content-type']);
-    if (calculatedHash !== serverAuthAttributes.hash) {
-        return finalize(new Error('Bad response payload mac'));
-    }
-
-    return finalize();
+    var calculatedHash = Crypto.calculatePayloadHash(options.payload, credentials.algorithm, res.headers['content-type']);
+    return (calculatedHash === attributes.hash);
 };
 
 
 // Generate a bewit value for a given URI
 
+/*
+ * credentials is an object with the following keys: 'id, 'key', 'algorithm'.
+ * options is an object with the following optional keys: 'ext', 'localtimeOffsetMsec'
+ */
 /*
     uri: 'http://example.com/resource?a=b' or object from Url.parse()
     options: {
@@ -268,11 +241,11 @@ exports.getBewit = function (uri, options) {
 
     // Application time
 
-    const now = Utils.now(options.localtimeOffsetMsec);
+    var now = Utils.now() + (options.localtimeOffsetMsec || 0);
 
     // Validate credentials
 
-    const credentials = options.credentials;
+    var credentials = options.credentials;
     if (!credentials ||
         !credentials.id ||
         !credentials.key ||
@@ -293,8 +266,8 @@ exports.getBewit = function (uri, options) {
 
     // Calculate signature
 
-    const exp = Math.floor(now / 1000) + options.ttlSec;
-    const mac = Crypto.calculateMac('bewit', credentials, {
+    var exp = Math.floor(now / 1000) + options.ttlSec;
+    var mac = Crypto.calculateMac('bewit', credentials, {
         ts: exp,
         nonce: '',
         method: 'GET',
@@ -306,8 +279,8 @@ exports.getBewit = function (uri, options) {
 
     // Construct bewit: id\exp\mac\ext
 
-    const bewit = credentials.id + '\\' + exp + '\\' + mac + '\\' + options.ext;
-    return Hoek.base64urlEncode(bewit);
+    var bewit = credentials.id + '\\' + exp + '\\' + mac + '\\' + options.ext;
+    return Utils.base64urlEncode(bewit);
 };
 
 
@@ -329,7 +302,7 @@ exports.getBewit = function (uri, options) {
 
         // Optional
 
-        timestamp: Date.now() / 1000,                       // A pre-calculated timestamp in seconds
+        timestamp: Date.now(),                              // A pre-calculated timestamp
         nonce: '2334f34f',                                  // A pre-generated nonce
         localtimeOffsetMsec: 400,                           // Time offset to sync with server time (ignored if timestamp provided)
     }
@@ -349,11 +322,11 @@ exports.message = function (host, port, message, options) {
 
     // Application time
 
-    const timestamp = options.timestamp || Utils.nowSecs(options.localtimeOffsetMsec);
+    var timestamp = options.timestamp || Math.floor((Utils.now() + (options.localtimeOffsetMsec || 0)) / 1000)
 
     // Validate credentials
 
-    const credentials = options.credentials;
+    var credentials = options.credentials;
     if (!credentials ||
         !credentials.id ||
         !credentials.key ||
@@ -369,17 +342,17 @@ exports.message = function (host, port, message, options) {
 
     // Calculate signature
 
-    const artifacts = {
+    var artifacts = {
         ts: timestamp,
         nonce: options.nonce || Cryptiles.randomString(6),
-        host,
-        port,
+        host: host,
+        port: port,
         hash: Crypto.calculatePayloadHash(message, credentials.algorithm)
     };
 
     // Construct authorization
 
-    const result = {
+    var result = {
         id: credentials.id,
         ts: artifacts.ts,
         nonce: artifacts.nonce,

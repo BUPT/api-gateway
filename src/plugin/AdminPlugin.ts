@@ -12,8 +12,11 @@ import formidable = require("formidable");
 import fs = require("fs");
 import {SwaggerFile} from "../util/SwaggerFile";
 import { GeneralResult } from "../general/GeneralResult";
-import request = require("request");
+import rq = require("request-promise");
+import {CombinationUrlService} from "../service/CombinationUrlService";
+import events = require("events");
 class AdminPlugin{
+
     /**
      * 基于basic-auth的身份认证
      * @param req 
@@ -56,28 +59,6 @@ class AdminPlugin{
                 return unauthorized(res);
             }
         })();
-        // let result: Promise<GeneralResult> = userListService.query(data);
-        // result.then(function(result){
-        //     // 对用户输入的密码进行加密运算
-        //     var password = null;
-        //     if (result.length > 0) {
-        //         password = crypto.createHmac('sha256', user.pass).update(result[0].salt).digest('hex');
-        //         if (password === result[0].password) {
-        //             next();
-        //             return;
-        //         }else{
-        //             console.log("用户名或密码错误");
-        //             return unauthorized(res);
-        //         }
-        //     }else{
-        //         console.log("未能登录");
-        //         return unauthorized(res);
-        //     }
-        // }).catch(function(err){
-        //     console.log(err);
-        //     console.log("未能登录");
-        //     return unauthorized(res);
-        // });
     }
 
     /**
@@ -249,28 +230,88 @@ class AdminPlugin{
 
     /**
      * 修改组合API名字
-     * @param req 
-     * @param res 
+     * @param req
+     * @param res
      */
     public async renameServiceName(req, res): Promise<void>{
         let apiInfoService: ApiInfoService = new ApiInfoService();
+        let combinationUrlService: CombinationUrlService = new CombinationUrlService();
         let url: string = req.query.url;
         let serviceName: string = req.query.serviceName;
         let updateResult: GeneralResult = await apiInfoService.update({URL: url}, serviceName);
+        let updataCombinnationResult: GeneralResult = await combinationUrlService.update({url: url}, serviceName);
         res.json(updateResult.getReturn());
     }
 
-    public debugAPI(req, res){
-        let url: string = req.query.url;
-        let host: string = "http://www.linyimin.club:8000";
-        request(host + url, function (error, response, body) {
-            // 访问成功
-            if (!error && response.statusCode == 200) {
-                res.json(new GeneralResult(true, null, null).getReturn());
-            }else{
-                res.json(new GeneralResult(false, error, null).getReturn());
-            }
+    /**
+     * 封装rq，返回Boolean类型，判断访问是否成功
+     * @param url 
+     */
+    private async _request(url: string): Promise<boolean>{
+        return new Promise<boolean>(function(resolve){
+            rq(url).then(function(){
+                resolve(true);
+            }).catch(function(){
+                resolve(false);
+            }); 
         });
+    }
+    public async debugAPI(req, res){
+        let eventEmitter = new events.EventEmitter();
+        let url: string = req.query.url;
+        let config: Config = new Config();
+        // 组合API和原子API对应的主机名
+        let host: string = config.getAdminServer().host + config.getAdminServer().port;
+        // 获取组合API的原子API ID 
+        let combinationUrlService: CombinationUrlService = new CombinationUrlService();
+        let queryResult: GeneralResult = await combinationUrlService.query({url:url});
+        let id: string[] = queryResult.getDatum().atom_url.split(",");
+        // 根据API的id查询API对应的url,并存储在urls中
+        let urls: string [] = [];
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        for(let i = 0; i < id.length; i++){
+            let result: GeneralResult = await apiInfoService.queryById(id[i]);
+            urls[i] = (result.getDatum())[0].URL;
+        }
+        // 保存测试结果
+        let data: Map<string, string> = new Map();
+        let flag: boolean = true;
+        let adminPlugin: AdminPlugin = new AdminPlugin();
+        for(let i = 0; i < urls.length; i++){
+            let result: boolean = await adminPlugin._request("http://www.linyimin.club:10010" + urls[i]);
+            if(result !== true){
+                flag = false;
+                data.set(urls[i], "fail");
+            }else{
+                data.set(urls[i], "suceess");
+            }
+        }
+        // 测试复合API的URL
+        if(flag == true){
+            let result: boolean = await adminPlugin._request("http://www.linyimin.club:8000" + url);
+            if(result == true){
+                data.set(url, "suceess");
+                res.json(new GeneralResult(true, null, adminPlugin._mapToObject(data)).getReturn());
+            }else{
+                data.set(url, "fail");
+                res.json(new GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
+            }
+        }else{
+            
+        }
+        res.json(new GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
+    }
+
+    /**
+     * 将Map转换成Object
+     * @param data 
+     */
+    private _mapToObject(data: Map<string, string>): {[key: string]: string}{
+        let result: {[key: string]: string} = {};
+        for(let [key, value] of data){
+            result[key] = value;
+        }
+        return result;
     }
 }
 export{AdminPlugin};

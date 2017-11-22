@@ -1,9 +1,7 @@
-"use strict";
 // import {DBConnect} from "../util/DBConnect";
 // import {UrlModel} from "../model/UrlModel";
 // let dbConnect: DBConnect = new DBConnect();
 // let db: Promise<any> = dbConnect.getDB();
-Object.defineProperty(exports, "__esModule", { value: true });
 // db.then(function(db){
 //     let urlModel: UrlModel = new UrlModel(db);
 //     let t = urlModel.query({"id": "1088"}, function(err, results){
@@ -75,14 +73,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // }
 // let t = getCount(1);
 // console.log(t.next());
-class GeneratorClass {
-    constructor() {
-        const iterator = this.generator(10);
-        iterator.next();
-    }
-    *generator(count) {
-        while (true)
-            yield count++;
-    }
-}
-exports.default = GeneratorClass;
+let name = "test";
+let js = require("../../views/uploads/json/" + name);
+console.log(js);

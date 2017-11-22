@@ -24,7 +24,7 @@ coverage
 .grunt
 
 # Bower dependency directory (https://bower.io/)
-# bower_components
+bower_components
 
 # node-waf configuration
 .lock-wscript
@@ -33,7 +33,7 @@ coverage
 build/Release
 
 # Dependency directories
-# node_modules/
+node_modules/
 jspm_packages/
 
 # Typescript v1 declaration files
@@ -55,7 +55,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-# .env
+.env
 
 # 编译之后的js文件
-# .js
+.js

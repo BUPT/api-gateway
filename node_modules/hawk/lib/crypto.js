@@ -1,15 +1,13 @@
-'use strict';
-
 // Load modules
 
-const Crypto = require('crypto');
-const Url = require('url');
-const Utils = require('./utils');
+var Crypto = require('crypto');
+var Url = require('url');
+var Utils = require('./utils');
 
 
 // Declare internals
 
-const internals = {};
+var internals = {};
 
 
 // MAC normalization format version
@@ -46,42 +44,34 @@ exports.algorithms = ['sha1', 'sha256'];
 
 exports.calculateMac = function (type, credentials, options) {
 
-    const normalized = exports.generateNormalizedString(type, options);
+    var normalized = exports.generateNormalizedString(type, options);
 
-    const hmac = Crypto.createHmac(credentials.algorithm, credentials.key).update(normalized);
-    const digest = hmac.digest('base64');
+    var hmac = Crypto.createHmac(credentials.algorithm, credentials.key).update(normalized);
+    var digest = hmac.digest('base64');
     return digest;
 };
 
 
 exports.generateNormalizedString = function (type, options) {
 
-    let resource = options.resource || '';
-    if (resource &&
-        resource[0] !== '/') {
-
-        const url = Url.parse(resource, false);
-        resource = url.path;                        // Includes query
-    }
-
-    let normalized = 'hawk.' + exports.headerVersion + '.' + type + '\n' +
+    var normalized = 'hawk.' + exports.headerVersion + '.' + type + '\n' +
                      options.ts + '\n' +
                      options.nonce + '\n' +
                      (options.method || '').toUpperCase() + '\n' +
-                     resource + '\n' +
+                     (options.resource || '') + '\n' +
                      options.host.toLowerCase() + '\n' +
                      options.port + '\n' +
                      (options.hash || '') + '\n';
 
     if (options.ext) {
-        normalized = normalized + options.ext.replace('\\', '\\\\').replace('\n', '\\n');
+        normalized += options.ext.replace('\\', '\\\\').replace('\n', '\\n');
     }
 
-    normalized = normalized + '\n';
+    normalized += '\n';
 
     if (options.app) {
-        normalized = normalized + options.app + '\n' +
-                                  (options.dlg || '') + '\n';
+        normalized += options.app + '\n' +
+                      (options.dlg || '') + '\n';
     }
 
     return normalized;
@@ -90,7 +80,7 @@ exports.generateNormalizedString = function (type, options) {
 
 exports.calculatePayloadHash = function (payload, algorithm, contentType) {
 
-    const hash = exports.initializePayloadHash(algorithm, contentType);
+    var hash = exports.initializePayloadHash(algorithm, contentType);
     hash.update(payload || '');
     return exports.finalizePayloadHash(hash);
 };
@@ -98,7 +88,7 @@ exports.calculatePayloadHash = function (payload, algorithm, contentType) {
 
 exports.initializePayloadHash = function (algorithm, contentType) {
 
-    const hash = Crypto.createHash(algorithm);
+    var hash = Crypto.createHash(algorithm);
     hash.update('hawk.' + exports.headerVersion + '.payload\n');
     hash.update(Utils.parseContentType(contentType) + '\n');
     return hash;
@@ -114,15 +104,8 @@ exports.finalizePayloadHash = function (hash) {
 
 exports.calculateTsMac = function (ts, credentials) {
 
-    const hmac = Crypto.createHmac(credentials.algorithm, credentials.key);
+    var hmac = Crypto.createHmac(credentials.algorithm, credentials.key);
     hmac.update('hawk.' + exports.headerVersion + '.ts\n' + ts + '\n');
     return hmac.digest('base64');
 };
 
-
-exports.timestampMessage = function (credentials, localtimeOffsetMsec) {
-
-    const now = Utils.nowSecs(localtimeOffsetMsec);
-    const tsm = exports.calculateTsMac(now, credentials);
-    return { ts: now, tsm };
-};

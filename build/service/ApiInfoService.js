@@ -67,6 +67,30 @@ class ApiInfoService {
             });
         });
     }
+    /**
+     * 查询数据
+     * @param data
+     */
+    query(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // 上下文传递
+            let _this = this;
+            return new Promise(function (resolve) {
+                _this._db.then(function (db) {
+                    let apiInfoModel = new ApiInfoModel_1.ApiInfoModel(db);
+                    apiInfoModel.query(data, function (err, results) {
+                        if (err) {
+                            resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
+                        }
+                        else {
+                            console.log(results[0]);
+                            resolve(new GeneralResult_1.GeneralResult(true, null, results));
+                        }
+                    });
+                });
+            });
+        });
+    }
     // 根据appId查找API相关数据
     queryByAppId(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -109,6 +133,9 @@ class ApiInfoService {
                         else {
                             resolve(new GeneralResult_1.GeneralResult(true, null, results));
                         }
+                    }).catch(function (err) {
+                        console.log(err);
+                        resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
                     });
                 }).catch(function (err) {
                     resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
@@ -127,6 +154,35 @@ class ApiInfoService {
             }
             else {
                 console.log(result.getReason());
+            }
+        });
+    }
+    eachCallback(data) {
+    }
+    update(condition, serviceName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiInfoService = new ApiInfoService();
+            let queryResult = yield apiInfoService.query(condition);
+            let removeResult = yield apiInfoService.remove(condition);
+            if (queryResult.getResult() == true && removeResult.getResult() == true) {
+                let dataum = queryResult.getDatum();
+                if (dataum.length == 0) {
+                    return new GeneralResult_1.GeneralResult(false, "该服务不存在", null);
+                }
+                dataum[0]["URL"] = serviceName;
+                let data = {};
+                data.ID = dataum[0].ID;
+                data.appId = dataum[0].appId;
+                data.name = dataum[0].name;
+                data.type = dataum[0].type;
+                data.argument = dataum[0].argument;
+                data.event = dataum[0].event;
+                data.URL = dataum[0].URL;
+                let insertResult = yield apiInfoService.insert([data]);
+                return insertResult;
+            }
+            else {
+                return (queryResult.getResult() == true) ? queryResult : removeResult;
             }
         });
     }

@@ -20,6 +20,10 @@ const crypto = require("crypto");
 const formidable = require("formidable");
 const fs = require("fs");
 const SwaggerFile_1 = require("../util/SwaggerFile");
+const GeneralResult_1 = require("../general/GeneralResult");
+const rq = require("request-promise");
+const CombinationUrlService_1 = require("../service/CombinationUrlService");
+const events = require("events");
 class AdminPlugin {
     /**
      * 基于basic-auth的身份认证
@@ -66,28 +70,6 @@ class AdminPlugin {
                 return unauthorized(res);
             }
         }))();
-        // let result: Promise<GeneralResult> = userListService.query(data);
-        // result.then(function(result){
-        //     // 对用户输入的密码进行加密运算
-        //     var password = null;
-        //     if (result.length > 0) {
-        //         password = crypto.createHmac('sha256', user.pass).update(result[0].salt).digest('hex');
-        //         if (password === result[0].password) {
-        //             next();
-        //             return;
-        //         }else{
-        //             console.log("用户名或密码错误");
-        //             return unauthorized(res);
-        //         }
-        //     }else{
-        //         console.log("未能登录");
-        //         return unauthorized(res);
-        //     }
-        // }).catch(function(err){
-        //     console.log(err);
-        //     console.log("未能登录");
-        //     return unauthorized(res);
-        // });
     }
     /**
      * 允许跨域访问
@@ -239,6 +221,109 @@ class AdminPlugin {
     //获取JSON解析器中间件  
     jsonParser() {
         require("body-parser").json();
+    }
+    /**
+     * 返回所有API数据
+     * @param req
+     * @param res
+     */
+    getAllAPI(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            let apiInfos = yield apiInfoService.query({});
+            res.json(apiInfos.getReturn());
+        });
+    }
+    /**
+     * 修改组合API名字
+     * @param req
+     * @param res
+     */
+    renameServiceName(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            let combinationUrlService = new CombinationUrlService_1.CombinationUrlService();
+            let url = req.query.url;
+            let serviceName = req.query.serviceName;
+            let updateResult = yield apiInfoService.update({ URL: url }, serviceName);
+            let updataCombinnationResult = yield combinationUrlService.update({ url: url }, serviceName);
+            res.json(updateResult.getReturn());
+        });
+    }
+    /**
+     * 封装rq，返回Boolean类型，判断访问是否成功
+     * @param url
+     */
+    _request(url) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise(function (resolve) {
+                rq(url).then(function () {
+                    resolve(true);
+                }).catch(function () {
+                    resolve(false);
+                });
+            });
+        });
+    }
+    debugAPI(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let eventEmitter = new events.EventEmitter();
+            let url = req.query.url;
+            let config = new config_1.Config();
+            // 组合API和原子API对应的主机名
+            let host = config.getAdminServer().host + config.getAdminServer().port;
+            // 获取组合API的原子API ID 
+            let combinationUrlService = new CombinationUrlService_1.CombinationUrlService();
+            let queryResult = yield combinationUrlService.query({ url: url });
+            let id = queryResult.getDatum().atom_url.split(",");
+            // 根据API的id查询API对应的url,并存储在urls中
+            let urls = [];
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            for (let i = 0; i < id.length; i++) {
+                let result = yield apiInfoService.queryById(id[i]);
+                urls[i] = (result.getDatum())[0].URL;
+            }
+            // 保存测试结果
+            let data = new Map();
+            let flag = true;
+            let adminPlugin = new AdminPlugin();
+            for (let i = 0; i < urls.length; i++) {
+                let result = yield adminPlugin._request("http://www.linyimin.club:10010" + urls[i]);
+                if (result !== true) {
+                    flag = false;
+                    data.set(urls[i], "fail");
+                }
+                else {
+                    data.set(urls[i], "suceess");
+                }
+            }
+            // 测试复合API的URL
+            if (flag == true) {
+                let result = yield adminPlugin._request("http://www.linyimin.club:8000" + url);
+                if (result == true) {
+                    data.set(url, "suceess");
+                    res.json(new GeneralResult_1.GeneralResult(true, null, adminPlugin._mapToObject(data)).getReturn());
+                }
+                else {
+                    data.set(url, "fail");
+                    res.json(new GeneralResult_1.GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
+                }
+            }
+            else {
+            }
+            res.json(new GeneralResult_1.GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
+        });
+    }
+    /**
+     * 将Map转换成Object
+     * @param data
+     */
+    _mapToObject(data) {
+        let result = {};
+        for (let [key, value] of data) {
+            result[key] = value;
+        }
+        return result;
     }
 }
 exports.AdminPlugin = AdminPlugin;

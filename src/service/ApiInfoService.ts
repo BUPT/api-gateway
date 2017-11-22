@@ -115,6 +115,9 @@ class ApiInfoService{
                     } else {
                         resolve(new GeneralResult(true, null, results));
                     }
+                }).catch(function(err){
+                    console.log(err);
+                    resolve(new GeneralResult(false, err.message, null));
                 });
             }).catch(function (err) {
                 resolve(new GeneralResult(false, err.message, null));
