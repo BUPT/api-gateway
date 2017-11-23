@@ -299,12 +299,15 @@ class AdminPlugin{
         let eventEmitter = new events.EventEmitter();
         let url: string = req.query.url;
         let config: Config = new Config();
-        // 组合API和原子API对应的主机名
-        let host: string = config.getAdminServer().host + config.getAdminServer().port;
-        // 获取组合API的原子API ID 
+        // 获取组合API的原子API ID
         let combinationUrlService: CombinationUrlService = new CombinationUrlService();
         let queryResult: GeneralResult = await combinationUrlService.query({url:url});
-        let id: string[] = queryResult.getDatum().atom_url.split(",");
+        // 判断该url是否存在
+        if(queryResult.getResult() == false || queryResult.getDatum().length == 0){
+            res.json(new GeneralResult(false, "该API不存在", url).getReturn());
+            return;
+        }
+        let id: string[] = queryResult.getDatum()[0].atom_url.split(",");
         // 根据API的id查询API对应的url,并存储在urls中
         let urls: string [] = [];
         let apiInfoService: ApiInfoService = new ApiInfoService();
