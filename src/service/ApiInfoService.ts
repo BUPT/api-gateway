@@ -1,6 +1,7 @@
 import {DBConnect} from "../util/DBConnect";
 import {ApiInfoModel} from "../model/ApiInfoModel";
 import {GeneralResult} from "../general/GeneralResult";
+import {CombinationUrlService} from "./CombinationUrlService";
 
 class ApiInfoService{
     // 连接数据库
@@ -142,7 +143,7 @@ class ApiInfoService{
     }
 
     /**
-     * 
+     * 更新操作
      * @param condition 
      * @param name 
      * @param serviceName 
@@ -176,6 +177,41 @@ class ApiInfoService{
             return insertResult;
         }else{
             return removeResult;
+        }
+    }
+
+    /**
+     * 判断url是否存在
+     * 存在，如果是原子API，返回对应url的信息
+     * 如果是组合API，返回组合API的全部信息和组成该API的所有原子API信息
+     * @param url 
+     */
+    public async isExisit(url: string): Promise<GeneralResult>{
+        let queryResult: GeneralResult = await this.query({"URL": url});
+        // url存在
+        if(queryResult.getDatum().length > 0){
+            let data: {[key: string]: string} = queryResult.getDatum()[0];
+            // 原子API
+            if(data.type != "组合"){
+                return new GeneralResult(true, "该url已被原子API占用", data);
+            }else{
+                let combinationUrlService: CombinationUrlService = new CombinationUrlService();
+                let combinationResult: GeneralResult = await combinationUrlService.query({"url": url});
+                if(combinationResult.getDatum().length > 0){
+                    // 获取对应原子API的ID
+                    let apiInfoIds: string [] = combinationResult.getDatum()[0].atom_url.split(",");
+                    let combinationData: {[key: string]: string}[] = [];
+                    combinationData[0] = data;
+                    for(let i = 0; i < apiInfoIds.length; i++){
+                        combinationData[i+1] = (await this.query({"ID": apiInfoIds[i]})).getDatum()[0];
+                    }
+                    return new GeneralResult(true, "该url已被组合API占用", combinationData);
+                }else{
+                    return new GeneralResult(true, "系统代码错误，数据库数据不一致", null);
+                }
+            }
+        }else {
+            return new GeneralResult(false, null, null);
         }
     }
 }  

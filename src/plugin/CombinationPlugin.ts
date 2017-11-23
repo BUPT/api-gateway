@@ -27,7 +27,7 @@ class CombinationPlugin{
      * @param req 
      * @param res 
      */
-    public getFloWXMLFile(req, res): void {
+    public async getFloWXMLFile(req, res): Promise<void> {
         // 获取流程文件的内容
         let flowData: string = req.query.fileContent;
         // 获取组合API的URL
@@ -36,13 +36,19 @@ class CombinationPlugin{
         let argument: string = req.query.argument;
         // 获取组合API的事件
         let event: string = req.query.event;
-
-        // 将URL转换成小驼峰类型的文件名
         if (serviceName[0] != '/') {
             serviceName = "/" + serviceName;
         }
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        // 判断该url是否已经存在
+        let result: GeneralResult = await apiInfoService.isExisit(serviceName);
+        if(result.getResult() == true){
+            res.json(result.getReturn());
+            return;
+        }
+        // 将URL转换成小驼峰类型的文件名
         let data: string[] = serviceName.split("/");
-        let fileName = data[1];
+        let fileName: string = data[1];
         for (let i = 2; i < data.length; i++) {
             fileName += data[i].toLowerCase().replace(/[a-z]/, function (c) { return c.toUpperCase() });
         }
@@ -82,8 +88,6 @@ class CombinationPlugin{
                 let urlService: UrlService = new UrlService();
                 let apiInfoService: ApiInfoService = new ApiInfoService();
                 let combinationUrlService: CombinationUrlService = new CombinationUrlService();
-                //let urlResult: Promise<GeneralResult> = urlService.insert([url]);
-                // let apiInfoResult: Promise<GeneralResult> = apiInfoService.insert([apiInfo]);
                 (async () =>{
                     let urlInsertResult: GeneralResult = await urlService.insert([url]);
                     let apiInfoInsertResult: GeneralResult = await apiInfoService.insert([apiInfo]);
@@ -95,9 +99,6 @@ class CombinationPlugin{
                         res.json(new GeneralResult(false, err.Message, null).getReturn());
                     }
                 })(); 
-                // 给前端返回yaml文件内容
-                // res.send(yamlText);
-                // res.end();
             }
         });
     }
