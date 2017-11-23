@@ -316,20 +316,11 @@ class AdminPlugin{
             urls[i] = (result.getDatum())[0].URL;
         }
         // 保存测试结果
-        let data: Map<string, string> = new Map();
-        let flag: boolean = true;
+        let data: Map<string, any> = new Map();
         let adminPlugin: AdminPlugin = new AdminPlugin();
-        for(let i = 0; i < urls.length; i++){
-            let result: boolean = await adminPlugin._request("http://www.linyimin.club:8000" + urls[i]);
-            if(result !== true){
-                flag = false;
-                data.set(urls[i], "fail");
-            }else{
-                data.set(urls[i], "suceess");
-            }
-        }
+        data = await adminPlugin._testAPI(urls);
         // 测试复合API的URL
-        if(flag == true){
+        if(data.get("flag") == true){
             let result: boolean = await adminPlugin._request("http://www.linyimin.club:8000" + url);
             if(result == true){
                 data.set(url, "suceess");
@@ -354,6 +345,26 @@ class AdminPlugin{
             result[key] = value;
         }
         return result;
+    }
+
+    /**
+     * 测试多个原子API的可用性
+     * @param urls 原子API的url组成的数组
+     */
+    private async _testAPI(urls: string []): Promise<Map<string, any>>{
+        let flag: boolean = true;
+        let data: Map<string, any> = new Map();
+        for (let i = 0; i < urls.length; i++) {
+            let result: boolean = await this._request("http://www.linyimin.club:8000" + urls[i]);
+            if (result !== true) {
+                flag = false;
+                data.set(urls[i], "fail");
+            } else {
+                data.set(urls[i], "suceess");
+            }
+        }
+        data.set("flag", flag);
+        return data;
     }
 }
 export{AdminPlugin};
