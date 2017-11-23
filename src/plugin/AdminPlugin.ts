@@ -82,7 +82,7 @@ class AdminPlugin{
      * @param req 
      * @param res 
      */
-    public APIRegister(req, res): void{
+    public async APIRegister(req, res): Promise<void>{
         // 根据JSdoc产生swagger的API配置文件
         let swaggerFile: SwaggerFile = new SwaggerFile();
         swaggerFile.generateFile();
@@ -91,14 +91,21 @@ class AdminPlugin{
         let data: { [key: string]: string }[][] = yamlParse.parse(path.swaggerFile);
         let url: {[key: string]: string}[] = data[0];
         let apiInfo: {[key: string]: string}[] = data[1];
-        // 将API注册信息加载到内存
-        let registerPlugin: RegisterPlugin = new RegisterPlugin();
-        registerPlugin.loadData(url);
-        // 将数据存入数据库
+
         let urlService: UrlService = new UrlService();
         let apiInfoService: ApiInfoService = new ApiInfoService();
-        urlService.loadData(url);
-        apiInfoService.loadData(apiInfo);
+
+        // 保存组合API的信息(API_info)
+        let combiantionUrlApiinfos: {[key: string]: string}[] = (await apiInfoService.query({"type": "组合"})).getDatum();
+
+        // 将数据存入数据库(由于注册组合API需要访问数据库信息，所以先将数据存入数据库)
+        await urlService.loadData(url);
+        await apiInfoService.loadData(apiInfo);
+        // 将API注册信息加载到内存
+        let registerPlugin: RegisterPlugin = new RegisterPlugin();
+        registerPlugin.loadData(url, combiantionUrlApiinfos).catch(function(err){
+            console.log(err);
+        });
         let config: Config = new Config();
         // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
         res.cookie("fileName", "swagger.yaml");
@@ -301,24 +308,31 @@ class AdminPlugin{
         let config: Config = new Config();
         // 获取组合API的原子API ID
         let combinationUrlService: CombinationUrlService = new CombinationUrlService();
-        let queryResult: GeneralResult = await combinationUrlService.query({url:url});
-        // 判断该url是否存在
-        if(queryResult.getResult() == false || queryResult.getDatum().length == 0){
-            res.json(new GeneralResult(false, "该API不存在", url).getReturn());
+        // let queryResult: GeneralResult = await combinationUrlService.query({url:url});
+        // // 判断该url是否存在
+        // if(queryResult.getResult() == false || queryResult.getDatum().length == 0){
+        //     res.json(new GeneralResult(false, "该API不存在", url + "该url不存在").getReturn());
+        //     return;
+        // }
+        // let id: string[] = queryResult.getDatum()[0].atom_url.split(",");
+        // // 根据API的id查询API对应的url,并存储在urls中
+        // let urls: string [] = [];
+        // let apiInfoService: ApiInfoService = new ApiInfoService();
+        // for(let i = 0; i < id.length; i++){
+        //     let result: GeneralResult = await apiInfoService.queryById(id[i]);
+        //     urls[i] = (result.getDatum())[0].URL;
+        // }
+        let result: GeneralResult = await combinationUrlService.getAtomUrl(url);
+        if(result.getResult() == false || result.getDatum().length == 0){
+            res.json(result.getReturn());
             return;
         }
-        let id: string[] = queryResult.getDatum()[0].atom_url.split(",");
-        // 根据API的id查询API对应的url,并存储在urls中
-        let urls: string [] = [];
-        let apiInfoService: ApiInfoService = new ApiInfoService();
-        for(let i = 0; i < id.length; i++){
-            let result: GeneralResult = await apiInfoService.queryById(id[i]);
-            urls[i] = (result.getDatum())[0].URL;
-        }
+        // 保存所有的原子API
+        let urls: string[] = result.getDatum();
         // 保存测试结果
         let data: Map<string, any> = new Map();
         let adminPlugin: AdminPlugin = new AdminPlugin();
-        data = await adminPlugin._testAPI(urls);
+        data = await adminPlugin.testAPI(urls);
         // 测试复合API的URL
         if(data.get("flag") == true){
             let result: boolean = await adminPlugin._request("http://www.linyimin.club:8000" + url);
@@ -342,7 +356,9 @@ class AdminPlugin{
     private _mapToObject(data: Map<string, string>): {[key: string]: string}{
         let result: {[key: string]: string} = {};
         for(let [key, value] of data){
-            result[key] = value;
+            if(key != "flag"){
+                result[key] = value;
+            }
         }
         return result;
     }
@@ -351,9 +367,11 @@ class AdminPlugin{
      * 测试多个原子API的可用性
      * @param urls 原子API的url组成的数组
      */
-    private async _testAPI(urls: string []): Promise<Map<string, any>>{
+    public async testAPI(urls: string []): Promise<Map<string, any>>{
+        // flag为true表示所有原子API都可用
         let flag: boolean = true;
         let data: Map<string, any> = new Map();
+        console.log(urls);
         for (let i = 0; i < urls.length; i++) {
             let result: boolean = await this._request("http://www.linyimin.club:8000" + urls[i]);
             if (result !== true) {

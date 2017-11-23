@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const CombinationUrlModel_1 = require("../model/CombinationUrlModel");
 const DBConnect_1 = require("../util/DBConnect");
 const GeneralResult_1 = require("../general/GeneralResult");
+const ApiInfoService_1 = require("./ApiInfoService");
 class CombinationUrlService {
     constructor() {
         // 连接数据库
@@ -119,6 +120,33 @@ class CombinationUrlService {
             }
             else {
                 return removeResult;
+            }
+        });
+    }
+    /**
+     * 根据组合API url获取其组成的原子API
+     * @param combinationUrl
+     */
+    getAtomUrl(combinationUrl) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let combinationUrlService = new CombinationUrlService();
+            let urls = [];
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            // 获取原子API对应的ID
+            let results = yield combinationUrlService.query({ "url": combinationUrl });
+            if (results.getResult() == false || results.getDatum().length == 0) {
+                return new GeneralResult_1.GeneralResult(false, "该url不是组合API", "该url不是组合API");
+            }
+            else {
+                if (results.getDatum().length > 0) {
+                    let id = results.getDatum()[0].atom_url.split(",");
+                    // 根据API的id查询API对应的url,并存储在urls中
+                    for (let i = 0; i < id.length; i++) {
+                        let result = yield apiInfoService.queryById(id[i]);
+                        urls[i] = (result.getDatum())[0].URL;
+                    }
+                    return new GeneralResult_1.GeneralResult(true, null, urls);
+                }
             }
         });
     }

@@ -91,26 +91,32 @@ class AdminPlugin {
      * @param res
      */
     APIRegister(req, res) {
-        // 根据JSdoc产生swagger的API配置文件
-        let swaggerFile = new SwaggerFile_1.SwaggerFile();
-        swaggerFile.generateFile();
-        let path = new config_1.Config().getPath();
-        let yamlParse = new YamlParse_1.YamlParse();
-        let data = yamlParse.parse(path.swaggerFile);
-        let url = data[0];
-        let apiInfo = data[1];
-        // 将API注册信息加载到内存
-        let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
-        registerPlugin.loadData(url);
-        // 将数据存入数据库
-        let urlService = new UrlService_1.UrlService();
-        let apiInfoService = new ApiInfoService_1.ApiInfoService();
-        urlService.loadData(url);
-        apiInfoService.loadData(apiInfo);
-        let config = new config_1.Config();
-        // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
-        res.cookie("fileName", "swagger.yaml");
-        res.redirect(config.getPath().swaggerUIURL);
+        return __awaiter(this, void 0, void 0, function* () {
+            // 根据JSdoc产生swagger的API配置文件
+            let swaggerFile = new SwaggerFile_1.SwaggerFile();
+            swaggerFile.generateFile();
+            let path = new config_1.Config().getPath();
+            let yamlParse = new YamlParse_1.YamlParse();
+            let data = yamlParse.parse(path.swaggerFile);
+            let url = data[0];
+            let apiInfo = data[1];
+            let urlService = new UrlService_1.UrlService();
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            // 保存组合API的信息(API_info)
+            let combiantionUrlApiinfos = (yield apiInfoService.query({ "type": "组合" })).getDatum();
+            // 将数据存入数据库(由于注册组合API需要访问数据库信息，所以先将数据存入数据库)
+            yield urlService.loadData(url);
+            yield apiInfoService.loadData(apiInfo);
+            // 将API注册信息加载到内存
+            let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
+            registerPlugin.loadData(url, combiantionUrlApiinfos).catch(function (err) {
+                console.log(err);
+            });
+            let config = new config_1.Config();
+            // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
+            res.cookie("fileName", "swagger.yaml");
+            res.redirect(config.getPath().swaggerUIURL);
+        });
     }
     /**
      * 上传文件并完成注册
@@ -304,35 +310,35 @@ class AdminPlugin {
             let eventEmitter = new events.EventEmitter();
             let url = req.query.url;
             let config = new config_1.Config();
-            // 组合API和原子API对应的主机名
-            let host = config.getAdminServer().host + config.getAdminServer().port;
-            // 获取组合API的原子API ID 
+            // 获取组合API的原子API ID
             let combinationUrlService = new CombinationUrlService_1.CombinationUrlService();
-            let queryResult = yield combinationUrlService.query({ url: url });
-            let id = queryResult.getDatum().atom_url.split(",");
-            // 根据API的id查询API对应的url,并存储在urls中
-            let urls = [];
-            let apiInfoService = new ApiInfoService_1.ApiInfoService();
-            for (let i = 0; i < id.length; i++) {
-                let result = yield apiInfoService.queryById(id[i]);
-                urls[i] = (result.getDatum())[0].URL;
+            // let queryResult: GeneralResult = await combinationUrlService.query({url:url});
+            // // 判断该url是否存在
+            // if(queryResult.getResult() == false || queryResult.getDatum().length == 0){
+            //     res.json(new GeneralResult(false, "该API不存在", url + "该url不存在").getReturn());
+            //     return;
+            // }
+            // let id: string[] = queryResult.getDatum()[0].atom_url.split(",");
+            // // 根据API的id查询API对应的url,并存储在urls中
+            // let urls: string [] = [];
+            // let apiInfoService: ApiInfoService = new ApiInfoService();
+            // for(let i = 0; i < id.length; i++){
+            //     let result: GeneralResult = await apiInfoService.queryById(id[i]);
+            //     urls[i] = (result.getDatum())[0].URL;
+            // }
+            let result = yield combinationUrlService.getAtomUrl(url);
+            if (result.getResult() == false || result.getDatum().length == 0) {
+                res.json(result.getReturn());
+                return;
             }
+            // 保存所有的原子API
+            let urls = result.getDatum();
             // 保存测试结果
             let data = new Map();
-            let flag = true;
             let adminPlugin = new AdminPlugin();
-            for (let i = 0; i < urls.length; i++) {
-                let result = yield adminPlugin._request("http://www.linyimin.club:8000" + urls[i]);
-                if (result !== true) {
-                    flag = false;
-                    data.set(urls[i], "fail");
-                }
-                else {
-                    data.set(urls[i], "suceess");
-                }
-            }
+            data = yield adminPlugin.testAPI(urls);
             // 测试复合API的URL
-            if (flag == true) {
+            if (data.get("flag") == true) {
                 let result = yield adminPlugin._request("http://www.linyimin.club:8000" + url);
                 if (result == true) {
                     data.set(url, "suceess");
@@ -356,9 +362,35 @@ class AdminPlugin {
     _mapToObject(data) {
         let result = {};
         for (let [key, value] of data) {
-            result[key] = value;
+            if (key != "flag") {
+                result[key] = value;
+            }
         }
         return result;
+    }
+    /**
+     * 测试多个原子API的可用性
+     * @param urls 原子API的url组成的数组
+     */
+    testAPI(urls) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // flag为true表示所有原子API都可用
+            let flag = true;
+            let data = new Map();
+            console.log(urls);
+            for (let i = 0; i < urls.length; i++) {
+                let result = yield this._request("http://www.linyimin.club:8000" + urls[i]);
+                if (result !== true) {
+                    flag = false;
+                    data.set(urls[i], "fail");
+                }
+                else {
+                    data.set(urls[i], "suceess");
+                }
+            }
+            data.set("flag", flag);
+            return data;
+        });
     }
 }
 exports.AdminPlugin = AdminPlugin;

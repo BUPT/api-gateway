@@ -43,6 +43,7 @@ class CombinationPlugin{
         // 判断该url是否已经存在
         let result: GeneralResult = await apiInfoService.isExisit(serviceName);
         if(result.getResult() == true){
+            result.setResult(false);
             res.json(result.getReturn());
             return;
         }

@@ -35,76 +35,81 @@ class CombinationPlugin {
      * @param res
      */
     getFloWXMLFile(req, res) {
-        // 获取流程文件的内容
-        let flowData = req.query.fileContent;
-        // 获取组合API的URL
-        let serviceName = req.query.serviceName;
-        // 获取组合API的参数
-        let argument = req.query.argument;
-        // 获取组合API的事件
-        let event = req.query.event;
-        // 将URL转换成小驼峰类型的文件名
-        if (serviceName[0] != '/') {
-            serviceName = "/" + serviceName;
-        }
-        let data = serviceName.split("/");
-        let fileName = data[1];
-        for (let i = 2; i < data.length; i++) {
-            fileName += data[i].toLowerCase().replace(/[a-z]/, function (c) { return c.toUpperCase(); });
-        }
-        // 将xml流程的内容转成JSON格式
-        xml2js.parseString(flowData, function (err, result) {
-            if (err) {
-                console.log(err);
+        return __awaiter(this, void 0, void 0, function* () {
+            // 获取流程文件的内容
+            let flowData = req.query.fileContent;
+            // 获取组合API的URL
+            let serviceName = req.query.serviceName;
+            // 获取组合API的参数
+            let argument = req.query.argument;
+            // 获取组合API的事件
+            let event = req.query.event;
+            if (serviceName[0] != '/') {
+                serviceName = "/" + serviceName;
             }
-            else {
-                // 将xml文件转换成JSON，并写入文件
-                let config = new config_1.Config();
-                let writeStream = fs.createWriteStream(config.getPath().combinationFileDir + fileName + ".json");
-                writeStream.end(JSON.stringify(result));
-                // 
-                // 将JSON格式的数据转换成yaml
-                let yamlText = json2yaml.stringify(result);
-                // 注册
-                let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
-                let registerApp = registerPlugin.getRegisterApp();
-                let combinationPlugin = new CombinationPlugin();
-                registerApp.use(serviceName, combinationPlugin.combinationService);
-                // 为相关的API标注，以便后期注销
-                registerApp._router.stack[registerApp._router.stack.length - 1].appId = "001";
-                registerApp._router.stack[registerApp._router.stack.length - 1].url = serviceName;
-                // 插入数据库
-                let url = {
-                    from: serviceName, APPId: "001", to: config.getApiServer().host + ":" + config.getApiServer().port, status: "0", is_new: "1"
-                };
-                let apiInfo = {
-                    ID: "0a00" + (count++), appId: "001", name: fileName, type: "组合", argument: argument, event: event, URL: serviceName
-                };
-                let combinationUrl = {
-                    url: serviceName, atom_url: (combinationPlugin.getApiIdFromFlow(result).join(","))
-                };
-                // 将结果插入数据库
-                let urlService = new UrlService_1.UrlService();
-                let apiInfoService = new ApiInfoService_1.ApiInfoService();
-                let combinationUrlService = new CombinationUrlService_1.CombinationUrlService();
-                //let urlResult: Promise<GeneralResult> = urlService.insert([url]);
-                // let apiInfoResult: Promise<GeneralResult> = apiInfoService.insert([apiInfo]);
-                (() => __awaiter(this, void 0, void 0, function* () {
-                    let urlInsertResult = yield urlService.insert([url]);
-                    let apiInfoInsertResult = yield apiInfoService.insert([apiInfo]);
-                    let combinationUrlInsertResult = yield combinationUrlService.insert([combinationUrl]);
-                    if (urlInsertResult.getResult() == true && apiInfoInsertResult.getResult() == true) {
-                        res.json(new GeneralResult_1.GeneralResult(true, null, yamlText).getReturn());
-                    }
-                    else {
-                        let errMessage = (urlInsertResult.getResult() == true) ? urlInsertResult.getReason() : apiInfoInsertResult.getReason();
-                        res.json(new GeneralResult_1.GeneralResult(false, err.Message, null).getReturn());
-                    }
-                }))();
-                // 给前端返回yaml文件内容
-                // res.send(yamlText);
-                // res.end();
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            // 判断该url是否已经存在
+            let result = yield apiInfoService.isExisit(serviceName);
+            if (result.getResult() == true) {
+                result.setResult(false);
+                res.json(result.getReturn());
+                return;
             }
+            // 将URL转换成小驼峰类型的文件名
+            let data = serviceName.split("/");
+            let fileName = data[1];
+            for (let i = 2; i < data.length; i++) {
+                fileName += data[i].toLowerCase().replace(/[a-z]/, function (c) { return c.toUpperCase(); });
+            }
+            // 将xml流程的内容转成JSON格式
+            xml2js.parseString(flowData, function (err, result) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    // 将xml文件转换成JSON，并写入文件
+                    let config = new config_1.Config();
+                    let writeStream = fs.createWriteStream(config.getPath().combinationFileDir + fileName + ".json");
+                    writeStream.end(JSON.stringify(result));
+                    // 
+                    // 将JSON格式的数据转换成yaml
+                    let yamlText = json2yaml.stringify(result);
+                    // 注册
+                    let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
+                    let registerApp = registerPlugin.getRegisterApp();
+                    let combinationPlugin = new CombinationPlugin();
+                    registerApp.use(serviceName, combinationPlugin.combinationService);
+                    // 为相关的API标注，以便后期注销
+                    registerApp._router.stack[registerApp._router.stack.length - 1].appId = "001";
+                    registerApp._router.stack[registerApp._router.stack.length - 1].url = serviceName;
+                    // 插入数据库
+                    let url = {
+                        from: serviceName, APPId: "001", to: config.getApiServer().host + ":" + config.getApiServer().port, status: "0", is_new: "1"
+                    };
+                    let apiInfo = {
+                        ID: "0a00" + (count++), appId: "001", name: fileName, type: "组合", argument: argument, event: event, URL: serviceName
+                    };
+                    let combinationUrl = {
+                        url: serviceName, atom_url: (combinationPlugin.getApiIdFromFlow(result).join(","))
+                    };
+                    // 将结果插入数据库
+                    let urlService = new UrlService_1.UrlService();
+                    let apiInfoService = new ApiInfoService_1.ApiInfoService();
+                    let combinationUrlService = new CombinationUrlService_1.CombinationUrlService();
+                    (() => __awaiter(this, void 0, void 0, function* () {
+                        let urlInsertResult = yield urlService.insert([url]);
+                        let apiInfoInsertResult = yield apiInfoService.insert([apiInfo]);
+                        let combinationUrlInsertResult = yield combinationUrlService.insert([combinationUrl]);
+                        if (urlInsertResult.getResult() == true && apiInfoInsertResult.getResult() == true) {
+                            res.json(new GeneralResult_1.GeneralResult(true, null, yamlText).getReturn());
+                        }
+                        else {
+                            let errMessage = (urlInsertResult.getResult() == true) ? urlInsertResult.getReason() : apiInfoInsertResult.getReason();
+                            res.json(new GeneralResult_1.GeneralResult(false, err.Message, null).getReturn());
+                        }
+                    }))();
+                }
+            });
         });
     }
     /**
