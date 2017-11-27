@@ -7,7 +7,8 @@ class CombinationUrlModel{
         this._combinationUrl = db.define("combination_url", {
             id: { type: 'serial', key: true },
             url: String,
-            atom_url: String
+            atom_url: String,
+            flow_xml: String
         });
     }
 

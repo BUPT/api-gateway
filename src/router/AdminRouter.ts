@@ -203,6 +203,28 @@ class AdminRouter{
          */
         this._router.get("/apis/debugAPI", adminPlugin.debugAPI);
 
+        /**
+         * @swagger
+         * /apis/getCombinationApiFlowXml:
+         *   get:
+         *       description: 获取组合API的流程xml文件
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: url
+         *           in: query
+         *           description: 组合API对应的url
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getCombinationApiFlowXml", combinationPlugin.getFlowData);
+
 
 
     }

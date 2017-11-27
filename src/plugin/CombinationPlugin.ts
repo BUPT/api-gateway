@@ -83,7 +83,8 @@ class CombinationPlugin{
                     ID: "0a00" + (count++), appId: "001", name: fileName, type:"组合", argument:argument, event: event, URL:serviceName
                 };
                 let combinationUrl: {[key: string]: string} = {
-                    url: serviceName, atom_url: (combinationPlugin.getApiIdFromFlow(result).join(","))
+                    url: serviceName, atom_url: (combinationPlugin.getApiIdFromFlow(result).join(",")),
+                    flow_xml: flowData
                 }
                 // 将结果插入数据库
                 let urlService: UrlService = new UrlService();
@@ -180,6 +181,19 @@ class CombinationPlugin{
             }
         }
         return id;
+    }
+
+
+    /**
+     * 根据组合API的url获取xml流程文件
+     * @param req 
+     * @param res 
+     */
+    public async getFlowData(req, res): Promise<void>{
+        let url: string = req.query.url;
+        let combinationUrlService: CombinationUrlService = new CombinationUrlService();
+        let combinationResult: GeneralResult = await combinationUrlService.query({url: url});
+        res.json(combinationResult.getReturn());
     }
 }
 export{CombinationPlugin};
