@@ -47,24 +47,6 @@ class AdminRouter{
 
         // 上传文件接口
         this._router.post("/apis/uploads", adminPlugin.upload);
-        /**
-         * @swagger
-         * /apis/viewAPIs:
-         *   get:
-         *       description: 可视化查看API
-         *       deprecated: false
-         *       tags:
-         *           - "查看API"
-         *       parameters:
-         *         - name: fileName
-         *           in: query
-         *           description: swagger配置文件的名称 
-         *           required: false
-         *           type: string
-         */
-        this._router.get("/user/register", userPlugin.register);
-
-
 
         /**
          * @swagger
@@ -87,17 +69,17 @@ class AdminRouter{
          * @swagger
          * /user/doLogin:
          *   get:
-         *       description: 用户注册
+         *       description: 用户登录
          *       deprecated: false
          *       tags:
          *           - "用户管理"
          *       parameters:
-         *         - name: user_name
+         *         - name: username
          *           in: query
          *           description: 用户名
          *           required: true
          *           type: string
-         *         - name: password
+         *         - name: pwd
          *           in: query
          *           description: 用户登录密码
          *           required: true
@@ -109,6 +91,154 @@ class AdminRouter{
          *           description:OK
          */
         this._router.get("/user/doLogin", userPlugin.doLogin);
+
+
+
+        /**
+         * @swagger
+         * /user/register:
+         *   get:
+         *       description: 用户注册
+         *       deprecated: false
+         *       tags:
+         *           - "用户管理"
+         *       parameters:
+         *         - name: username
+         *           in: query
+         *           description: 用户名
+         *           required: true
+         *           type: string
+         *         - name: pwd
+         *           in: query
+         *           description: 用户登录密码
+         *           required: true
+         *           type: string
+         *         - name: realname
+         *           in: query
+         *           description: 用户名真实姓名
+         *           required: true
+         *           type: string
+         *         - name: email
+         *           in: query
+         *           description: 用户邮箱
+         *           required: true
+         *           type: string
+         *         - name: role
+         *           in: query
+         *           description: 用户角色
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/user/register", userPlugin.register);
+
+
+        /**
+         * @swagger
+         * /user/getAllUser:
+         *   get:
+         *       description: 获取全部用户信息
+         *       deprecated: false
+         *       tags:
+         *           - "用户管理"
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/user/getAllUser", userPlugin.getAllUser);
+
+
+        /**
+         * @swagger
+         * /user/getUserByName:
+         *   get:
+         *       description: 根据用户名获取用户信息
+         *       deprecated: false
+         *       tags:
+         *           - "用户管理"
+         *       parameters:
+         *         - name: username
+         *           in: query
+         *           description: 用户名
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/user/getUserByName", userPlugin.getUserByname);
+
+        /**
+         * @swagger
+         * /user/removeUserByName:
+         *   get:
+         *       description: 根据用户名删除用户信息
+         *       deprecated: false
+         *       tags:
+         *           - "用户管理"
+         *       parameters:
+         *         - name: username
+         *           in: query
+         *           description: 用户名
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/user/removeUserByName", userPlugin.removeUserByName);
+
+        /**
+         * @swagger
+         * /user/updateUser:
+         *   get:
+         *       description: 更改用户信息
+         *       deprecated: false
+         *       tags:
+         *           - "用户管理"
+         *       parameters:
+         *         - name: username
+         *           in: query
+         *           description: 用户名
+         *           required: true
+         *           type: string
+         *         - name: pwd
+         *           in: query
+         *           description: 用户登录密码
+         *           required: true
+         *           type: string
+         *         - name: realname
+         *           in: query
+         *           description: 用户名真实姓名
+         *           required: true
+         *           type: string
+         *         - name: email
+         *           in: query
+         *           description: 用户邮箱
+         *           required: true
+         *           type: string
+         *         - name: role
+         *           in: query
+         *           description: 用户角色
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/user/updateUser", userPlugin.updateUser);
 
         /**
          * @swagger
