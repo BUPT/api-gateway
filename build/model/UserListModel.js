@@ -21,7 +21,8 @@ class UserListModel {
             password: String,
             salt: String,
             role: String,
-            raw_password: String
+            raw_password: String,
+            real_name: String
         });
     }
     get() {
