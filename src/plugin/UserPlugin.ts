@@ -106,7 +106,7 @@ class UserPlugin{
         if(queryResult.getResult() == true && queryResult.getDatum().length > 0){
             res.json(queryResult.getReturn());
         }else{
-            res.json(new GeneralResult(false, "该用户民不存在", null).getReturn());
+            res.json(new GeneralResult(false, "该用户名不存在", null).getReturn());
         }
         
     }
