@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class Config {
     constructor() {
-        this._baseDir = "F:/项目/API-Gateway-v3";
+        this._baseDir = "E:/API网关文档/APIGateWay/ts/5TypeScript/router/lym/API-Gateway-v3";
         this._storage = {
             "host": '111.207.243.66',
             "user": 'root',
