@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express = require("express");
+const AdminRouter_1 = require("./router/AdminRouter");
+const RegisterPlugin_1 = require("./plugin/RegisterPlugin");
+const TopPerformanceModel_1 = require("./model/TopPerformanceModel");
+let router = new AdminRouter_1.AdminRouter().getRouter();
+let registerApp = new RegisterPlugin_1.RegisterPlugin().getRegisterApp();
+let adminApp = express();
+TopPerformanceModel_1.TopPerformanceModel.init();
+adminApp.use("/", router);
+adminApp.listen(8001);
+registerApp.listen(8000);
