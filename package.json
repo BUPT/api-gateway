@@ -1,0 +1,42 @@
+{
+  "name": "api-gateway-v3",
+  "version": "1.0.0",
+  "description": "typescript试下简单的API网关",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "app": "node ./build/test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lym152898/API-Gateway-v3.git"
+  },
+  "keywords": [
+    "typescipt",
+    "node"
+  ],
+  "author": "linyimin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lym152898/API-Gateway-v3/issues"
+  },
+  "homepage": "https://github.com/lym152898/API-Gateway-v3#readme",
+  "devDependencies": {
+    "@types/node": "^8.0.51",
+    "basic-auth": "^2.0.0",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0",
+    "orm": "^4.0.1",
+    "swagger-jsdoc": "^1.9.7",
+    "yamljs": "^0.3.0"
+  },
+  "dependencies": {
+    "express-http-proxy": "^1.1.0",
+    "formidable": "^1.1.1",
+    "json2yaml": "^1.1.0",
+    "os-utils": "0.0.14",
+    "request": "^2.83.0",
+    "silly-datetime": "^0.1.2",
+    "xml2js": "^0.4.19"
+  }
+}
