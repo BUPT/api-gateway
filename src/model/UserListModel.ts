@@ -11,7 +11,12 @@ class UserListModel {
             password: String,
             salt: String,
             role: String,
+<<<<<<< HEAD
             raw_password: String
+=======
+            raw_password: String,
+            real_name: String
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         });
     }
 

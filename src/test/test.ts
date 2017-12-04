@@ -83,6 +83,7 @@
 //         yield i++;
 //     }
 // }
+<<<<<<< HEAD
 // let t = getCount(1);
 // console.log(t.next());
 // export default class GeneratorClass {
@@ -133,3 +134,11 @@ app.use('/proxy', proxy('localhost:12345', {
     }
   }));
 app.listen(8888);
+=======
+
+// let t = getCount(1);
+// console.log(t.next());
+let name = "test"
+let js = require("../../views/uploads/json/"+ name);
+console.log(js);
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af

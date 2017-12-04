@@ -9,56 +9,47 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * 定义API_info表的模型
+ * 定义combination_url表模型
  */
-class ApiInfoModel {
+class CombinationUrlModel {
     constructor(db) {
-        this._apiInfo = null;
-        this._apiInfo = db.define("API_info", {
-            ID: String,
-            appId: String,
-            name: String,
-            type: String,
-            argument: String,
-            event: String,
-            URL: String
+        this._combinationUrl = null;
+        this._combinationUrl = db.define("combination_url", {
+            id: { type: 'serial', key: true },
+            url: String,
+            atom_url: String,
+            flow_xml: String
         });
     }
     get() {
-        return this._apiInfo;
+        return this._combinationUrl;
     }
     set(value) {
-        this._apiInfo = value;
+        this._combinationUrl = value;
     }
     // 查找数据
     query(data, callback) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._apiInfo.find(data, callback);
+            this._combinationUrl.find(data, callback);
         });
     }
     // 插入多条数据
     insert(data, callback) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._apiInfo.create(data, callback);
+            this._combinationUrl.create(data, callback);
         });
     }
     // 删除数据
     remove(data, callback) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._apiInfo.find(data).remove(callback);
+            this._combinationUrl.find(data).remove(callback);
         });
     }
     // 更改数据
-<<<<<<< HEAD
     update(data, eachCallback, saveCallback) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._apiInfo.find(data).each(eachCallback).save(saveCallback);
-=======
-    update(condition, data, eachCallback, saveCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this._apiInfo.find(condition).each(eachCallback).save(saveCallback);
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
+            this._combinationUrl.find(data).each(eachCallback).save(saveCallback);
         });
     }
 }
-exports.ApiInfoModel = ApiInfoModel;
+exports.CombinationUrlModel = CombinationUrlModel;

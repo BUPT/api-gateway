@@ -11,6 +11,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const DBConnect_1 = require("../util/DBConnect");
 const ApiInfoModel_1 = require("../model/ApiInfoModel");
 const GeneralResult_1 = require("../general/GeneralResult");
+<<<<<<< HEAD
+=======
+const CombinationUrlService_1 = require("./CombinationUrlService");
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 class ApiInfoService {
     constructor() {
         // 连接数据库
@@ -67,6 +71,32 @@ class ApiInfoService {
             });
         });
     }
+<<<<<<< HEAD
+=======
+    /**
+     * 查询数据
+     * @param data
+     */
+    query(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // 上下文传递
+            let _this = this;
+            return new Promise(function (resolve) {
+                _this._db.then(function (db) {
+                    let apiInfoModel = new ApiInfoModel_1.ApiInfoModel(db);
+                    apiInfoModel.query(data, function (err, results) {
+                        if (err) {
+                            resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
+                        }
+                        else {
+                            resolve(new GeneralResult_1.GeneralResult(true, null, results));
+                        }
+                    });
+                });
+            });
+        });
+    }
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     // 根据appId查找API相关数据
     queryByAppId(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -109,6 +139,12 @@ class ApiInfoService {
                         else {
                             resolve(new GeneralResult_1.GeneralResult(true, null, results));
                         }
+<<<<<<< HEAD
+=======
+                    }).catch(function (err) {
+                        console.log(err);
+                        resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
                     });
                 }).catch(function (err) {
                     resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
@@ -130,5 +166,90 @@ class ApiInfoService {
             }
         });
     }
+<<<<<<< HEAD
+=======
+    eachCallback(data) {
+    }
+    /**
+     * 更新操作
+     * @param condition
+     * @param name
+     * @param serviceName
+     */
+    update(condition, name, URL) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiInfoService = new ApiInfoService();
+            let queryResult = yield apiInfoService.query(condition);
+            let removeResult = null;
+            if (queryResult.getResult() == true) {
+                removeResult = yield apiInfoService.remove(condition);
+                ;
+            }
+            else {
+                return new GeneralResult_1.GeneralResult(false, "该服务不存在", null);
+            }
+            if (removeResult.getResult() == true) {
+                let dataum = queryResult.getDatum();
+                if (dataum == null || dataum.length == 0) {
+                    return new GeneralResult_1.GeneralResult(false, "该服务不存在", null);
+                }
+                dataum[0]["name"] = name;
+                dataum[0]["URL"] = URL;
+                let data = {};
+                data.ID = dataum[0].ID;
+                data.appId = dataum[0].appId;
+                data.name = dataum[0].name;
+                data.type = dataum[0].type;
+                data.argument = dataum[0].argument;
+                data.event = dataum[0].event;
+                data.URL = dataum[0].URL;
+                let insertResult = yield apiInfoService.insert([data]);
+                return insertResult;
+            }
+            else {
+                return removeResult;
+            }
+        });
+    }
+    /**
+     * 判断url是否存在
+     * 存在，如果是原子API，返回对应url的信息
+     * 如果是组合API，返回组合API的全部信息和组成该API的所有原子API信息
+     * @param url
+     */
+    isExisit(url) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let queryResult = yield this.query({ "URL": url });
+            // url存在
+            if (queryResult.getDatum().length > 0) {
+                let data = queryResult.getDatum()[0];
+                // 原子API
+                if (data.type != "组合") {
+                    return new GeneralResult_1.GeneralResult(true, "该url已被原子API占用", data);
+                }
+                else {
+                    let combinationUrlService = new CombinationUrlService_1.CombinationUrlService();
+                    let combinationResult = yield combinationUrlService.query({ "url": url });
+                    if (combinationResult.getDatum().length > 0) {
+                        // 获取对应原子API的ID
+                        let apiInfoIds = combinationResult.getDatum()[0].atom_url.split(",");
+                        let combinationData = [];
+                        combinationData[0] = data;
+                        for (let i = 0; i < apiInfoIds.length; i++) {
+                            combinationData[i + 1] = (yield this.query({ "ID": apiInfoIds[i] })).getDatum()[0];
+                        }
+                        return new GeneralResult_1.GeneralResult(true, "该url已被组合API占用", combinationData);
+                    }
+                    else {
+                        return new GeneralResult_1.GeneralResult(true, "系统代码错误，数据库数据不一致", null);
+                    }
+                }
+            }
+            else {
+                return new GeneralResult_1.GeneralResult(false, null, null);
+            }
+        });
+    }
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 }
 exports.ApiInfoService = ApiInfoService;

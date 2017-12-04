@@ -20,6 +20,14 @@ const crypto = require("crypto");
 const formidable = require("formidable");
 const fs = require("fs");
 const SwaggerFile_1 = require("../util/SwaggerFile");
+<<<<<<< HEAD
+=======
+const GeneralResult_1 = require("../general/GeneralResult");
+const rq = require("request-promise");
+const CombinationUrlService_1 = require("../service/CombinationUrlService");
+const events = require("events");
+const CombinationPlugin_1 = require("./CombinationPlugin");
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 class AdminPlugin {
     /**
      * 基于basic-auth的身份认证
@@ -66,6 +74,7 @@ class AdminPlugin {
                 return unauthorized(res);
             }
         }))();
+<<<<<<< HEAD
         // let result: Promise<GeneralResult> = userListService.query(data);
         // result.then(function(result){
         //     // 对用户输入的密码进行加密运算
@@ -88,6 +97,8 @@ class AdminPlugin {
         //     console.log("未能登录");
         //     return unauthorized(res);
         // });
+=======
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     }
     /**
      * 允许跨域访问
@@ -108,6 +119,7 @@ class AdminPlugin {
      * @param res
      */
     APIRegister(req, res) {
+<<<<<<< HEAD
         // 根据JSdoc产生swagger的API配置文件
         let swaggerFile = new SwaggerFile_1.SwaggerFile();
         swaggerFile.generateFile();
@@ -128,6 +140,34 @@ class AdminPlugin {
         // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
         res.cookie("fileName", "swagger.yaml");
         res.redirect(config.getPath().swaggerUIURL);
+=======
+        return __awaiter(this, void 0, void 0, function* () {
+            // 根据JSdoc产生swagger的API配置文件
+            let swaggerFile = new SwaggerFile_1.SwaggerFile();
+            swaggerFile.generateFile();
+            let path = new config_1.Config().getPath();
+            let yamlParse = new YamlParse_1.YamlParse();
+            let data = yamlParse.parse(path.swaggerFile);
+            let url = data[0];
+            let apiInfo = data[1];
+            let urlService = new UrlService_1.UrlService();
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            // 保存组合API的信息(API_info)
+            let combiantionUrlApiinfos = (yield apiInfoService.query({ "type": "组合" })).getDatum();
+            // 将数据存入数据库(由于注册组合API需要访问数据库信息，所以先将数据存入数据库)
+            yield urlService.loadData(url);
+            yield apiInfoService.loadData(apiInfo);
+            // 将API注册信息加载到内存
+            let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
+            registerPlugin.loadData(url, combiantionUrlApiinfos).catch(function (err) {
+                console.log(err);
+            });
+            let config = new config_1.Config();
+            // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
+            res.cookie("fileName", "swagger.yaml");
+            res.redirect(config.getPath().swaggerUIURL);
+        });
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     }
     /**
      * 上传文件并完成注册
@@ -163,6 +203,7 @@ class AdminPlugin {
                 let apiInfoService = new ApiInfoService_1.ApiInfoService();
                 let urlService = new UrlService_1.UrlService();
                 registerPlugin.addData(url);
+<<<<<<< HEAD
                 // let removeUrl: Promise<any> = urlService.remove({ "APPId": url[0].APPId });
                 // removeUrl.then(function(){
                 //     urlService.insert(url);
@@ -175,6 +216,8 @@ class AdminPlugin {
                 // }).catch(function(err){
                 //     console.log(err);
                 // });
+=======
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
                 (() => __awaiter(this, void 0, void 0, function* () {
                     let removeUrl = yield urlService.remove({ "APPId": url[0].APPId });
                     let removeApiInfo = yield apiInfoService.remove({ "appId": api_info[0].appId });
@@ -240,5 +283,183 @@ class AdminPlugin {
     jsonParser() {
         require("body-parser").json();
     }
+<<<<<<< HEAD
+=======
+    /**
+     * 返回所有API数据
+     * @param req
+     * @param res
+     */
+    getAllAPI(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            let apiInfos = yield apiInfoService.query({});
+            res.json(apiInfos.getReturn());
+        });
+    }
+    /**
+     * 修改组合API名字
+     * @param req
+     * @param res
+     */
+    renameServiceName(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            let combinationUrlService = new CombinationUrlService_1.CombinationUrlService();
+            let url = req.query.url;
+            let serviceName = req.query.serviceName;
+            // 更新内存
+            let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
+            let registerApp = registerPlugin.getRegisterApp();
+            if (registerApp._router && registerApp._router.stack) {
+                for (let i = 2; i < registerApp._router.stack.length; i++) {
+                    if (registerApp._router.stack[i].url == url) {
+                        // 删除原url对应的中间件
+                        registerApp._router.stack.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            // 向内存中注册新的url
+            let combinationPlugin = new CombinationPlugin_1.CombinationPlugin();
+            registerApp.use(serviceName, combinationPlugin.combinationService);
+            // 更新数据库
+            //将URL转换成小驼峰类型的文件名
+            let adminPlugin = new AdminPlugin();
+            let config = new config_1.Config();
+            let originName = adminPlugin.urlToUppercase(url);
+            let fileName = adminPlugin.urlToUppercase(serviceName);
+            // 更改流程文件的名称
+            let dir = config.getPath().combinationFileDir;
+            fs.renameSync(dir + originName + ".json", dir + fileName + ".json");
+            // 更新数据库
+            let updateResult = yield apiInfoService.update({ URL: url }, fileName, serviceName);
+            let updataCombinnationResult = yield combinationUrlService.update({ url: url }, serviceName);
+            res.json(updateResult.getReturn());
+        });
+    }
+    /**
+     * 封装rq，返回Boolean类型，判断访问是否成功
+     * @param url
+     */
+    _request(url) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise(function (resolve) {
+                rq(url).then(function () {
+                    resolve(true);
+                }).catch(function () {
+                    resolve(false);
+                });
+            });
+        });
+    }
+    /**
+     * 将URL转换成小驼峰类型的文件名
+     * @param url
+     */
+    urlToUppercase(url) {
+        if (url[0] != '/') {
+            url = "/" + url;
+        }
+        let data = url.split("/");
+        let fileName = data[1];
+        for (let i = 2; i < data.length; i++) {
+            fileName += data[i].toLowerCase().replace(/[a-z]/, function (c) { return c.toUpperCase(); });
+        }
+        return fileName;
+    }
+    /**
+     * 组合API调试
+     * @param req
+     * @param res
+     */
+    debugAPI(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let eventEmitter = new events.EventEmitter();
+            let url = req.query.url;
+            let config = new config_1.Config();
+            // 获取组合API的原子API ID
+            let combinationUrlService = new CombinationUrlService_1.CombinationUrlService();
+            // let queryResult: GeneralResult = await combinationUrlService.query({url:url});
+            // // 判断该url是否存在
+            // if(queryResult.getResult() == false || queryResult.getDatum().length == 0){
+            //     res.json(new GeneralResult(false, "该API不存在", url + "该url不存在").getReturn());
+            //     return;
+            // }
+            // let id: string[] = queryResult.getDatum()[0].atom_url.split(",");
+            // // 根据API的id查询API对应的url,并存储在urls中
+            // let urls: string [] = [];
+            // let apiInfoService: ApiInfoService = new ApiInfoService();
+            // for(let i = 0; i < id.length; i++){
+            //     let result: GeneralResult = await apiInfoService.queryById(id[i]);
+            //     urls[i] = (result.getDatum())[0].URL;
+            // }
+            let result = yield combinationUrlService.getAtomUrl(url);
+            if (result.getResult() == false || result.getDatum().length == 0) {
+                res.json(result.getReturn());
+                return;
+            }
+            // 保存所有的原子API
+            let urls = result.getDatum();
+            // 保存测试结果
+            let data = new Map();
+            let adminPlugin = new AdminPlugin();
+            data = yield adminPlugin.testAPI(urls);
+            // 测试复合API的URL
+            if (data.get("flag") == true) {
+                let result = yield adminPlugin._request("http://www.linyimin.club:8000" + url);
+                if (result == true) {
+                    data.set(url, "suceess");
+                    res.json(new GeneralResult_1.GeneralResult(true, null, adminPlugin._mapToObject(data)).getReturn());
+                }
+                else {
+                    data.set(url, "fail");
+                    res.json(new GeneralResult_1.GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
+                }
+            }
+            else {
+                data.set(url, "fail");
+                res.json(new GeneralResult_1.GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
+            }
+        });
+    }
+    /**
+     * 将Map转换成Object
+     * @param data
+     */
+    _mapToObject(data) {
+        let result = {};
+        for (let [key, value] of data) {
+            if (key != "flag") {
+                result[key] = value;
+            }
+        }
+        return result;
+    }
+    /**
+     * 测试多个原子API的可用性
+     * @param urls 原子API的url组成的数组
+     */
+    testAPI(urls) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // flag为true表示所有原子API都可用
+            let flag = true;
+            let data = new Map();
+            console.log(urls);
+            for (let i = 0; i < urls.length; i++) {
+                let result = yield this._request("http://www.linyimin.club:8000" + urls[i]);
+                if (result !== true) {
+                    flag = false;
+                    data.set(urls[i], "fail");
+                }
+                else {
+                    data.set(urls[i], "suceess");
+                }
+            }
+            data.set("flag", flag);
+            return data;
+        });
+    }
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 }
 exports.AdminPlugin = AdminPlugin;
