@@ -355,9 +355,10 @@ class AdminPlugin{
      */
     private _mapToObject(data: Map<string, string>): {[key: string]: string}{
         let result: {[key: string]: string} = {};
-        for(let [key, value] of data){
-            if(key != "flag"){
-                result[key] = value;
+        let t:[ String, String];
+        for(let t of data){
+            if(t[0] != "flag"){
+                result[t[0]] = t[1];
             }
         }
         return result;

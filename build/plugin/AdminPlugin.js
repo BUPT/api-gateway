@@ -20,14 +20,11 @@ const crypto = require("crypto");
 const formidable = require("formidable");
 const fs = require("fs");
 const SwaggerFile_1 = require("../util/SwaggerFile");
-<<<<<<< HEAD
-=======
 const GeneralResult_1 = require("../general/GeneralResult");
 const rq = require("request-promise");
 const CombinationUrlService_1 = require("../service/CombinationUrlService");
 const events = require("events");
 const CombinationPlugin_1 = require("./CombinationPlugin");
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 class AdminPlugin {
     /**
      * 基于basic-auth的身份认证
@@ -74,31 +71,6 @@ class AdminPlugin {
                 return unauthorized(res);
             }
         }))();
-<<<<<<< HEAD
-        // let result: Promise<GeneralResult> = userListService.query(data);
-        // result.then(function(result){
-        //     // 对用户输入的密码进行加密运算
-        //     var password = null;
-        //     if (result.length > 0) {
-        //         password = crypto.createHmac('sha256', user.pass).update(result[0].salt).digest('hex');
-        //         if (password === result[0].password) {
-        //             next();
-        //             return;
-        //         }else{
-        //             console.log("用户名或密码错误");
-        //             return unauthorized(res);
-        //         }
-        //     }else{
-        //         console.log("未能登录");
-        //         return unauthorized(res);
-        //     }
-        // }).catch(function(err){
-        //     console.log(err);
-        //     console.log("未能登录");
-        //     return unauthorized(res);
-        // });
-=======
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     }
     /**
      * 允许跨域访问
@@ -119,28 +91,6 @@ class AdminPlugin {
      * @param res
      */
     APIRegister(req, res) {
-<<<<<<< HEAD
-        // 根据JSdoc产生swagger的API配置文件
-        let swaggerFile = new SwaggerFile_1.SwaggerFile();
-        swaggerFile.generateFile();
-        let path = new config_1.Config().getPath();
-        let yamlParse = new YamlParse_1.YamlParse();
-        let data = yamlParse.parse(path.swaggerFile);
-        let url = data[0];
-        let apiInfo = data[1];
-        // 将API注册信息加载到内存
-        let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
-        registerPlugin.loadData(url);
-        // 将数据存入数据库
-        let urlService = new UrlService_1.UrlService();
-        let apiInfoService = new ApiInfoService_1.ApiInfoService();
-        urlService.loadData(url);
-        apiInfoService.loadData(apiInfo);
-        let config = new config_1.Config();
-        // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
-        res.cookie("fileName", "swagger.yaml");
-        res.redirect(config.getPath().swaggerUIURL);
-=======
         return __awaiter(this, void 0, void 0, function* () {
             // 根据JSdoc产生swagger的API配置文件
             let swaggerFile = new SwaggerFile_1.SwaggerFile();
@@ -167,7 +117,6 @@ class AdminPlugin {
             res.cookie("fileName", "swagger.yaml");
             res.redirect(config.getPath().swaggerUIURL);
         });
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     }
     /**
      * 上传文件并完成注册
@@ -203,21 +152,6 @@ class AdminPlugin {
                 let apiInfoService = new ApiInfoService_1.ApiInfoService();
                 let urlService = new UrlService_1.UrlService();
                 registerPlugin.addData(url);
-<<<<<<< HEAD
-                // let removeUrl: Promise<any> = urlService.remove({ "APPId": url[0].APPId });
-                // removeUrl.then(function(){
-                //     urlService.insert(url);
-                // }).catch(function(err){
-                //     console.log(err);
-                // });
-                // let removeApiInfo: Promise<any> = apiInfoService.remove({ "appId": api_info[0].appId});
-                // removeApiInfo.then(function(){
-                //     apiInfoService.insert(api_info);
-                // }).catch(function(err){
-                //     console.log(err);
-                // });
-=======
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
                 (() => __awaiter(this, void 0, void 0, function* () {
                     let removeUrl = yield urlService.remove({ "APPId": url[0].APPId });
                     let removeApiInfo = yield apiInfoService.remove({ "appId": api_info[0].appId });
@@ -283,8 +217,6 @@ class AdminPlugin {
     jsonParser() {
         require("body-parser").json();
     }
-<<<<<<< HEAD
-=======
     /**
      * 返回所有API数据
      * @param req
@@ -429,9 +361,10 @@ class AdminPlugin {
      */
     _mapToObject(data) {
         let result = {};
-        for (let [key, value] of data) {
-            if (key != "flag") {
-                result[key] = value;
+        let t;
+        for (let t of data) {
+            if (t[0] != "flag") {
+                result[t[0]] = t[1];
             }
         }
         return result;
@@ -460,6 +393,5 @@ class AdminPlugin {
             return data;
         });
     }
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 }
 exports.AdminPlugin = AdminPlugin;
