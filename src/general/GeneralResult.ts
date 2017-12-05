@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 
 //数据返回格式
-=======
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 class GeneralResult{
     private _result: boolean;
     private _reason: string;

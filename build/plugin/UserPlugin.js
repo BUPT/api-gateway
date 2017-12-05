@@ -19,35 +19,6 @@ class UserPlugin {
      * @param res
      */
     register(req, res) {
-<<<<<<< HEAD
-        let randomSalt = new RandomSalt_1.RandomSalt();
-        // 产生长度为20的随机盐值
-        let salt = randomSalt.generateRandomSalt(20);
-        // 使用随机产生的盐值和密码一起进行加密运算,产生密文密码
-        let password = crypto.createHmac('sha256', req.query.password).update(salt).digest('hex');
-        // 构造成一条user_list表记录
-        let data = {
-            user_name: req.query.user_name,
-            email: req.query.email,
-            password: password,
-            salt: salt,
-            raw_password: req.query.password,
-            role: "1"
-        };
-        // 将数据插入数据库
-        let userListService = new UserListService_1.UserListService();
-        (() => __awaiter(this, void 0, void 0, function* () {
-            let result = yield userListService.insert([data]);
-            res.json(result.getReturn());
-            return;
-        }))();
-        // let result: Promise<GeneralResult> = userListService.insert([data]);
-        // result.then(function(){
-        //     res.json({"result": true});
-        // }).catch(function(err){
-        //     res.json({"result": false, "reason": err});
-        // });
-=======
         return __awaiter(this, void 0, void 0, function* () {
             let randomSalt = new RandomSalt_1.RandomSalt();
             // 产生长度为20的随机盐值
@@ -75,7 +46,6 @@ class UserPlugin {
                 res.json(result.getReturn());
             }
         });
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     }
     /**
      * 用户登录
@@ -84,13 +54,8 @@ class UserPlugin {
      */
     doLogin(req, res) {
         // 获取用户名和密码
-<<<<<<< HEAD
-        let userName = req.query.user_name;
-        let password = req.query.password;
-=======
         let userName = req.query.username;
         let password = req.query.pwd;
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         // 构造查询条件
         let data = { "user_name": userName };
         let userListService = new UserListService_1.UserListService();
@@ -127,8 +92,6 @@ class UserPlugin {
         //     res.json({result: false, reason: err});
         // });
     }
-<<<<<<< HEAD
-=======
     /**
      * 获取所有的用户
      * @param req
@@ -206,6 +169,5 @@ class UserPlugin {
             }
         });
     }
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 }
 exports.UserPlugin = UserPlugin;

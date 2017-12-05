@@ -49,15 +49,9 @@ class ApiInfoModel {
         });
     }
     // 更改数据
-<<<<<<< HEAD
-    update(data, eachCallback, saveCallback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this._apiInfo.find(data).each(eachCallback).save(saveCallback);
-=======
     update(condition, data, eachCallback, saveCallback) {
         return __awaiter(this, void 0, void 0, function* () {
             this._apiInfo.find(condition).each(eachCallback).save(saveCallback);
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         });
     }
 }
