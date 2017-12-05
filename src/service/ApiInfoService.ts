@@ -1,10 +1,7 @@
 import {DBConnect} from "../util/DBConnect";
 import {ApiInfoModel} from "../model/ApiInfoModel";
 import {GeneralResult} from "../general/GeneralResult";
-<<<<<<< HEAD
-=======
 import {CombinationUrlService} from "./CombinationUrlService";
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 
 class ApiInfoService{
     // 连接数据库
@@ -59,8 +56,6 @@ class ApiInfoService{
         });
     }
 
-<<<<<<< HEAD
-=======
 
     /**
      * 查询数据
@@ -83,7 +78,6 @@ class ApiInfoService{
         });
     }
 
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     // 根据appId查找API相关数据
     public async queryByAppId(data: string): Promise<GeneralResult>{
         let _this = this;
@@ -121,12 +115,9 @@ class ApiInfoService{
                     } else {
                         resolve(new GeneralResult(true, null, results));
                     }
-<<<<<<< HEAD
-=======
                 }).catch(function(err){
                     console.log(err);
                     resolve(new GeneralResult(false, err.message, null));
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
                 });
             }).catch(function (err) {
                 resolve(new GeneralResult(false, err.message, null));
@@ -145,8 +136,6 @@ class ApiInfoService{
             console.log(result.getReason());
         }
     }
-<<<<<<< HEAD
-=======
 
 
     public eachCallback(data: string): void{
@@ -225,6 +214,5 @@ class ApiInfoService{
             return new GeneralResult(false, null, null);
         }
     }
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 }  
 export{ApiInfoService};

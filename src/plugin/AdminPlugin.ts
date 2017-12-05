@@ -12,9 +12,6 @@ import formidable = require("formidable");
 import fs = require("fs");
 import {SwaggerFile} from "../util/SwaggerFile";
 import { GeneralResult } from "../general/GeneralResult";
-<<<<<<< HEAD
-class AdminPlugin{
-=======
 import rq = require("request-promise");
 import {CombinationUrlService} from "../service/CombinationUrlService";
 import events = require("events");
@@ -22,7 +19,6 @@ import { CombinationPlugin } from "./CombinationPlugin";
 import { config } from "bluebird";
 class AdminPlugin{
 
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     /**
      * 基于basic-auth的身份认证
      * @param req 
@@ -65,31 +61,6 @@ class AdminPlugin{
                 return unauthorized(res);
             }
         })();
-<<<<<<< HEAD
-        // let result: Promise<GeneralResult> = userListService.query(data);
-        // result.then(function(result){
-        //     // 对用户输入的密码进行加密运算
-        //     var password = null;
-        //     if (result.length > 0) {
-        //         password = crypto.createHmac('sha256', user.pass).update(result[0].salt).digest('hex');
-        //         if (password === result[0].password) {
-        //             next();
-        //             return;
-        //         }else{
-        //             console.log("用户名或密码错误");
-        //             return unauthorized(res);
-        //         }
-        //     }else{
-        //         console.log("未能登录");
-        //         return unauthorized(res);
-        //     }
-        // }).catch(function(err){
-        //     console.log(err);
-        //     console.log("未能登录");
-        //     return unauthorized(res);
-        // });
-=======
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     }
 
     /**
@@ -111,11 +82,7 @@ class AdminPlugin{
      * @param req 
      * @param res 
      */
-<<<<<<< HEAD
-    public APIRegister(req, res): void{
-=======
     public async APIRegister(req, res): Promise<void>{
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         // 根据JSdoc产生swagger的API配置文件
         let swaggerFile: SwaggerFile = new SwaggerFile();
         swaggerFile.generateFile();
@@ -124,16 +91,6 @@ class AdminPlugin{
         let data: { [key: string]: string }[][] = yamlParse.parse(path.swaggerFile);
         let url: {[key: string]: string}[] = data[0];
         let apiInfo: {[key: string]: string}[] = data[1];
-<<<<<<< HEAD
-        // 将API注册信息加载到内存
-        let registerPlugin: RegisterPlugin = new RegisterPlugin();
-        registerPlugin.loadData(url);
-        // 将数据存入数据库
-        let urlService: UrlService = new UrlService();
-        let apiInfoService: ApiInfoService = new ApiInfoService();
-        urlService.loadData(url);
-        apiInfoService.loadData(apiInfo);
-=======
 
         let urlService: UrlService = new UrlService();
         let apiInfoService: ApiInfoService = new ApiInfoService();
@@ -149,7 +106,6 @@ class AdminPlugin{
         registerPlugin.loadData(url, combiantionUrlApiinfos).catch(function(err){
             console.log(err);
         });
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         let config: Config = new Config();
         // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
         res.cookie("fileName", "swagger.yaml");
@@ -189,21 +145,6 @@ class AdminPlugin{
                 let apiInfoService: ApiInfoService = new ApiInfoService();
                 let urlService: UrlService = new UrlService();
                 registerPlugin.addData(url);
-<<<<<<< HEAD
-                // let removeUrl: Promise<any> = urlService.remove({ "APPId": url[0].APPId });
-                // removeUrl.then(function(){
-                //     urlService.insert(url);
-                // }).catch(function(err){
-                //     console.log(err);
-                // });
-                // let removeApiInfo: Promise<any> = apiInfoService.remove({ "appId": api_info[0].appId});
-                // removeApiInfo.then(function(){
-                //     apiInfoService.insert(api_info);
-                // }).catch(function(err){
-                //     console.log(err);
-                // });
-=======
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
                 (async () => {
                     let removeUrl: GeneralResult = await urlService.remove({ "APPId": url[0].APPId });
                     let removeApiInfo: GeneralResult = await apiInfoService.remove({"appId": api_info[0].appId});
@@ -271,8 +212,6 @@ class AdminPlugin{
     public jsonParser(){
         require("body-parser").json();
     }
-<<<<<<< HEAD
-=======
 
 
     /**
@@ -445,6 +384,5 @@ class AdminPlugin{
         data.set("flag", flag);
         return data;
     }
->>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 }
 export{AdminPlugin};
