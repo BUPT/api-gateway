@@ -1,4 +1,11 @@
 "use strict";
+<<<<<<< HEAD
+Object.defineProperty(exports, "__esModule", { value: true });
+const express = require("express");
+const proxy = require("express-http-proxy");
+const PerformanceMonitorPlugin_1 = require("./PerformanceMonitorPlugin");
+let registerApp = express();
+=======
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -16,6 +23,7 @@ const ApiInfoService_1 = require("../service/ApiInfoService");
 const AdminPlugin_1 = require("../plugin/AdminPlugin");
 const CombinationPlugin_1 = require("./CombinationPlugin");
 const UrlService_1 = require("../service/UrlService");
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 /**
  * 注册API数据
  */
@@ -26,6 +34,36 @@ class RegisterPlugin {
     getRegisterApp() {
         return this._registerApp;
     }
+<<<<<<< HEAD
+    loadData(url) {
+        let data = new Map();
+        // _router数组存在数据，则清空
+        if (this._registerApp._router) {
+            this._registerApp._router.stack.length = 2;
+        }
+        // 加载数据
+        for (let i = 0; i < url.length; i++) {
+            let value = { "to": url[i].to, "status": url[i].status };
+            data.set(url[i].from, value);
+            if (url[i].status == 0) {
+                let performanceMonitorPlugin = new PerformanceMonitorPlugin_1.PerformanceMonitorPlugin();
+                performanceMonitorPlugin.soursePerformanceHost = url[i].to;
+                this._registerApp.use(url[i].from, performanceMonitorPlugin.soursePerformanceMonitor.bind(performanceMonitorPlugin), proxy(url[i].to, {
+                    proxyReqPathResolver: function (req) {
+                        return req.originalUrl;
+                    }
+                }));
+                // 为相关的API标注，以便后期注销
+                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[0].appId;
+            }
+        }
+        console.log(data);
+    }
+    addData(url) {
+        let data = new Map();
+        // 先清空之前已经注册公司的数据，再重新重新注册改公司的API数据
+        let appId = url[0].appId;
+=======
     /**
      * 重新加载注册API
      * @param url
@@ -105,6 +143,7 @@ class RegisterPlugin {
         let data = new Map();
         // 先清空之前已经注册公司的数据，再重新重新注册改公司的API数据
         let appId = url[0].APPId;
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         if (this._registerApp._router && this._registerApp.stack) {
             for (let i = 2; i < this._registerApp._router.satck.length; i++) {
                 if (this._registerApp._router.stack[i].appId === appId) {
@@ -126,7 +165,10 @@ class RegisterPlugin {
                 }));
                 // 为相关的API标注，以便后期注销
                 this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[0].appId;
+<<<<<<< HEAD
+=======
                 this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url[0].from;
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
             }
         }
         console.log(data);

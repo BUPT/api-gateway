@@ -73,6 +73,47 @@
 // }
 // let t = getCount(1);
 // console.log(t.next());
+<<<<<<< HEAD
+// export default class GeneratorClass {
+//     constructor() {
+//         const iterator = this.generator(10);
+//         iterator.next();
+//     }
+//     *generator(count: number): IterableIterator<number> {
+//         while (true)
+//             yield count++;
+//     }
+// }
+// import {LogModel} from "../model/LogModel";
+// let logModel :LogModel= new LogModel();
+// console.log(logModel.get());
+var proxy = require('express-http-proxy');
+var other_app = require('express')();
+var app = require('express')();
+other_app.use('/proxy0', function (req, res, next) {
+    res.json({ "name": "chenyuanxing" });
+    next();
+});
+other_app.listen(12345);
+app.use('/proxy0', proxy('www.baidu.com'));
+// app.use('/proxy', proxy('localhost:12345', {
+//     proxyReqPathResolver: function(req) {
+//       return require('url').parse(req.url).path;
+//     }
+//   }));
+app.use('/proxy', proxy('localhost:12345', {
+    proxyReqPathResolver: function (req) {
+        return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                var resolvedPathValue = "http://baidu.com";
+                resolve(resolvedPathValue);
+            }, 200);
+        });
+    }
+}));
+app.listen(8888);
+=======
 let name = "test";
 let js = require("../../views/uploads/json/" + name);
 console.log(js);
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af

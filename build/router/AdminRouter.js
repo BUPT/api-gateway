@@ -7,6 +7,10 @@ const UserPlugin_1 = require("../plugin/UserPlugin");
 const RegisterPlugin_1 = require("../plugin/RegisterPlugin");
 const CombinationPlugin_1 = require("../plugin/CombinationPlugin");
 const config_1 = require("../config/config");
+<<<<<<< HEAD
+const PerformanceMonitorPlugin_1 = require("../plugin/PerformanceMonitorPlugin");
+=======
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 class AdminRouter {
     constructor() {
         this._router = router;
@@ -21,10 +25,20 @@ class AdminRouter {
         let userPlugin = new UserPlugin_1.UserPlugin();
         let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
         let combinationPlugin = new CombinationPlugin_1.CombinationPlugin();
+<<<<<<< HEAD
+        let performanceMonitor = new PerformanceMonitorPlugin_1.PerformanceMonitorPlugin();
+        // 允许跨域访问
+        this._router.all('*', adminPlugin.allowCORSAccess);
+        //性能监控
+        this._router.all('*', performanceMonitor.logPerformanceMonitor);
+        // 对管理员操作进行basic-auth身份认证
+        this._router.all("/apis/*", adminPlugin.basicAuth);
+=======
         // 允许跨域访问
         this._router.all('*', adminPlugin.allowCORSAccess);
         // 对管理员操作进行basic-auth身份认证
         //this._router.all("/apis/*", adminPlugin.basicAuth);
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         /**
          * @swagger
          * /apis/register:
@@ -62,6 +76,28 @@ class AdminRouter {
          *           required: false
          *           type: string
          */
+<<<<<<< HEAD
+        this._router.get("/user/register", userPlugin.register);
+        /**
+         * @swagger
+         * /apis/viewAPIs:
+         *   get:
+         *       description: 可视化查看API
+         *       deprecated: false
+         *       tags:
+         *           - "查看API"
+         *       parameters:
+         *         - name: fileName
+         *           in: query
+         *           description: swagger配置文件的名称
+         *           required: false
+         *           type: string
+         */
+        this._router.get("/apis/viewAPIs", adminPlugin.viewAPIs);
+        /**
+         * @swagger
+         * /user/doLogin:
+=======
         this._router.get("/apis/viewAPIs", adminPlugin.viewAPIs);
         /**
          * @swagger
@@ -92,22 +128,33 @@ class AdminRouter {
         /**
          * @swagger
          * /user/register:
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
          *   get:
          *       description: 用户注册
          *       deprecated: false
          *       tags:
          *           - "用户管理"
          *       parameters:
+<<<<<<< HEAD
+         *         - name: user_name
+=======
          *         - name: username
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
          *           in: query
          *           description: 用户名
          *           required: true
          *           type: string
+<<<<<<< HEAD
+         *         - name: password
+=======
          *         - name: pwd
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
          *           in: query
          *           description: 用户登录密码
          *           required: true
          *           type: string
+<<<<<<< HEAD
+=======
          *         - name: realname
          *           in: query
          *           description: 用户名真实姓名
@@ -123,12 +170,16 @@ class AdminRouter {
          *           description: 用户角色
          *           required: true
          *           type: string
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
          *       produces:
          *         - application/json
          *       responses:
          *         200:
          *           description:OK
          */
+<<<<<<< HEAD
+        this._router.get("/user/doLogin", userPlugin.doLogin);
+=======
         this._router.get("/user/register", userPlugin.register);
         /**
          * @swagger
@@ -228,6 +279,7 @@ class AdminRouter {
          *           description:OK
          */
         this._router.get("/user/updateUser", userPlugin.updateUser);
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         /**
          * @swagger
          * /apis/single:
@@ -253,6 +305,8 @@ class AdminRouter {
         this._router.use("/static", express.static(config.getPath().static));
         // 组合API
         this._router.post("/combination/getFlowXML", combinationPlugin.getFloWXMLFile);
+<<<<<<< HEAD
+=======
         /**
          * @swagger
          * /apis/getAllAPI:
@@ -336,6 +390,7 @@ class AdminRouter {
          *           description:OK
          */
         this._router.get("/apis/getCombinationApiFlowXml", combinationPlugin.getFlowData);
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     }
 }
 exports.AdminRouter = AdminRouter;

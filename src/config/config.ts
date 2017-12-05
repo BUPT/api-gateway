@@ -1,6 +1,10 @@
 
 class Config{
+<<<<<<< HEAD
+    private _baseDir = "D:/API-Gateway-v3-master";
+=======
     private _baseDir = "E:/API网关文档/APIGateWay/ts/5TypeScript/router/lym/API-Gateway-v3";
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     private _storage = {
         "host": '111.207.243.66',
         "user": 'root',
@@ -10,11 +14,19 @@ class Config{
         "port": "3306"
     };
     private _api_server = {
+<<<<<<< HEAD
+        "host": "localhost",
+        "port": "8000",
+    }
+    private _admin_server = {
+        "host": "localhost",
+=======
         "host": "www.linyimin.club",
         "port": "8000",
     }
     private _admin_server = {
         "host": "www.linyimin.club",
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         "port": "8001",
     }
     private _path = {
@@ -28,9 +40,15 @@ class Config{
         // 管理员API的swagger配置文件路径
         "adminAPIsFile": this._baseDir + "/views/uploads/json/file.json",
         // 注册API的swagger UI的首页html路径
+<<<<<<< HEAD
+        "swaggerUIURL": "http://localhost:8001/static/index.html",
+        // 管理员API的swagger UI的首页HTML路径
+        "adminAPIsURL": "http://localhost:8001/static/viewAPIs.html",
+=======
         "swaggerUIURL": "http://www.linyimin.club:8001/static/index.html",
         // 管理员API的swagger UI的首页HTML路径
         "adminAPIsURL": "http://www.linyimin.club:8001/static/viewAPIs.html",
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
         // 文件上传页面的HTML页面路径
         "uploadFileURL": this._baseDir + "/views/fileUpload.html",
         // 定义swagger注释的文件路径
@@ -42,7 +60,11 @@ class Config{
         // 单个接口的swagger配置文件
         "singleSwaggerFile": this._baseDir + "/views/uploads/json/single.json",
         // 单个API的swagger UI的首页HTML路径
+<<<<<<< HEAD
+        "singleSwaggerFileURL": "http://localhost:8001/static/single.html"
+=======
         "singleSwaggerFileURL": "http://www.linyimin.club:8001/static/single.html"
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     }
 
     public getBaseDir(){

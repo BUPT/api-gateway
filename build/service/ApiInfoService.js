@@ -11,7 +11,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const DBConnect_1 = require("../util/DBConnect");
 const ApiInfoModel_1 = require("../model/ApiInfoModel");
 const GeneralResult_1 = require("../general/GeneralResult");
+<<<<<<< HEAD
+=======
 const CombinationUrlService_1 = require("./CombinationUrlService");
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 class ApiInfoService {
     constructor() {
         // 连接数据库
@@ -68,6 +71,8 @@ class ApiInfoService {
             });
         });
     }
+<<<<<<< HEAD
+=======
     /**
      * 查询数据
      * @param data
@@ -91,6 +96,7 @@ class ApiInfoService {
             });
         });
     }
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
     // 根据appId查找API相关数据
     queryByAppId(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -133,9 +139,12 @@ class ApiInfoService {
                         else {
                             resolve(new GeneralResult_1.GeneralResult(true, null, results));
                         }
+<<<<<<< HEAD
+=======
                     }).catch(function (err) {
                         console.log(err);
                         resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
                     });
                 }).catch(function (err) {
                     resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
@@ -157,6 +166,8 @@ class ApiInfoService {
             }
         });
     }
+<<<<<<< HEAD
+=======
     eachCallback(data) {
     }
     /**
@@ -239,5 +250,6 @@ class ApiInfoService {
             }
         });
     }
+>>>>>>> 7b8875d097b14c5d46d2878ed607b6d83b0e52af
 }
 exports.ApiInfoService = ApiInfoService;
