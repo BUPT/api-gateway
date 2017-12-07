@@ -4,11 +4,18 @@ import {RegisterPlugin} from "./plugin/RegisterPlugin";
 import {Router} from "./router/Router"
 import * as http from 'http';
 let router = new AdminRouter().getRouter();
-let registerApp = new RegisterPlugin().getRegisterApp()
+let registerPlugin: RegisterPlugin = new RegisterPlugin();
+let registerApp = registerPlugin.getRegisterApp()
+// 初始化注册
+(async () =>{
+    await registerPlugin.init();
+    registerApp.listen(8000);
+})();
+
+
 let adminApp = express();
 adminApp.use("/",router);
 adminApp.listen(8001);
-registerApp.listen(8000);
 let wcy_router:Router = new Router();
 http.createServer(
     function (request, response)

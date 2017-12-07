@@ -71,5 +71,28 @@ class UrlService{
             console.log(result.getReason());
         }
     }
+
+
+
+    /**
+     * 查询url表中的信息
+     * @param data 
+     */
+    public async query(data: {[key: string]: string}): Promise<GeneralResult>{
+        // 传递上下文
+        let _this = this;
+        return new Promise<GeneralResult>(function(resolve){
+            _this._db.then(function (db) {
+                let urlModel: UrlModel = new UrlModel(db);
+                urlModel.query(data, function (err, results) {
+                    if (err) {
+                        resolve(new GeneralResult(false, err.message, null));
+                    } else {
+                        resolve(new GeneralResult(true, null, results));
+                    }
+                });
+            });
+        })
+    }
 }
 export{UrlService};
