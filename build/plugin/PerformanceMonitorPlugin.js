@@ -31,10 +31,18 @@ class PerformanceMonitorPlugin {
      */
     logPerformanceMonitor(req, res, next) {
         let logModel = new LogModel_1.LogModel();
+        if (req.query.username != undefined) {
+            logModel.username = req.query.username;
+            logModel.classes = 'common';
+        }
+        else {
+            logModel.username = 'null';
+            logModel.classes = 'null';
+        }
         logModel.time = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
         logModel.ip = GetIp_1.GetIP.getClientIP(req);
         logModel.status = 'succeed'; //默认为成功
-        logModel.service = '访问服务';
+        logModel.service = req.originalUrl;
         logModel.device = req.rawHeaders[5];
         req.on('end', function () {
             logModel.responseTime = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
