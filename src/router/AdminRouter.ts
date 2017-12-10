@@ -292,6 +292,29 @@ class AdminRouter{
 
         /**
          * @swagger
+         * /apis/getApiInfoByType:
+         *   get:
+         *       description: 根据API的类型获取API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: APIType
+         *           in: query
+         *           description: API的类型
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getApiInfoByType", adminPlugin.getApiInfoByType);
+
+
+        /**
+         * @swagger
          * /apis/renameServiceName:
          *   get:
          *       description: 组合API重命名

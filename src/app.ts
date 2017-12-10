@@ -7,10 +7,8 @@ let router = new AdminRouter().getRouter();
 let registerPlugin: RegisterPlugin = new RegisterPlugin();
 let registerApp = registerPlugin.getRegisterApp()
 // 初始化注册
-(async () =>{
-    await registerPlugin.init();
-    registerApp.listen(8000);
-})();
+registerPlugin.init();
+registerApp.listen(8000);
 
 
 let adminApp = express();

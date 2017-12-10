@@ -3,7 +3,6 @@ import proxy = require("express-http-proxy");
 import {PerformanceMonitorPlugin} from "./PerformanceMonitorPlugin"
 import { request } from "https";
 import { print } from "util";
-let registerApp = express();
 import {CombinationUrlService} from "../service/CombinationUrlService";
 import { ApiInfoService } from "../service/ApiInfoService";
 import { GeneralResult } from "../general/GeneralResult";
@@ -12,7 +11,7 @@ import { CombinationPlugin } from "./CombinationPlugin";
 import { UrlService } from "../service/UrlService";
 import { config } from "bluebird";
 import { Config } from "../config/config";
-
+let registerApp = express();
 /**
  * 注册API数据
  */

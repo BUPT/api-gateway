@@ -225,6 +225,18 @@ class AdminPlugin{
         res.json(apiInfos.getReturn());
     }
 
+    public async getApiInfoByType(req, res): Promise<void>{
+        // 获取api类型
+        let type: string = req.query.APIType;
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let apiInfos: GeneralResult = await apiInfoService.query({type: type});
+        if(apiInfos.getResult() === true && apiInfos.getDatum().length > 0){
+            res.json(apiInfos.getReturn());
+        }else{
+            res.json(new GeneralResult(false, "输入的类型对应的API不存在", null).getReturn()); 
+        }
+    }
+
     /**
      * 修改组合API名字
      * @param req
