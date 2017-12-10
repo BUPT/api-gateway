@@ -15,7 +15,7 @@ import { GeneralResult } from "../general/GeneralResult";
 import rq = require("request-promise");
 import {CombinationUrlService} from "../service/CombinationUrlService";
 import events = require("events");
-import { CombinationPlugin } from "./CombinationPlugin";
+import { CombinationUrlPlugin } from "./CombinationUrlPlugin";
 import { config } from "bluebird";
 class AdminPlugin{
 
@@ -261,8 +261,8 @@ class AdminPlugin{
             }
         }
         // 向内存中注册新的url
-        let combinationPlugin: CombinationPlugin = new CombinationPlugin();
-        registerApp.use(serviceName, combinationPlugin.combinationService);
+        let combinationUrlPlugin: CombinationUrlPlugin = new CombinationUrlPlugin();
+        registerApp.use(serviceName, combinationUrlPlugin.combinationService);
 
         // 更新数据库
         //将URL转换成小驼峰类型的文件名

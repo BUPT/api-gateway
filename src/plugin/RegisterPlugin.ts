@@ -7,7 +7,7 @@ import {CombinationUrlService} from "../service/CombinationUrlService";
 import { ApiInfoService } from "../service/ApiInfoService";
 import { GeneralResult } from "../general/GeneralResult";
 import {AdminPlugin} from "../plugin/AdminPlugin";
-import { CombinationPlugin } from "./CombinationPlugin";
+import { CombinationUrlPlugin } from "./CombinationUrlPlugin";
 import { UrlService } from "../service/UrlService";
 import { config } from "bluebird";
 import { Config } from "../config/config";
@@ -59,14 +59,14 @@ class RegisterPlugin{
         let combinationUrls: GeneralResult = await combinationUrlService.query({});
         // 存在组合API
         if(combinationUrls.getResult() == true){
-            let combinationPlugin: CombinationPlugin = new CombinationPlugin();
+            let combinationUrlPlugin: CombinationUrlPlugin = new CombinationUrlPlugin();
             for(let i = 0; i < (combinationUrls.getDatum()).length; i++){
                 let url: string = combinationUrls.getDatum()[i].url;
                 let atomUrls: string [] = (await combinationUrlService.getAtomUrl(url)).getDatum();
                 let adminPlugin: AdminPlugin = new AdminPlugin();
                 let result: Map<string, any> = await adminPlugin.testAPI(atomUrls);
                 if(result.get("flag") == true){
-                    registerApp.use(url, combinationPlugin.combinationService);
+                    registerApp.use(url, combinationUrlPlugin.combinationService);
 
                     // 获取url对应的APPId
                     let apiInfo: GeneralResult = await apiInfoService.query({url: atomUrls[0]});
