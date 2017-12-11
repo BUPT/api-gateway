@@ -1,4 +1,3 @@
-
 class Config{
     private _baseDir = "F:/项目/API-Gateway-v3";
     private _storage = {
