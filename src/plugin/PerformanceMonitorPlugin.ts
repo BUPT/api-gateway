@@ -10,6 +10,7 @@ import util = require("util")
 import os = require("os")
 import osUtils = require("os-utils");
 import { print } from "util";
+import { UserPerformanceModel } from "../model/userPerformanceModel";
 
 /**
  * 性能监控插件
@@ -32,10 +33,17 @@ class PerformanceMonitorPlugin{
      */
     public logPerformanceMonitor(req, res, next): void{
         let logModel :LogModel= new LogModel();
+        if(req.query.username!=undefined){
+            logModel.username = req.query.username;    
+            logModel.classes = 'common';
+        }else{
+            logModel.username = 'null';
+            logModel.classes = 'null';
+        }
         logModel.time = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
         logModel.ip = GetIP.getClientIP(req);
         logModel.status = 'succeed';        //默认为成功
-        logModel.service = '访问服务';
+        logModel.service = req.originalUrl;
         logModel.device = req.rawHeaders[5];
         req.on('end',function(){
             logModel.responseTime = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss'); 
@@ -116,6 +124,32 @@ class PerformanceMonitorPlugin{
             console.log(key+' value= '+value.totleVisit+' '+value.unitTimeTotleVisit+' '+value.concurrentVolume+' '+value.averageResponseTime)
         })
         
+        next();
+    }
+
+     /**
+     * 二级能力平台性能监控1
+     * @param req 
+     * @param res 
+     * @param next 
+     */
+    public userPerformanceMonitor(req, res, next): void{
+        //用户性能监控的的服务名称
+        let username = req.require.username;
+        if(username==undefined){
+        }else{
+            let userPerformance :UserPerformanceModel;
+            let lastVIsitTime = new Date();
+            if(UserPerformanceModel._userPerformanceMap.has(username)){
+                userPerformance = UserPerformanceModel._userPerformanceMap.get(username);
+            }else{
+                userPerformance = new UserPerformanceModel();
+            }
+            userPerformance.totleVisit++;
+            userPerformance.unitTimeTotleVisit++;
+            userPerformance.lastVisitTime = lastVIsitTime;
+            UserPerformanceModel._userPerformanceMap.set(username,userPerformance);
+        }
         next();
     }
 }
