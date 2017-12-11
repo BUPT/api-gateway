@@ -157,5 +157,44 @@ class PerformanceMonitorPlugin{
         }
         next();
     }
+
+     /**
+     * 返回二级能力平台性能监控数据的全部serverName
+     * 通过http://localhost:8001/viewSoursePerformanceKeys
+     * @param req 
+     * @param res 
+     */
+    public viewSoursePerformanceKeys(req, res):any{
+        let keys = [];
+        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
+            keys.push(key);
+        });
+        res.send(keys);
+        return ;
+    }
+    /**
+     * 返回二级能力平台性能监控数据
+     * 通过http://localhost:8001/viewSoursePerformance?name=/bookBack 返回json
+     * @param req 
+     * @param res 
+     */
+    public viewSoursePerformance(req, res):any{
+        // /user?name=tobi
+        let serverName :String= req.param('name');
+        console.log(serverName);
+        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
+            if(key ==serverName){
+                res.json(JSON.stringify(value));
+                return ;
+            }
+            
+        });
+        return ;
+    }
+    public viewTopPerformance(req, res):any{
+        res.json(JSON.stringify(TopPerformanceModel.topPerformance));
+        return ;
+    }
+
 }
 export{PerformanceMonitorPlugin};
