@@ -15,6 +15,13 @@ class SoursePerformanceModel {
     get() {
         return this._serverName;
     }
+    static getAll() {
+        let str = '';
+        SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
+            str = str + '\n' + key + ' value= ' + value.totleVisit + ' ' + value.unitTimeTotleVisit + ' ' + value.concurrentVolume + ' ' + value.averageResponseTime;
+        });
+        return str;
+    }
     set serverName(serverName) {
         this._serverName = serverName;
     }

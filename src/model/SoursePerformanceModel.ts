@@ -17,7 +17,13 @@ class SoursePerformanceModel {
     public get(): any {
         return this._serverName;
     }
-
+    public static getAll(): String {
+        let str :String = '';
+        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
+            str = str+'\n'+ key+' value= '+value.totleVisit+' '+value.unitTimeTotleVisit+' '+value.concurrentVolume+' '+value.averageResponseTime;
+        });
+        return str;
+    }
     set serverName(serverName:String){
         this._serverName = serverName;
     }

@@ -19,6 +19,9 @@ class TopPerformanceModel {
     static init() {
         TopPerformanceModel.topPerformance = new TopPerformanceModel();
     }
+    static getAll() {
+        return TopPerformanceModel.topPerformance._totleVisit + ' ' + TopPerformanceModel.topPerformance._unitTimeTotleVisit + ' ' + TopPerformanceModel.topPerformance._concurrentVolume + ' ' + TopPerformanceModel.topPerformance._cpuUsage + ' ' + TopPerformanceModel.topPerformance._iopsUsage + ' ' + TopPerformanceModel.topPerformance._memoryUsage + ' ' + TopPerformanceModel.topPerformance._averageResponseTime + ' ';
+    }
     get() {
         return this._cpuUsage;
     }

@@ -11,7 +11,7 @@ import os = require("os")
 import osUtils = require("os-utils");
 import { print } from "util";
 import { UserPerformanceModel } from "../model/userPerformanceModel";
-
+import {PerformanceService} from "../service/PerformanceService"
 /**
  * 性能监控插件
  */
@@ -47,12 +47,14 @@ class PerformanceMonitorPlugin{
         logModel.device = req.rawHeaders[5];
         req.on('end',function(){
             logModel.responseTime = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss'); 
-            console.log(logModel.get())           
+            // console.log(logModel.get())           
         }).on('error',function(){
             logModel.status = 'error'
-            console.log(logModel.get())  
+            // console.log(logModel.get())  
         })
-        fs.writeFileSync('req',util.inspect(req,{depth:null})); //depth:null 展开全部层级
+        let performanceService :PerformanceService= new PerformanceService();
+        performanceService.logPerformanceToFile(logModel);
+        // fs.writeFileSync('req',util.inspect(req,{depth:null})); //depth:null 展开全部层级
         next();
     }
          /**

@@ -5,10 +5,10 @@ const TopPerformanceModel_1 = require("../model/TopPerformanceModel");
 const SoursePerformanceModel_1 = require("../model/SoursePerformanceModel");
 const sd = require("silly-datetime");
 const GetIp_1 = require("../util/GetIp");
-const fs = require("fs");
-const util = require("util");
 const os = require("os");
 const osUtils = require("os-utils");
+const userPerformanceModel_1 = require("../model/userPerformanceModel");
+const PerformanceService_1 = require("../service/PerformanceService");
 /**
  * 性能监控插件
  */
@@ -46,12 +46,14 @@ class PerformanceMonitorPlugin {
         logModel.device = req.rawHeaders[5];
         req.on('end', function () {
             logModel.responseTime = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
-            console.log(logModel.get());
+            // console.log(logModel.get())           
         }).on('error', function () {
             logModel.status = 'error';
-            console.log(logModel.get());
+            // console.log(logModel.get())  
         });
-        fs.writeFileSync('req', util.inspect(req, { depth: null })); //depth:null 展开全部层级
+        let performanceService = new PerformanceService_1.PerformanceService();
+        performanceService.logPerformanceToFile(logModel);
+        // fs.writeFileSync('req',util.inspect(req,{depth:null})); //depth:null 展开全部层级
         next();
     }
     /**
@@ -121,6 +123,33 @@ class PerformanceMonitorPlugin {
         SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
             console.log(key + ' value= ' + value.totleVisit + ' ' + value.unitTimeTotleVisit + ' ' + value.concurrentVolume + ' ' + value.averageResponseTime);
         });
+        next();
+    }
+    /**
+    * 二级能力平台性能监控1
+    * @param req
+    * @param res
+    * @param next
+    */
+    userPerformanceMonitor(req, res, next) {
+        //用户性能监控的的服务名称
+        let username = req.require.username;
+        if (username == undefined) {
+        }
+        else {
+            let userPerformance;
+            let lastVIsitTime = new Date();
+            if (userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.has(username)) {
+                userPerformance = userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.get(username);
+            }
+            else {
+                userPerformance = new userPerformanceModel_1.UserPerformanceModel();
+            }
+            userPerformance.totleVisit++;
+            userPerformance.unitTimeTotleVisit++;
+            userPerformance.lastVisitTime = lastVIsitTime;
+            userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.set(username, userPerformance);
+        }
         next();
     }
 }

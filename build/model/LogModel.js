@@ -16,6 +16,9 @@ class LogModel {
         this._status = '';
         this._responseTime = '';
     }
+    getAll() {
+        return this._ID + ' ' + this._time + ' ' + this._username + ' ' + this._classes + ' ' + this._ip + ' ' + this._device + ' ' + this._service + ' ' + this._status + ' ' + this._responseTime;
+    }
     get() {
         return [this._ID, this._time, this._username, this._classes, this._ip, this._device, this._service, this._status, this._responseTime];
     }
