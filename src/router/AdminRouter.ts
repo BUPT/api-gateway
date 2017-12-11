@@ -33,7 +33,7 @@ class AdminRouter{
         //性能监控
         this._router.all('*',performanceMonitor.logPerformanceMonitor)
         // 对管理员操作进行basic-auth身份认证
-        this._router.all("/apis/*", adminPlugin.basicAuth);
+        //this._router.all("/apis/*", adminPlugin.basicAuth);
         /**
          * @swagger
          * /apis/register:
