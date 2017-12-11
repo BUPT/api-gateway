@@ -92,14 +92,15 @@ class PerformanceMonitorPlugin {
         next();
     }
     /**
-    * 二级能力平台性能监控1
+    * 二级能力平台性能监控
     * @param req
     * @param res
     * @param next
     */
     soursePerformanceMonitor(req, res, next) {
         //二级平台性能监控的的服务名称
-        let serverName = this._soursePerformanceHost.toString() + req.originalUrl.toString();
+        // let serverName = this._soursePerformanceHost.toString()+req.originalUrl.toString();
+        let serverName = req.originalUrl.toString();
         // serverName 目前都是这种www.linyimin.club:10010/bookTo?isBuy=true
         let SoursePerformance;
         let visitTime = new Date();
@@ -130,7 +131,7 @@ class PerformanceMonitorPlugin {
         next();
     }
     /**
-    * 二级能力平台性能监控1
+    * 用户监控
     * @param req
     * @param res
     * @param next
@@ -155,6 +156,38 @@ class PerformanceMonitorPlugin {
             userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.set(username, userPerformance);
         }
         next();
+    }
+    /**
+    * 返回二级能力平台性能监控数据的全部serverName
+    * 通过
+    * @param req
+    * @param res
+    */
+    viewSoursePerformanceKeys(req, res) {
+        let keys = [];
+        SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
+            keys.push(key);
+        });
+        res.send(keys);
+        return;
+    }
+    /**
+     * 返回二级能力平台性能监控数据
+     * 通过
+     * @param req
+     * @param res
+     */
+    viewSoursePerformance(req, res) {
+        // /user?name=tobi
+        let serverName = req.param('name');
+        console.log(serverName);
+        SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
+            if (key == serverName) {
+                res.json(JSON.stringify(value));
+                return;
+            }
+        });
+        return;
     }
 }
 exports.PerformanceMonitorPlugin = PerformanceMonitorPlugin;
