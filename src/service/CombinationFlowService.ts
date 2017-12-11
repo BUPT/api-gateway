@@ -15,6 +15,7 @@ class CombinationFlowService {
                 combinationFlowModel.insert(data, function (err) {
                     if (err) {
                         console.log("INSERT DATA INTO combination_flow FAIL");
+                        console.log(err);
                         resolve(new GeneralResult(false, err.message, data));
                     } else {
                         console.log("INSERT DATA INTO combination_flow SUCCESS");

@@ -552,6 +552,7 @@ class AdminRouter{
          *           description:OK
          */
         this._router.get("/apis/registerCombinationAPI", combinationPlugin.registerCombinationAPI);
+        this._router.get("/call", combinationPlugin.publish);
     }
 }
 export{AdminRouter};
