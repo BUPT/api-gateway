@@ -29,6 +29,11 @@ class AdminRouter {
         this._router.all('*', adminPlugin.allowCORSAccess);
         //性能监控
         this._router.all('*', performanceMonitor.logPerformanceMonitor);
+<<<<<<< HEAD
+=======
+        //一级能力平台监控
+        this._router.all('*', performanceMonitor.topPerformanceMonitor);
+>>>>>>> e588a6b240fd04c8de1116fa3e6dbc8bbfedd1ed
         // 对管理员操作进行basic-auth身份认证
         //this._router.all("/apis/*", adminPlugin.basicAuth);
         /**

@@ -88,6 +88,10 @@ class PerformanceMonitorPlugin {
     soursePerformanceMonitor(req, res, next) {
         //二级平台性能监控的的服务名称
         let serverName = this._soursePerformanceHost.toString() + req.originalUrl.toString();
+<<<<<<< HEAD
+=======
+        // serverName 目前都是这种www.linyimin.club:10010/bookTo?isBuy=true
+>>>>>>> e588a6b240fd04c8de1116fa3e6dbc8bbfedd1ed
         let SoursePerformance;
         let visitTime = new Date();
         if (SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.has(serverName)) {
@@ -113,6 +117,37 @@ class PerformanceMonitorPlugin {
         SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
             console.log(key + ' value= ' + value.totleVisit + ' ' + value.unitTimeTotleVisit + ' ' + value.concurrentVolume + ' ' + value.averageResponseTime);
         });
+<<<<<<< HEAD
+=======
+        new PerformanceService_1.PerformanceService().SoursePerformanceToFile();
+        next();
+    }
+    /**
+    * 二级能力平台性能监控1
+    * @param req
+    * @param res
+    * @param next
+    */
+    userPerformanceMonitor(req, res, next) {
+        //用户性能监控的的服务名称
+        let username = req.require.username;
+        if (username == undefined) {
+        }
+        else {
+            let userPerformance;
+            let lastVIsitTime = new Date();
+            if (userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.has(username)) {
+                userPerformance = userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.get(username);
+            }
+            else {
+                userPerformance = new userPerformanceModel_1.UserPerformanceModel();
+            }
+            userPerformance.totleVisit++;
+            userPerformance.unitTimeTotleVisit++;
+            userPerformance.lastVisitTime = lastVIsitTime;
+            userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.set(username, userPerformance);
+        }
+>>>>>>> e588a6b240fd04c8de1116fa3e6dbc8bbfedd1ed
         next();
     }
 }
