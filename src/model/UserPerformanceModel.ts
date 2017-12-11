@@ -12,7 +12,13 @@ class UserPerformanceModel {
     constructor() {
        
     }
-    
+    public static getAll():String{
+        let str:String = '';
+        UserPerformanceModel._userPerformanceMap.forEach(function(value,key,map){
+            str = str+'\n'+ key+' value= '+value.totleVisit+' '+value.unitTimeTotleVisit+' '+value._lastVisitTime;
+        });
+        return str;
+    }
     public get(): any {
         return this._userName;
     }

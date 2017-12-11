@@ -1,0 +1,4 @@
+
+  serverName:www.linyimin.club:10010/bookTo  totleVisit: 2  unitTimeTotleVisit:2  concurrentVolume:0  averageResponseTime:2
+  serverName:www.linyimin.club:10010/bookBack  totleVisit: 2  unitTimeTotleVisit:2  concurrentVolume:0  averageResponseTime:2
+  serverName:www.linyimin.club:10010/refundTo  totleVisit: 2  unitTimeTotleVisit:2  concurrentVolume:1  averageResponseTime:2

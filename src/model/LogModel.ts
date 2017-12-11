@@ -16,7 +16,9 @@ class LogModel {
     constructor() {
        
     }
-    
+    public getAll():String{
+        return this._ID+' '+this._time+' '+this._username+' '+this._classes+' '+this._ip+' '+this._device+' '+this._service+' '+this._status+' '+this._responseTime;
+    }
     public get(): any {
         return [this._ID,this._time,this._username,this._classes,this._ip,this._device,this._service,this._status,this._responseTime];
     }

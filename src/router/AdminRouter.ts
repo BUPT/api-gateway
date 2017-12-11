@@ -29,9 +29,11 @@ class AdminRouter{
         let performanceMonitor:PerformanceMonitorPlugin = new PerformanceMonitorPlugin();
 
         // 允许跨域访问
-        this._router.all('*', adminPlugin.allowCORSAccess)
+        this._router.all('*', adminPlugin.allowCORSAccess);
         //性能监控
-        this._router.all('*',performanceMonitor.logPerformanceMonitor)
+        this._router.all('*',performanceMonitor.logPerformanceMonitor);
+        //一级能力平台监控
+        this._router.all('*',performanceMonitor.topPerformanceMonitor);
         // 对管理员操作进行basic-auth身份认证
         //this._router.all("/apis/*", adminPlugin.basicAuth);
         /**
