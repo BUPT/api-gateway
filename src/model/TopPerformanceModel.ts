@@ -4,7 +4,7 @@
  * 
  */
 class TopPerformanceModel {
-    static topPerformance:TopPerformanceModel;
+    static topPerformance:TopPerformanceModel = new TopPerformanceModel();
     private _totleVisit:number=0;
     private _unitTimeTotleVisit:number=0;
     private _concurrentVolume:number=0;
@@ -21,7 +21,7 @@ class TopPerformanceModel {
         TopPerformanceModel.topPerformance = new TopPerformanceModel()
     }
     public static getAll():String{
-        return TopPerformanceModel.topPerformance._totleVisit+' '+TopPerformanceModel.topPerformance._unitTimeTotleVisit+' '+TopPerformanceModel.topPerformance._concurrentVolume+' '+TopPerformanceModel.topPerformance._cpuUsage+' '+TopPerformanceModel.topPerformance._iopsUsage+' '+TopPerformanceModel.topPerformance._memoryUsage+' '+TopPerformanceModel.topPerformance._averageResponseTime+' ';
+        return '总访问次数: '+TopPerformanceModel.topPerformance._totleVisit+'   单位时间总访问次数: '+TopPerformanceModel.topPerformance._unitTimeTotleVisit+'   并发数: '+TopPerformanceModel.topPerformance._concurrentVolume+'   cpu利用率：'+TopPerformanceModel.topPerformance._cpuUsage+'   iopsUsage：'+TopPerformanceModel.topPerformance._iopsUsage+'   memory利用率：'+TopPerformanceModel.topPerformance._memoryUsage+'   均响应时间：'+TopPerformanceModel.topPerformance._averageResponseTime+'';
     }
     public get(): any {
         return this._cpuUsage;
@@ -30,23 +30,44 @@ class TopPerformanceModel {
     set totleVisit(totleVisit:number){
         this._totleVisit  =totleVisit;
     }
+    get totleVisit():number{
+        return this._totleVisit;
+    }
     set unitTimeTotleVisit(unitTimeTotleVisit:number){
         this._unitTimeTotleVisit = unitTimeTotleVisit;
+    }
+    get unitTimeTotleVisit():number{
+        return this._unitTimeTotleVisit;
     }
     set concurrentVolume(concurrentVolume:number) {
         this._concurrentVolume = concurrentVolume;
     }
+    get concurrentVolume():number{
+        return this._concurrentVolume;
+    }
     set cpuUsage(cpuUsage:number){
         this._cpuUsage = cpuUsage;
+    }
+    get cpuUsage():number{
+        return this._cpuUsage;
     }
     set memoryUsage(memoryUsage:String){
         this._memoryUsage = memoryUsage;
     }
+    get memoryUsage():String{
+        return this._memoryUsage;
+    }
     set iopsUsage(iopsUsage:number){
         this._iopsUsage = iopsUsage;
     }
+    get iopsUsage():number{
+        return this._iopsUsage;
+    }
     set averageResponseTime(averageResponseTime:number){
         this._averageResponseTime = averageResponseTime;
+    }
+    get averageResponseTime():number{
+        return this._averageResponseTime;
     }
 
 

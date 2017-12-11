@@ -4,7 +4,7 @@ import fs = require("fs");
 import {TopPerformanceModel} from "../model/TopPerformanceModel";
 import {SoursePerformanceModel} from "../model/SoursePerformanceModel";
 import { UserPerformanceModel } from "../model/userPerformanceModel";
-
+import {PerformanceMonitorPlugin} from "../plugin/PerformanceMonitorPlugin"
 class PerformanceService{
     /**
      * 日志存放到本地文件中
@@ -19,21 +19,22 @@ class PerformanceService{
      * @param 
      */
     public topPerformanceToFile():void{
-        fs.writeFileSync('performanceFile/topPerformance.txt',TopPerformanceModel.getAll()); 
+        PerformanceMonitorPlugin.topPerformanceMonitorCommen();
+        fs.writeFileSync('./performanceFile/topPerformance.txt',TopPerformanceModel.getAll()); 
     }
      /**
      * Api监控数据存放到本地文件中
      * @param 
      */
     public SoursePerformanceToFile():void{
-        fs.writeFileSync('performanceFile/SoursePerformance.txt',SoursePerformanceModel.getAll());         
+        fs.writeFileSync('./performanceFile/SoursePerformance.txt',SoursePerformanceModel.getAll());         
     }
      /**
      * 用户访问监控数据存放到本地文件中
      * @param 
      */
     public userPerformanceToFile():void{
-        fs.writeFileSync('performanceFile/userPerformance.txt',UserPerformanceModel.getAll());                 
+        fs.writeFileSync('./performanceFile/userPerformance.txt',UserPerformanceModel.getAll());                 
     }
      
 }

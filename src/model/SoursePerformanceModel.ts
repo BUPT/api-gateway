@@ -20,7 +20,7 @@ class SoursePerformanceModel {
     public static getAll(): String {
         let str :String = '';
         SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
-            str = str+'\n'+ key+' value= '+value.totleVisit+' '+value.unitTimeTotleVisit+' '+value.concurrentVolume+' '+value.averageResponseTime;
+            str = str+'\n'+ '  serverName:'+key+'  totleVisit: '+value.totleVisit+'  unitTimeTotleVisit:'+value.unitTimeTotleVisit+'  concurrentVolume:'+value.concurrentVolume+'  averageResponseTime:'+value.averageResponseTime;
         });
         return str;
     }

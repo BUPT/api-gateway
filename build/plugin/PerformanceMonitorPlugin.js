@@ -60,7 +60,7 @@ class PerformanceMonitorPlugin {
 * 一级网关能力平台性能监控1
 * 获取系统自带信息,cpu,memory信息
 */
-    topPerformanceMonitorCommen() {
+    static topPerformanceMonitorCommen() {
         TopPerformanceModel_1.TopPerformanceModel.topPerformance.memoryUsage = ((os.totalmem() - os.freemem()) / os.totalmem()).toFixed(3);
         osUtils.cpuUsage(function (value) {
             TopPerformanceModel_1.TopPerformanceModel.topPerformance.cpuUsage = value;
@@ -74,9 +74,9 @@ class PerformanceMonitorPlugin {
    *
    */
     topPerformanceMonitor(req, res, next) {
-        TopPerformanceModel_1.TopPerformanceModel.topPerformance.totleVisit++;
-        TopPerformanceModel_1.TopPerformanceModel.topPerformance.unitTimeTotleVisit++;
-        TopPerformanceModel_1.TopPerformanceModel.topPerformance.concurrentVolume++;
+        TopPerformanceModel_1.TopPerformanceModel.topPerformance.totleVisit = TopPerformanceModel_1.TopPerformanceModel.topPerformance.totleVisit + 1;
+        TopPerformanceModel_1.TopPerformanceModel.topPerformance.unitTimeTotleVisit = TopPerformanceModel_1.TopPerformanceModel.topPerformance.unitTimeTotleVisit + 1;
+        TopPerformanceModel_1.TopPerformanceModel.topPerformance.concurrentVolume = TopPerformanceModel_1.TopPerformanceModel.topPerformance.concurrentVolume + 1;
         let visitTime = new Date();
         req.on('end', function () {
             let responseTime = new Date();
@@ -87,6 +87,8 @@ class PerformanceMonitorPlugin {
         }).on('error', function () {
             TopPerformanceModel_1.TopPerformanceModel.topPerformance.concurrentVolume--;
         });
+        //每次访问就写入文件一次
+        new PerformanceService_1.PerformanceService().topPerformanceToFile();
         next();
     }
     /**
@@ -98,6 +100,7 @@ class PerformanceMonitorPlugin {
     soursePerformanceMonitor(req, res, next) {
         //二级平台性能监控的的服务名称
         let serverName = this._soursePerformanceHost.toString() + req.originalUrl.toString();
+        // serverName 目前都是这种www.linyimin.club:10010/bookTo?isBuy=true
         let SoursePerformance;
         let visitTime = new Date();
         if (SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.has(serverName)) {
@@ -123,6 +126,7 @@ class PerformanceMonitorPlugin {
         SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
             console.log(key + ' value= ' + value.totleVisit + ' ' + value.unitTimeTotleVisit + ' ' + value.concurrentVolume + ' ' + value.averageResponseTime);
         });
+        new PerformanceService_1.PerformanceService().SoursePerformanceToFile();
         next();
     }
     /**
