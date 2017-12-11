@@ -33,7 +33,7 @@ class AdminRouter{
         //性能监控
         this._router.all('*',performanceMonitor.logPerformanceMonitor)
         // 对管理员操作进行basic-auth身份认证
-        this._router.all("/apis/*", adminPlugin.basicAuth);
+        //this._router.all("/apis/*", adminPlugin.basicAuth);
         /**
          * @swagger
          * /apis/register:
@@ -296,6 +296,23 @@ class AdminRouter{
 
         /**
          * @swagger
+         * /apis/getAllAPIInfoWithKong:
+         *   get:
+         *       description: 根据Kong的格式获取全部API数据
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getAllAPIInfoWithKong", adminPlugin.getAllAPIInfoWithKong);
+
+
+        /**
+         * @swagger
          * /apis/getApiInfoByType:
          *   get:
          *       description: 根据API的类型获取API信息
@@ -324,7 +341,7 @@ class AdminRouter{
          *       description: 组合API重命名
          *       deprecated: false
          *       tags:
-         *           - "API管理"
+         *           - "组合API管理"
          *       parameters:
          *         - name: url
          *           in: query
@@ -351,7 +368,7 @@ class AdminRouter{
          *       description: 组合API测试
          *       deprecated: false
          *       tags:
-         *           - "API管理"
+         *           - "组合API管理"
          *       parameters:
          *         - name: url
          *           in: query
@@ -373,7 +390,7 @@ class AdminRouter{
          *       description: 获取组合API的流程xml文件
          *       deprecated: false
          *       tags:
-         *           - "API管理"
+         *           - "组合API管理"
          *       parameters:
          *         - name: url
          *           in: query
@@ -397,7 +414,7 @@ class AdminRouter{
          *       description: 存储组合API的原子API的信息
          *       deprecated: false
          *       tags:
-         *           - "API管理"
+         *           - "组合API管理"
          *       parameters:
          *         - name: moduleId
          *           in: query
@@ -460,7 +477,7 @@ class AdminRouter{
          *       description: 获取组合API的原子API的信息
          *       deprecated: false
          *       tags:
-         *           - "API管理"
+         *           - "组合API管理"
          *       parameters:
          *         - name: moduleId
          *           in: query
@@ -488,12 +505,32 @@ class AdminRouter{
          *       description: 注册组合API
          *       deprecated: false
          *       tags:
-         *           - "API管理"
+         *           - "组合API管理"
          *       parameters:
          *         - name: combinationUrl
          *           in: query
          *           description: 组合API对应的url
          *           required: true
+         *           type: string
+         *         - name: name
+         *           in: query
+         *           description: 组合API对应的名称
+         *           required: false
+         *           type: string
+         *         - name: ID
+         *           in: query
+         *           description: 组合API对应的ID
+         *           required: false
+         *           type: string
+         *         - name: argument
+         *           in: query
+         *           description: 组合API对应的参数
+         *           required: false
+         *           type: string
+         *         - name: response
+         *           in: query
+         *           description: 组合API对应的输出
+         *           required: false
          *           type: string
          *         - name: flowJson
          *           in: query

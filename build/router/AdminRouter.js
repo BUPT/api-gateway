@@ -5,8 +5,9 @@ let router = express.Router();
 const AdminPlugin_1 = require("../plugin/AdminPlugin");
 const UserPlugin_1 = require("../plugin/UserPlugin");
 const RegisterPlugin_1 = require("../plugin/RegisterPlugin");
-const CombinationPlugin_1 = require("../plugin/CombinationPlugin");
+const CombinationUrlPlugin_1 = require("../plugin/CombinationUrlPlugin");
 const config_1 = require("../config/config");
+const CombinationPlugin_1 = require("../plugin/CombinationPlugin");
 const PerformanceMonitorPlugin_1 = require("../plugin/PerformanceMonitorPlugin");
 class AdminRouter {
     constructor() {
@@ -21,6 +22,7 @@ class AdminRouter {
         let adminPlugin = new AdminPlugin_1.AdminPlugin();
         let userPlugin = new UserPlugin_1.UserPlugin();
         let registerPlugin = new RegisterPlugin_1.RegisterPlugin();
+        let combinationUrlPlugin = new CombinationUrlPlugin_1.CombinationUrlPlugin();
         let combinationPlugin = new CombinationPlugin_1.CombinationPlugin();
         let performanceMonitor = new PerformanceMonitorPlugin_1.PerformanceMonitorPlugin();
         // 允许跨域访问
@@ -28,7 +30,7 @@ class AdminRouter {
         //性能监控
         this._router.all('*', performanceMonitor.logPerformanceMonitor);
         // 对管理员操作进行basic-auth身份认证
-        this._router.all("/apis/*", adminPlugin.basicAuth);
+        //this._router.all("/apis/*", adminPlugin.basicAuth);
         /**
          * @swagger
          * /apis/register:
@@ -256,7 +258,7 @@ class AdminRouter {
         // 静态页面
         this._router.use("/static", express.static(config.getPath().static));
         // 组合API
-        this._router.post("/combination/getFlowXML", combinationPlugin.getFloWXMLFile);
+        this._router.post("/combination/getFlowXML", combinationUrlPlugin.getFloWXMLFile);
         /**
          * @swagger
          * /apis/getAllAPI:
@@ -274,12 +276,48 @@ class AdminRouter {
         this._router.get("/apis/getAllAPI", adminPlugin.getAllAPI);
         /**
          * @swagger
+         * /apis/getAllAPIInfoWithKong:
+         *   get:
+         *       description: 根据Kong的格式获取全部API数据
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getAllAPIInfoWithKong", adminPlugin.getAllAPIInfoWithKong);
+        /**
+         * @swagger
+         * /apis/getApiInfoByType:
+         *   get:
+         *       description: 根据API的类型获取API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: APIType
+         *           in: query
+         *           description: API的类型
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getApiInfoByType", adminPlugin.getApiInfoByType);
+        /**
+         * @swagger
          * /apis/renameServiceName:
          *   get:
          *       description: 组合API重命名
          *       deprecated: false
          *       tags:
-         *           - "API管理"
+         *           - "组合API管理"
          *       parameters:
          *         - name: url
          *           in: query
@@ -305,7 +343,7 @@ class AdminRouter {
          *       description: 组合API测试
          *       deprecated: false
          *       tags:
-         *           - "API管理"
+         *           - "组合API管理"
          *       parameters:
          *         - name: url
          *           in: query
@@ -326,7 +364,7 @@ class AdminRouter {
          *       description: 获取组合API的流程xml文件
          *       deprecated: false
          *       tags:
-         *           - "API管理"
+         *           - "组合API管理"
          *       parameters:
          *         - name: url
          *           in: query
@@ -339,7 +377,140 @@ class AdminRouter {
          *         200:
          *           description:OK
          */
-        this._router.get("/apis/getCombinationApiFlowXml", combinationPlugin.getFlowData);
+        this._router.get("/apis/getCombinationApiFlowXml", combinationUrlPlugin.getFlowData);
+        /**
+         * @swagger
+         * /apis/storeAtomApiInfo:
+         *   get:
+         *       description: 存储组合API的原子API的信息
+         *       deprecated: false
+         *       tags:
+         *           - "组合API管理"
+         *       parameters:
+         *         - name: moduleId
+         *           in: query
+         *           description: 原子API的对应的块ID
+         *           required: true
+         *           type: string
+         *         - name: type
+         *           in: query
+         *           description: 原子API对应的类型
+         *           required: false
+         *           type: string
+         *         - name: name
+         *           in: query
+         *           description: 原子API的名称
+         *           required: false
+         *           type: string
+         *         - name: id
+         *           in: query
+         *           description: 原子API对应的ID
+         *           required: false
+         *           type: string
+         *         - name: argument
+         *           in: query
+         *           description: 原子API的对应参数信息
+         *           required: true
+         *           type: string
+         *         - name: response
+         *           in: query
+         *           description: 原子API对应的返回结果
+         *           required: false
+         *           type: string
+         *         - name: URL
+         *           in: query
+         *           description: 原子API的对应的URL
+         *           required: true
+         *           type: string
+         *         - name: isAsync
+         *           in: query
+         *           description: 是否异步
+         *           required: false
+         *           type: string
+         *         - name: condition
+         *           in: query
+         *           description: 原子API的执行条件
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/storeAtomApiInfo", combinationPlugin.storeAtomApiInfo);
+        /**
+         * @swagger
+         * /apis/getAtomApiInfo:
+         *   get:
+         *       description: 获取组合API的原子API的信息
+         *       deprecated: false
+         *       tags:
+         *           - "组合API管理"
+         *       parameters:
+         *         - name: moduleId
+         *           in: query
+         *           description: 原子API的对应的块ID
+         *           required: true
+         *           type: string
+         *         - name: combinationUrl
+         *           in: query
+         *           description: 组合API对应的url
+         *           required: false
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getAtomApiInfo", combinationPlugin.getAtomApiInfo);
+        /**
+         * @swagger
+         * /apis/registerCombinationAPI:
+         *   get:
+         *       description: 注册组合API
+         *       deprecated: false
+         *       tags:
+         *           - "组合API管理"
+         *       parameters:
+         *         - name: combinationUrl
+         *           in: query
+         *           description: 组合API对应的url
+         *           required: true
+         *           type: string
+         *         - name: name
+         *           in: query
+         *           description: 组合API对应的名称
+         *           required: true
+         *           type: string
+         *         - name: ID
+         *           in: query
+         *           description: 组合API对应的ID
+         *           required: true
+         *           type: string
+         *         - name: argument
+         *           in: query
+         *           description: 组合API对应的参数
+         *           required: true
+         *           type: string
+         *         - name: response
+         *           in: query
+         *           description: 组合API对应的输出
+         *           required: true
+         *           type: string
+         *         - name: flowJson
+         *           in: query
+         *           description: 组合API对应的流程文件
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/registerCombinationAPI", combinationPlugin.registerCombinationAPI);
     }
 }
 exports.AdminRouter = AdminRouter;

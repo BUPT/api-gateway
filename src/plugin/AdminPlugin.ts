@@ -225,6 +225,40 @@ class AdminPlugin{
         res.json(apiInfos.getReturn());
     }
 
+
+    public async getAllAPIInfoWithKong(req, res): Promise<void>{
+        let urlService: UrlService = new UrlService();
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let config: Config = new Config();
+        let result: {[key: string]: string}[] = [];
+        // 获取url表中的所有信息
+        let urlResult: GeneralResult = await urlService.query({});
+        if(urlResult.getResult() === true && urlResult.getDatum().length > 0){
+            let temp: {[key: string]: string} = {};
+            for(let i = 0; i < urlResult.getDatum().length; i++){
+                let apiInfoResult: GeneralResult = await apiInfoService.query({URL: urlResult.getDatum()[i].from});
+                if(apiInfoResult.getResult() === true && apiInfoResult.getDatum().length > 0){
+                    temp.method = urlResult.getDatum()[i].method;
+                    temp.name = apiInfoResult.getDatum()[0].name;
+                    temp.host = config .getApiServer().host;
+                    temp.interface = urlResult.getDatum()[i].from;
+                    temp.uris = urlResult.getDatum()[i].to;
+                    temp.upstreamUrl = urlResult.getDatum()[i].to + temp.interface;
+                    temp.time = "2017-12-07 12:09:22";
+                    result[i] = temp;
+                }
+            }
+            res.json(new GeneralResult(true, "", result).getReturn());
+        }else{
+            res.json(new GeneralResult(false, "您还没有注册相关API", null).getReturn());
+        }
+    }
+
+    /**
+     * 根据API的类型获取API数据信息
+     * @param req 
+     * @param res 
+     */
     public async getApiInfoByType(req, res): Promise<void>{
         // 获取api类型
         let type: string = req.query.APIType;
