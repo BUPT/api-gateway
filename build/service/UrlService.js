@@ -89,5 +89,28 @@ class UrlService {
             }
         });
     }
+    /**
+     * 查询url表中的信息
+     * @param data
+     */
+    query(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // 传递上下文
+            let _this = this;
+            return new Promise(function (resolve) {
+                _this._db.then(function (db) {
+                    let urlModel = new UrlModel_1.UrlModel(db);
+                    urlModel.query(data, function (err, results) {
+                        if (err) {
+                            resolve(new GeneralResult_1.GeneralResult(false, err.message, null));
+                        }
+                        else {
+                            resolve(new GeneralResult_1.GeneralResult(true, null, results));
+                        }
+                    });
+                });
+            });
+        });
+    }
 }
 exports.UrlService = UrlService;

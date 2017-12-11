@@ -1,7 +1,7 @@
 import {CombinationUrlModel} from "../model/CombinationUrlModel";
 import {DBConnect} from "../util/DBConnect";
 import { GeneralResult } from "../general/GeneralResult";
-import { CombinationPlugin } from "../plugin/CombinationPlugin";
+import { CombinationUrlPlugin } from "../plugin/CombinationUrlPlugin";
 import { ApiInfoService} from "./ApiInfoService";
 
 class CombinationUrlService{

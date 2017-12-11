@@ -2,6 +2,7 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   x-appId: "001"
+  x-realhost: www.linyimin.club:10010
   title: A simple API Gateway 
 # during dev, should point to your local machine
 host: www.linyimin.club:8000

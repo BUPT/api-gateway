@@ -5,10 +5,10 @@ const TopPerformanceModel_1 = require("../model/TopPerformanceModel");
 const SoursePerformanceModel_1 = require("../model/SoursePerformanceModel");
 const sd = require("silly-datetime");
 const GetIp_1 = require("../util/GetIp");
+const fs = require("fs");
+const util = require("util");
 const os = require("os");
 const osUtils = require("os-utils");
-const userPerformanceModel_1 = require("../model/userPerformanceModel");
-const PerformanceService_1 = require("../service/PerformanceService");
 /**
  * 性能监控插件
  */
@@ -31,36 +31,26 @@ class PerformanceMonitorPlugin {
      */
     logPerformanceMonitor(req, res, next) {
         let logModel = new LogModel_1.LogModel();
-        if (req.query.username != undefined) {
-            logModel.username = req.query.username;
-            logModel.classes = 'common';
-        }
-        else {
-            logModel.username = 'null';
-            logModel.classes = 'null';
-        }
         logModel.time = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
         logModel.ip = GetIp_1.GetIP.getClientIP(req);
         logModel.status = 'succeed'; //默认为成功
-        logModel.service = req.originalUrl;
+        logModel.service = '访问服务';
         logModel.device = req.rawHeaders[5];
         req.on('end', function () {
             logModel.responseTime = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
-            // console.log(logModel.get())           
+            console.log(logModel.get());
         }).on('error', function () {
             logModel.status = 'error';
-            // console.log(logModel.get())  
+            console.log(logModel.get());
         });
-        let performanceService = new PerformanceService_1.PerformanceService();
-        performanceService.logPerformanceToFile(logModel);
-        // fs.writeFileSync('req',util.inspect(req,{depth:null})); //depth:null 展开全部层级
+        fs.writeFileSync('req', util.inspect(req, { depth: null })); //depth:null 展开全部层级
         next();
     }
     /**
 * 一级网关能力平台性能监控1
 * 获取系统自带信息,cpu,memory信息
 */
-    static topPerformanceMonitorCommen() {
+    topPerformanceMonitorCommen() {
         TopPerformanceModel_1.TopPerformanceModel.topPerformance.memoryUsage = ((os.totalmem() - os.freemem()) / os.totalmem()).toFixed(3);
         osUtils.cpuUsage(function (value) {
             TopPerformanceModel_1.TopPerformanceModel.topPerformance.cpuUsage = value;
@@ -74,9 +64,9 @@ class PerformanceMonitorPlugin {
    *
    */
     topPerformanceMonitor(req, res, next) {
-        TopPerformanceModel_1.TopPerformanceModel.topPerformance.totleVisit = TopPerformanceModel_1.TopPerformanceModel.topPerformance.totleVisit + 1;
-        TopPerformanceModel_1.TopPerformanceModel.topPerformance.unitTimeTotleVisit = TopPerformanceModel_1.TopPerformanceModel.topPerformance.unitTimeTotleVisit + 1;
-        TopPerformanceModel_1.TopPerformanceModel.topPerformance.concurrentVolume = TopPerformanceModel_1.TopPerformanceModel.topPerformance.concurrentVolume + 1;
+        TopPerformanceModel_1.TopPerformanceModel.topPerformance.totleVisit++;
+        TopPerformanceModel_1.TopPerformanceModel.topPerformance.unitTimeTotleVisit++;
+        TopPerformanceModel_1.TopPerformanceModel.topPerformance.concurrentVolume++;
         let visitTime = new Date();
         req.on('end', function () {
             let responseTime = new Date();
@@ -87,21 +77,21 @@ class PerformanceMonitorPlugin {
         }).on('error', function () {
             TopPerformanceModel_1.TopPerformanceModel.topPerformance.concurrentVolume--;
         });
-        //每次访问就写入文件一次
-        new PerformanceService_1.PerformanceService().topPerformanceToFile();
         next();
     }
     /**
-    * 二级能力平台性能监控
+    * 二级能力平台性能监控1
     * @param req
     * @param res
     * @param next
     */
     soursePerformanceMonitor(req, res, next) {
         //二级平台性能监控的的服务名称
-        // let serverName = this._soursePerformanceHost.toString()+req.originalUrl.toString();
-        let serverName = req.originalUrl.toString();
+        let serverName = this._soursePerformanceHost.toString() + req.originalUrl.toString();
+<<<<<<< HEAD
+=======
         // serverName 目前都是这种www.linyimin.club:10010/bookTo?isBuy=true
+>>>>>>> e588a6b240fd04c8de1116fa3e6dbc8bbfedd1ed
         let SoursePerformance;
         let visitTime = new Date();
         if (SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.has(serverName)) {
@@ -127,11 +117,13 @@ class PerformanceMonitorPlugin {
         SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
             console.log(key + ' value= ' + value.totleVisit + ' ' + value.unitTimeTotleVisit + ' ' + value.concurrentVolume + ' ' + value.averageResponseTime);
         });
+<<<<<<< HEAD
+=======
         new PerformanceService_1.PerformanceService().SoursePerformanceToFile();
         next();
     }
     /**
-    * 用户监控
+    * 二级能力平台性能监控1
     * @param req
     * @param res
     * @param next
@@ -155,39 +147,8 @@ class PerformanceMonitorPlugin {
             userPerformance.lastVisitTime = lastVIsitTime;
             userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.set(username, userPerformance);
         }
+>>>>>>> e588a6b240fd04c8de1116fa3e6dbc8bbfedd1ed
         next();
-    }
-    /**
-    * 返回二级能力平台性能监控数据的全部serverName
-    * 通过
-    * @param req
-    * @param res
-    */
-    viewSoursePerformanceKeys(req, res) {
-        let keys = [];
-        SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
-            keys.push(key);
-        });
-        res.send(keys);
-        return;
-    }
-    /**
-     * 返回二级能力平台性能监控数据
-     * 通过
-     * @param req
-     * @param res
-     */
-    viewSoursePerformance(req, res) {
-        // /user?name=tobi
-        let serverName = req.param('name');
-        console.log(serverName);
-        SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
-            if (key == serverName) {
-                res.json(JSON.stringify(value));
-                return;
-            }
-        });
-        return;
     }
 }
 exports.PerformanceMonitorPlugin = PerformanceMonitorPlugin;

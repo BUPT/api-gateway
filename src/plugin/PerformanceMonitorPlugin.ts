@@ -94,15 +94,14 @@ class PerformanceMonitorPlugin{
     }
 
      /**
-     * 二级能力平台性能监控
+     * 二级能力平台性能监控1
      * @param req 
      * @param res 
      * @param next 
      */
     public soursePerformanceMonitor(req, res, next): void{
         //二级平台性能监控的的服务名称
-        // let serverName = this._soursePerformanceHost.toString()+req.originalUrl.toString();
-        let serverName = req.originalUrl.toString();
+        let serverName = this._soursePerformanceHost.toString()+req.originalUrl.toString();
         // serverName 目前都是这种www.linyimin.club:10010/bookTo?isBuy=true
         let SoursePerformance :SoursePerformanceModel;
         let visitTime = new Date();
@@ -134,7 +133,7 @@ class PerformanceMonitorPlugin{
     }
 
      /**
-     * 用户监控
+     * 二级能力平台性能监控1
      * @param req 
      * @param res 
      * @param next 
@@ -196,5 +195,6 @@ class PerformanceMonitorPlugin{
         res.json(JSON.stringify(TopPerformanceModel.topPerformance));
         return ;
     }
+
 }
 export{PerformanceMonitorPlugin};

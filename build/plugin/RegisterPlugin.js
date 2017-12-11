@@ -11,12 +11,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const proxy = require("express-http-proxy");
 const PerformanceMonitorPlugin_1 = require("./PerformanceMonitorPlugin");
-let registerApp = express();
 const CombinationUrlService_1 = require("../service/CombinationUrlService");
 const ApiInfoService_1 = require("../service/ApiInfoService");
 const AdminPlugin_1 = require("../plugin/AdminPlugin");
-const CombinationPlugin_1 = require("./CombinationPlugin");
+const CombinationUrlPlugin_1 = require("./CombinationUrlPlugin");
 const UrlService_1 = require("../service/UrlService");
+const config_1 = require("../config/config");
+let registerApp = express();
 /**
  * 注册API数据
  */
@@ -34,6 +35,9 @@ class RegisterPlugin {
     loadData(url, combiantionUrlApiinfos) {
         return __awaiter(this, void 0, void 0, function* () {
             let data = new Map();
+            // 保存真实的API服务地址
+            let config = new config_1.Config();
+            let realhost = config.getApiServer().host + ":" + config.getApiServer().port;
             // _router数组存在数据，则清空
             if (this._registerApp._router) {
                 this._registerApp._router.stack.length = 2;
@@ -62,34 +66,20 @@ class RegisterPlugin {
             let combinationUrls = yield combinationUrlService.query({});
             // 存在组合API
             if (combinationUrls.getResult() == true) {
-                let combinationPlugin = new CombinationPlugin_1.CombinationPlugin();
+                let combinationUrlPlugin = new CombinationUrlPlugin_1.CombinationUrlPlugin();
                 for (let i = 0; i < (combinationUrls.getDatum()).length; i++) {
-                    let url = combinationUrls.getDatum()[0].url;
+                    let url = combinationUrls.getDatum()[i].url;
                     let atomUrls = (yield combinationUrlService.getAtomUrl(url)).getDatum();
                     let adminPlugin = new AdminPlugin_1.AdminPlugin();
                     let result = yield adminPlugin.testAPI(atomUrls);
                     if (result.get("flag") == true) {
-                        registerApp.use(url, combinationPlugin.combinationService);
+                        registerApp.use(url, combinationUrlPlugin.combinationService);
+                        // 获取url对应的APPId
+                        let apiInfo = yield apiInfoService.query({ url: atomUrls[0] });
                         // 为相关的API标注，以便后期注销
-                        this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = "001";
+                        this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = apiInfo.getDatum()[0].appId;
                         this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url;
-                        data.set(url, { to: "http://www.linyijin.club:8000", status: "0" });
-                        // 将数据插入数据库
-                        for (let j = 0; j < combiantionUrlApiinfos.length; j++) {
-                            if (combiantionUrlApiinfos[j].URL == url) {
-                                let apiInfo = {};
-                                apiInfo.ID = combiantionUrlApiinfos[j].ID;
-                                apiInfo.appId = combiantionUrlApiinfos[j].appId;
-                                apiInfo.name = combiantionUrlApiinfos[j].name;
-                                apiInfo.type = combiantionUrlApiinfos[j].type;
-                                apiInfo.argument = combiantionUrlApiinfos[j].argument;
-                                apiInfo.event = combiantionUrlApiinfos[j].event;
-                                apiInfo.URL = combiantionUrlApiinfos[j].URL;
-                                apiInfoService.insert([apiInfo]);
-                                break;
-                            }
-                        }
-                        urlService.insert([{ "APPId": "001", "to": "http://www.linyimin.club:8000", "from": url, "status": "0", "is_new": "1" }]);
+                        data.set(url, { to: realhost, status: "0" });
                     }
                 }
             }
@@ -133,6 +123,22 @@ class RegisterPlugin {
             }
         }
         console.log(data);
+    }
+    /**
+     * 初始化系统时从数据库读取数据进行注册
+     */
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let urlService = new UrlService_1.UrlService();
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            // 获取url表中的所有数据
+            let urlResult = yield urlService.query({});
+            // 获取API_info表中的所有数据
+            let apiInfoResult = yield apiInfoService.query({});
+            // 保存组合API的信息(API_info)
+            let combiantionUrlApiinfos = yield apiInfoService.query({ "type": "组合" });
+            yield this.loadData(urlResult.getDatum(), combiantionUrlApiinfos.getDatum());
+        });
     }
 }
 exports.RegisterPlugin = RegisterPlugin;

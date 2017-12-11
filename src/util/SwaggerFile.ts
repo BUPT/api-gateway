@@ -24,7 +24,6 @@ class SwaggerFile{
 
         let swaggerSpec = swaggerJsDoc(options);
         fs.writeFileSync(config.getPath().adminAPIsFile, JSON.stringify(swaggerSpec));
-        fs.writeFileSync(config.getPath().adminAPIsFile, JSON.stringify(swaggerSpec));
     }
 }
 export{SwaggerFile};
