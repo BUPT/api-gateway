@@ -101,35 +101,35 @@
 // let logModel :LogModel= new LogModel();
 // console.log(logModel.get());
 
-var proxy = require('express-http-proxy');
-var other_app = require('express')();
-var app = require('express')();
+// var proxy = require('express-http-proxy');
+// var other_app = require('express')();
+// var app = require('express')();
 
-other_app.use('/proxy0',function(req,res,next){
-    res.json({"name": "chenyuanxing"});
-    next();
-} );
-other_app.listen(12345);
+// other_app.use('/proxy0',function(req,res,next){
+//     res.json({"name": "chenyuanxing"});
+//     next();
+// } );
+// other_app.listen(12345);
 
 
 
-app.use('/proxy0', proxy('www.baidu.com'));
+// app.use('/proxy0', proxy('www.baidu.com'));
 
 // app.use('/proxy', proxy('localhost:12345', {
 //     proxyReqPathResolver: function(req) {
 //       return require('url').parse(req.url).path;
 //     }
 //   }));
-app.use('/proxy', proxy('localhost:12345', {
-    proxyReqPathResolver: function(req) {
-      return new Promise(
-          function (resolve, reject) {
-        setTimeout(function () {   // simulate async
-          var resolvedPathValue = "http://baidu.com";
-          resolve(resolvedPathValue);
-        }, 200);
-      }
-    );
-    }
-  }));
-app.listen(8888);
+// app.use('/proxy', proxy('localhost:12345', {
+//     proxyReqPathResolver: function(req) {
+//       return new Promise(
+//           function (resolve, reject) {
+//         setTimeout(function () {   // simulate async
+//           var resolvedPathValue = "http://baidu.com";
+//           resolve(resolvedPathValue);
+//         }, 200);
+//       }
+//     );
+//     }
+//   }));
+// app.listen(8888);

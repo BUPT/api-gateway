@@ -10,7 +10,8 @@ import util = require("util")
 import os = require("os")
 import osUtils = require("os-utils");
 import { print } from "util";
-
+import { UserPerformanceModel } from "../model/userPerformanceModel";
+import {PerformanceService} from "../service/PerformanceService"
 /**
  * 性能监控插件
  */
@@ -32,26 +33,35 @@ class PerformanceMonitorPlugin{
      */
     public logPerformanceMonitor(req, res, next): void{
         let logModel :LogModel= new LogModel();
+        if(req.query.username!=undefined){
+            logModel.username = req.query.username;    
+            logModel.classes = 'common';
+        }else{
+            logModel.username = 'null';
+            logModel.classes = 'null';
+        }
         logModel.time = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
         logModel.ip = GetIP.getClientIP(req);
         logModel.status = 'succeed';        //默认为成功
-        logModel.service = '访问服务';
+        logModel.service = req.originalUrl;
         logModel.device = req.rawHeaders[5];
         req.on('end',function(){
             logModel.responseTime = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss'); 
-            console.log(logModel.get())           
+            // console.log(logModel.get())           
         }).on('error',function(){
             logModel.status = 'error'
-            console.log(logModel.get())  
+            // console.log(logModel.get())  
         })
-        fs.writeFileSync('req',util.inspect(req,{depth:null})); //depth:null 展开全部层级
+        let performanceService :PerformanceService= new PerformanceService();
+        performanceService.logPerformanceToFile(logModel);
+        // fs.writeFileSync('req',util.inspect(req,{depth:null})); //depth:null 展开全部层级
         next();
     }
          /**
      * 一级网关能力平台性能监控1
      * 获取系统自带信息,cpu,memory信息
      */
-    public topPerformanceMonitorCommen(): void{
+    public static topPerformanceMonitorCommen(): void{
         TopPerformanceModel.topPerformance.memoryUsage = ((os.totalmem()-os.freemem())/os.totalmem()).toFixed(3);
         osUtils.cpuUsage(function(value){
             TopPerformanceModel.topPerformance.cpuUsage = value;
@@ -65,9 +75,9 @@ class PerformanceMonitorPlugin{
      * 
      */
     public topPerformanceMonitor(req, res, next): void{
-        TopPerformanceModel.topPerformance.totleVisit++;
-        TopPerformanceModel.topPerformance.unitTimeTotleVisit++;
-        TopPerformanceModel.topPerformance.concurrentVolume++;
+        TopPerformanceModel.topPerformance.totleVisit = TopPerformanceModel.topPerformance.totleVisit +1;
+        TopPerformanceModel.topPerformance.unitTimeTotleVisit =TopPerformanceModel.topPerformance.unitTimeTotleVisit+1 ;
+        TopPerformanceModel.topPerformance.concurrentVolume= TopPerformanceModel.topPerformance.concurrentVolume+1;
         let visitTime = new Date();
         req.on('end',function(){
             let responseTime =new Date(); 
@@ -78,18 +88,22 @@ class PerformanceMonitorPlugin{
         }).on('error',function(){
             TopPerformanceModel.topPerformance.concurrentVolume--;            
         })
+        //每次访问就写入文件一次
+        new PerformanceService().topPerformanceToFile();
         next();
     }
 
      /**
-     * 二级能力平台性能监控1
+     * 二级能力平台性能监控
      * @param req 
      * @param res 
      * @param next 
      */
     public soursePerformanceMonitor(req, res, next): void{
         //二级平台性能监控的的服务名称
-        let serverName = this._soursePerformanceHost.toString()+req.originalUrl.toString();
+        // let serverName = this._soursePerformanceHost.toString()+req.originalUrl.toString();
+        let serverName = req.originalUrl.toString();
+        // serverName 目前都是这种www.linyimin.club:10010/bookTo?isBuy=true
         let SoursePerformance :SoursePerformanceModel;
         let visitTime = new Date();
         if(SoursePerformanceModel._soursePerformanceMap.has(serverName)){
@@ -115,8 +129,68 @@ class PerformanceMonitorPlugin{
         SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
             console.log(key+' value= '+value.totleVisit+' '+value.unitTimeTotleVisit+' '+value.concurrentVolume+' '+value.averageResponseTime)
         })
-        
+        new PerformanceService().SoursePerformanceToFile();
         next();
+    }
+
+     /**
+     * 用户监控
+     * @param req 
+     * @param res 
+     * @param next 
+     */
+    public userPerformanceMonitor(req, res, next): void{
+        //用户性能监控的的服务名称
+        let username = req.require.username;
+        if(username==undefined){
+        }else{
+            let userPerformance :UserPerformanceModel;
+            let lastVIsitTime = new Date();
+            if(UserPerformanceModel._userPerformanceMap.has(username)){
+                userPerformance = UserPerformanceModel._userPerformanceMap.get(username);
+            }else{
+                userPerformance = new UserPerformanceModel();
+            }
+            userPerformance.totleVisit++;
+            userPerformance.unitTimeTotleVisit++;
+            userPerformance.lastVisitTime = lastVIsitTime;
+            UserPerformanceModel._userPerformanceMap.set(username,userPerformance);
+        }
+        next();
+    }
+
+     /**
+     * 返回二级能力平台性能监控数据的全部serverName
+     * 通过http://localhost:8001/viewSoursePerformanceKeys
+     * @param req 
+     * @param res 
+     */
+    public viewSoursePerformanceKeys(req, res):any{
+        let keys = [];
+        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
+            keys.push(key);
+        });
+        res.send(keys);
+        return ;
+    }
+    /**
+     * 返回二级能力平台性能监控数据
+     * 通过http://localhost:8001/viewSoursePerformance?name=/bookBack 返回json
+     * @param req 
+     * @param res 
+     */
+    public viewSoursePerformance(req, res):any{
+        // /user?name=tobi
+        let serverName :String= req.param('name');
+        console.log(serverName);
+        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
+            if(key ==serverName){
+                res.json(JSON.stringify(value));
+                return ;
+            }
+            
+        });
+        return ;
     }
 }
 export{PerformanceMonitorPlugin};
