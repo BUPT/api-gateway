@@ -3,6 +3,8 @@ import { GeneralResult } from "../general/GeneralResult";
 import { CombinationFlowService } from "../service/CombinationFlowService";
 import { ApiInfoService } from "../service/ApiInfoService";
 import { UrlService } from "../service/UrlService";
+import { Config } from "../config/config";
+import { RegisterPlugin } from "./RegisterPlugin";
 let atomApiInfo: { [key: string]: string } [] = [];
 let count: number = 0;
 class CombinationPlugin{
@@ -41,7 +43,7 @@ class CombinationPlugin{
             if(result.getResult() === true && result.getDatum().length >0){
                 res.json(result.getReturn());
             }else{
-                res.json(new GeneralResult(false, "改模块对应的API不存在", null));
+                res.json(new GeneralResult(false, "该模块对应的API不存在", null));
             }
             return;
         }
@@ -77,20 +79,59 @@ class CombinationPlugin{
         await combinationService.update({combination_url: atomApiInfo[0].combination_url}, atomApiInfo);
 
         // 找到原子API所属的项目或第三方
-        let temp: GeneralResult = await apiInfoService.query({URL: atomApiInfo[0].})
+        let temp: GeneralResult = await apiInfoService.query({URL: atomApiInfo[0].URL});
+        let appId: string = temp.getDatum()[0].appId;
         // 持久化存储后清空临时存储
         atomApiInfo = [];
 
 
-        
         let apiInfo: {[key: string]: string} = {};
         let url: {[key: string]: string} = {};
         let combinationFlow: {[key: string]: string} = {};
         apiInfo.ID = req.query.ID;
-       
-        apiInfo.appId = 
+        apiInfo.appId = appId;
+        apiInfo.name = req.query.name;
+        apiInfo.argument = req.query.argument;
+        apiInfo.response = req.query.response;
+        apiInfo.URL = combinationUrl;
+        apiInfo.type = "组合";
 
+        apiInfoService.insert([apiInfo]);
+
+        let config: Config = new Config();
+        url.APPId = appId;
+        url.from = combinationUrl;
+        url.to = config.getApiServer().host + ":" + config.getApiServer().port;
+        // TODO: 先检测之后在再确定status的值
+        // TODO: 添加访问方法类型
+        url.status = "0";
+        url.is_new = "1";
+        url.method = "get";
+
+        urlService.insert([url]);
+
+        combinationFlow.combination_url = combinationUrl;
+        combinationFlow.flow = flow;
+
+
+        combinationFlowService.insert([combinationFlow]);
+
+        // 注册
+        let registerPlugin: RegisterPlugin = new RegisterPlugin();
+        let registerApp = registerPlugin.getRegisterApp();
+        let combinationPlugin: CombinationPlugin = new CombinationPlugin();
+        registerApp.use(combinationUrl, combinationPlugin.combinationService);
+        // 为相关的API标注，以便后期注销
+        registerApp._router.stack[registerApp._router.stack.length - 1].appId = appId;
+        registerApp._router.stack[registerApp._router.stack.length - 1].url = combinationUrl;
+
+        
         res.json({"flowJson": flow});
+    }
+
+
+    public combinationService(){
+        console.log("hello");
     }
 
 }
