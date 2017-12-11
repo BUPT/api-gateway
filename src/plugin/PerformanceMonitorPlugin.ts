@@ -192,5 +192,9 @@ class PerformanceMonitorPlugin{
         });
         return ;
     }
+    public viewTopPerformance(req, res):any{
+        res.json(JSON.stringify(TopPerformanceModel.topPerformance));
+        return ;
+    }
 }
 export{PerformanceMonitorPlugin};
