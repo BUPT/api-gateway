@@ -169,7 +169,7 @@ class PerformanceMonitorPlugin{
         SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
             keys.push(key);
         });
-        res.send(keys);
+        res.json(keys);
         return ;
     }
     /**
@@ -180,11 +180,11 @@ class PerformanceMonitorPlugin{
      */
     public viewSoursePerformance(req, res):any{
         // /user?name=tobi
-        let serverName :String= req.param('name');
+        let serverName :String= req.query.name;
         console.log(serverName);
         SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
             if(key ==serverName){
-                res.json(JSON.stringify(value));
+                res.json(value);
                 return ;
             }
             
@@ -192,7 +192,7 @@ class PerformanceMonitorPlugin{
         return ;
     }
     public viewTopPerformance(req, res):any{
-        res.json(JSON.stringify(TopPerformanceModel.topPerformance));
+        res.json(TopPerformanceModel.topPerformance);
         return ;
     }
 
