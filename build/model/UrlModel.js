@@ -20,7 +20,8 @@ class UrlModel {
             from: String,
             to: String,
             status: String,
-            is_new: String
+            is_new: String,
+            method: String
         });
     }
     get() {

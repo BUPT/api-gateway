@@ -24,7 +24,7 @@ const GeneralResult_1 = require("../general/GeneralResult");
 const rq = require("request-promise");
 const CombinationUrlService_1 = require("../service/CombinationUrlService");
 const events = require("events");
-const CombinationPlugin_1 = require("./CombinationPlugin");
+const CombinationUrlPlugin_1 = require("./CombinationUrlPlugin");
 class AdminPlugin {
     /**
      * 基于basic-auth的身份认证
@@ -229,6 +229,55 @@ class AdminPlugin {
             res.json(apiInfos.getReturn());
         });
     }
+    getAllAPIInfoWithKong(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let urlService = new UrlService_1.UrlService();
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            let config = new config_1.Config();
+            let result = [];
+            // 获取url表中的所有信息
+            let urlResult = yield urlService.query({});
+            if (urlResult.getResult() === true && urlResult.getDatum().length > 0) {
+                let temp = {};
+                for (let i = 0; i < urlResult.getDatum().length; i++) {
+                    let apiInfoResult = yield apiInfoService.query({ URL: urlResult.getDatum()[i].from });
+                    if (apiInfoResult.getResult() === true && apiInfoResult.getDatum().length > 0) {
+                        temp.method = urlResult.getDatum()[i].method;
+                        temp.name = apiInfoResult.getDatum()[0].name;
+                        temp.host = config.getApiServer().host;
+                        temp.interface = urlResult.getDatum()[i].from;
+                        temp.uris = urlResult.getDatum()[i].to;
+                        temp.upstreamUrl = urlResult.getDatum()[i].to + temp.interface;
+                        temp.time = "2017-12-07 12:09:22";
+                        result[i] = temp;
+                    }
+                }
+                res.json(new GeneralResult_1.GeneralResult(true, "", result).getReturn());
+            }
+            else {
+                res.json(new GeneralResult_1.GeneralResult(false, "您还没有注册相关API", null).getReturn());
+            }
+        });
+    }
+    /**
+     * 根据API的类型获取API数据信息
+     * @param req
+     * @param res
+     */
+    getApiInfoByType(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // 获取api类型
+            let type = req.query.APIType;
+            let apiInfoService = new ApiInfoService_1.ApiInfoService();
+            let apiInfos = yield apiInfoService.query({ type: type });
+            if (apiInfos.getResult() === true && apiInfos.getDatum().length > 0) {
+                res.json(apiInfos.getReturn());
+            }
+            else {
+                res.json(new GeneralResult_1.GeneralResult(false, "输入的类型对应的API不存在", null).getReturn());
+            }
+        });
+    }
     /**
      * 修改组合API名字
      * @param req
@@ -253,8 +302,8 @@ class AdminPlugin {
                 }
             }
             // 向内存中注册新的url
-            let combinationPlugin = new CombinationPlugin_1.CombinationPlugin();
-            registerApp.use(serviceName, combinationPlugin.combinationService);
+            let combinationUrlPlugin = new CombinationUrlPlugin_1.CombinationUrlPlugin();
+            registerApp.use(serviceName, combinationUrlPlugin.combinationService);
             // 更新数据库
             //将URL转换成小驼峰类型的文件名
             let adminPlugin = new AdminPlugin();

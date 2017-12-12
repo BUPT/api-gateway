@@ -3,14 +3,15 @@ import proxy = require("express-http-proxy");
 import {PerformanceMonitorPlugin} from "./PerformanceMonitorPlugin"
 import { request } from "https";
 import { print } from "util";
-let registerApp = express();
 import {CombinationUrlService} from "../service/CombinationUrlService";
 import { ApiInfoService } from "../service/ApiInfoService";
 import { GeneralResult } from "../general/GeneralResult";
 import {AdminPlugin} from "../plugin/AdminPlugin";
-import { CombinationPlugin } from "./CombinationPlugin";
+import { CombinationUrlPlugin } from "./CombinationUrlPlugin";
 import { UrlService } from "../service/UrlService";
-
+import { config } from "bluebird";
+import { Config } from "../config/config";
+let registerApp = express();
 /**
  * 注册API数据
  */
@@ -26,6 +27,9 @@ class RegisterPlugin{
      */
     public async loadData(url: { [key: string]: any }[], combiantionUrlApiinfos:{[key: string]: any}[]): Promise<void>{
         let data = new Map();
+        // 保存真实的API服务地址
+        let config: Config = new Config();
+        let realhost: string = config.getApiServer().host + ":" + config.getApiServer().port;
         // _router数组存在数据，则清空
         if(this._registerApp._router){
             this._registerApp._router.stack.length = 2;
@@ -55,35 +59,21 @@ class RegisterPlugin{
         let combinationUrls: GeneralResult = await combinationUrlService.query({});
         // 存在组合API
         if(combinationUrls.getResult() == true){
-            let combinationPlugin: CombinationPlugin = new CombinationPlugin();
+            let combinationUrlPlugin: CombinationUrlPlugin = new CombinationUrlPlugin();
             for(let i = 0; i < (combinationUrls.getDatum()).length; i++){
-                let url: string = combinationUrls.getDatum()[0].url;
+                let url: string = combinationUrls.getDatum()[i].url;
                 let atomUrls: string [] = (await combinationUrlService.getAtomUrl(url)).getDatum();
                 let adminPlugin: AdminPlugin = new AdminPlugin();
                 let result: Map<string, any> = await adminPlugin.testAPI(atomUrls);
                 if(result.get("flag") == true){
-                    registerApp.use(url, combinationPlugin.combinationService);
-                    // 为相关的API标注，以便后期注销
-                    this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = "001";
-                    this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url;
-                    data.set(url, {to: "http://www.linyijin.club:8000", status:"0"});
+                    registerApp.use(url, combinationUrlPlugin.combinationService);
 
-                    // 将数据插入数据库
-                    for(let j = 0; j < combiantionUrlApiinfos.length; j++){
-                        if(combiantionUrlApiinfos[j].URL == url){
-                            let apiInfo: {[key: string]: string} = {};
-                            apiInfo.ID = combiantionUrlApiinfos[j].ID;
-                            apiInfo.appId = combiantionUrlApiinfos[j].appId;
-                            apiInfo.name = combiantionUrlApiinfos[j].name;
-                            apiInfo.type = combiantionUrlApiinfos[j].type;
-                            apiInfo.argument = combiantionUrlApiinfos[j].argument;
-                            apiInfo.event = combiantionUrlApiinfos[j].event;
-                            apiInfo.URL = combiantionUrlApiinfos[j].URL;
-                            apiInfoService.insert([apiInfo]);
-                            break;
-                        }
-                    }
-                    urlService.insert([{"APPId": "001", "to": "http://www.linyimin.club:8000", "from": url, "status": "0", "is_new": "1" }]);
+                    // 获取url对应的APPId
+                    let apiInfo: GeneralResult = await apiInfoService.query({url: atomUrls[0]});
+                    // 为相关的API标注，以便后期注销
+                    this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = apiInfo.getDatum()[0].appId;
+                    this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url;
+                    data.set(url, {to: realhost, status:"0"});
                 }
             }
         }
@@ -128,6 +118,23 @@ class RegisterPlugin{
             }
         }
         console.log(data);
+    }
+
+
+    /**
+     * 初始化系统时从数据库读取数据进行注册
+     */
+    public async init(): Promise<void>{
+        let urlService: UrlService = new UrlService();
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        // 获取url表中的所有数据
+        let urlResult: GeneralResult = await urlService.query({});
+        // 获取API_info表中的所有数据
+        let apiInfoResult: GeneralResult = await apiInfoService.query({});
+        // 保存组合API的信息(API_info)
+        let combiantionUrlApiinfos: GeneralResult = await apiInfoService.query({ "type": "组合" });
+        await this.loadData(urlResult.getDatum(), combiantionUrlApiinfos.getDatum());
+        
     }
 }
 export{RegisterPlugin};

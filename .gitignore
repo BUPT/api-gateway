@@ -58,4 +58,4 @@ typings/
 .env
 
 # 编译之后的js文件
-.js
+*.js

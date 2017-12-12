@@ -26,12 +26,12 @@ class YamlParse {
         let API_info = [];
         let url = [];
         let data = this.loadFile(filePath);
-        // 真实服务器地址"www.linyimin.club:10010"
-        let realHost = "www.linyimin.club:10010";
         // 基础URL
         let basePath = data.basePath;
         // 公司对应的ID
         let appId = data.info["x-appId"];
+        // 真实服务器地址
+        let realHost = data.info["x-realhost"];
         // API的ID
         let ID = "";
         // API名称
