@@ -12,6 +12,7 @@ import osUtils = require("os-utils");
 import { print } from "util";
 import { UserPerformanceModel } from "../model/userPerformanceModel";
 import {PerformanceService} from "../service/PerformanceService"
+import { GeneralResult } from "../general/GeneralResult";
 /**
  * 性能监控插件
  */
@@ -169,7 +170,21 @@ class PerformanceMonitorPlugin{
         SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
             keys.push(key);
         });
-        res.json(keys);
+        res.json(new GeneralResult(true,null,keys));
+        return ;
+    }
+    /**
+     * 返回二级能力平台性能监控数据
+     * 通过http://localhost:8001/viewSoursePerformance?name=/bookBack 返回json
+     * @param req 
+     * @param res 
+     */
+     public viewSoursePerformanceKeys(req, res):any{
+        let keys = [];
+        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
+            keys.push(key);
+        });
+        res.json(new GeneralResult(true,null,keys));
         return ;
     }
     /**
@@ -180,19 +195,21 @@ class PerformanceMonitorPlugin{
      */
     public viewSoursePerformance(req, res):any{
         // /user?name=tobi
-        let serverName :String= req.query.name;
+        let serverName :String= req.param('name');
         console.log(serverName);
-        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
-            if(key ==serverName){
-                res.json(value);
-                return ;
-            }
-            
-        });
+            console.log(serverName);
+            SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
+                if(key ==serverName){
+                    res.json(new GeneralResult(true,null,JSON.stringify(value)));
+                    return ;
+                }
+                
+            });
+           // res.json(new GeneralResult(false,null,{'data':'name dose not visit'}))
         return ;
     }
     public viewTopPerformance(req, res):any{
-        res.json(TopPerformanceModel.topPerformance);
+        res.json(new GeneralResult(true,null,TopPerformanceModel.topPerformance));
         return ;
     }
 
