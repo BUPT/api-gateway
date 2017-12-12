@@ -9,6 +9,7 @@ const os = require("os");
 const osUtils = require("os-utils");
 const userPerformanceModel_1 = require("../model/userPerformanceModel");
 const PerformanceService_1 = require("../service/PerformanceService");
+const GeneralResult_1 = require("../general/GeneralResult");
 /**
  * 性能监控插件
  */
@@ -159,7 +160,7 @@ class PerformanceMonitorPlugin {
     }
     /**
     * 返回二级能力平台性能监控数据的全部serverName
-    * 通过
+    * 通过http://localhost:8001/viewSoursePerformanceKeys
     * @param req
     * @param res
     */
@@ -168,12 +169,12 @@ class PerformanceMonitorPlugin {
         SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
             keys.push(key);
         });
-        res.send(keys);
+        res.json(new GeneralResult_1.GeneralResult(true, null, keys));
         return;
     }
     /**
      * 返回二级能力平台性能监控数据
-     * 通过
+     * 通过http://localhost:8001/viewSoursePerformance?name=/bookBack 返回json
      * @param req
      * @param res
      */
@@ -181,12 +182,18 @@ class PerformanceMonitorPlugin {
         // /user?name=tobi
         let serverName = req.param('name');
         console.log(serverName);
+        console.log(serverName);
         SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
             if (key == serverName) {
-                res.json(JSON.stringify(value));
+                res.json(new GeneralResult_1.GeneralResult(true, null, JSON.stringify(value)));
                 return;
             }
         });
+        // res.json(new GeneralResult(false,null,{'data':'name dose not visit'}))
+        return;
+    }
+    viewTopPerformance(req, res) {
+        res.json(new GeneralResult_1.GeneralResult(true, null, TopPerformanceModel_1.TopPerformanceModel.topPerformance));
         return;
     }
 }

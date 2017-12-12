@@ -29,6 +29,8 @@ class AdminRouter {
         this._router.all('*', performanceMonitor.logPerformanceMonitor);
         //一级能力平台监控
         this._router.all('*', performanceMonitor.topPerformanceMonitor);
+        //一级监控数据
+        this._router.all('/viewTopPerformance', performanceMonitor.viewTopPerformance);
         //api这一级监控数据的所有api名称
         this._router.all('/viewSoursePerformanceKeys', performanceMonitor.viewSoursePerformanceKeys);
         //api这一级监控数据

@@ -12,6 +12,7 @@ import osUtils = require("os-utils");
 import { print } from "util";
 import { UserPerformanceModel } from "../model/userPerformanceModel";
 import {PerformanceService} from "../service/PerformanceService"
+import { GeneralResult } from "../general/GeneralResult";
 /**
  * 性能监控插件
  */
@@ -170,7 +171,7 @@ class PerformanceMonitorPlugin{
         SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
             keys.push(key);
         });
-        res.send(keys);
+        res.json(new GeneralResult(true,null,keys));
         return ;
     }
     /**
@@ -183,17 +184,19 @@ class PerformanceMonitorPlugin{
         // /user?name=tobi
         let serverName :String= req.param('name');
         console.log(serverName);
-        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
-            if(key ==serverName){
-                res.json(JSON.stringify(value));
-                return ;
-            }
-            
-        });
+            console.log(serverName);
+            SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
+                if(key ==serverName){
+                    res.json(new GeneralResult(true,null,JSON.stringify(value)));
+                    return ;
+                }
+                
+            });
+           // res.json(new GeneralResult(false,null,{'data':'name dose not visit'}))
         return ;
     }
     public viewTopPerformance(req, res):any{
-        res.json(JSON.stringify(TopPerformanceModel.topPerformance));
+        res.json(new GeneralResult(true,null,TopPerformanceModel.topPerformance));
         return ;
     }
 }

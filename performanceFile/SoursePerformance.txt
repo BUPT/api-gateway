@@ -1,3 +1,2 @@
 
-  serverName:/bookTo  totleVisit: 1  unitTimeTotleVisit:1  concurrentVolume:0  averageResponseTime:16
-  serverName:/bookBack  totleVisit: 1  unitTimeTotleVisit:1  concurrentVolume:1  averageResponseTime:0
+  serverName:/bookTo  totleVisit: 1  unitTimeTotleVisit:1  concurrentVolume:1  averageResponseTime:0
