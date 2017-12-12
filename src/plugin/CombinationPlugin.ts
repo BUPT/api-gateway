@@ -174,6 +174,7 @@ class CombinationPlugin{
         url.status = "0";
         url.is_new = "1";
         url.method = "get";
+        url.is_atom = "0";
 
         urlService.insert([url]);
 
@@ -196,6 +197,11 @@ class CombinationPlugin{
     }
 
 
+    /**
+     * 组合API的执行
+     * @param req 
+     * @param res 
+     */
     public async combinationService(req, res): Promise<void>{
         // 获取流程文件
         let combinationFlowService: CombinationFlowService = new CombinationFlowService();
@@ -206,11 +212,20 @@ class CombinationPlugin{
         run(flowJson);
         res.json({"data": flowJson});
     }
+
+    /**
+     * 事件发布
+     * @param req 
+     * @param res 
+     */
     public publish(req, res){
         eventEmitter.emit(req.query.event);
         res.json({data:"发布事件"});
     }
 
+    public async initCombinationService(): Promise<void>{
+
+    }
 }
 
 export{CombinationPlugin};

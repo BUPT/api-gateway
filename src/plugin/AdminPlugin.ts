@@ -105,7 +105,7 @@ class AdminPlugin{
         await apiInfoService.loadData(apiInfo);
         // 将API注册信息加载到内存
         let registerPlugin: RegisterPlugin = new RegisterPlugin();
-        registerPlugin.loadData(url, combiantionUrlApiinfos).catch(function(err){
+        registerPlugin.loadData(url).catch(function(err){
             console.log(err);
         });
         let config: Config = new Config();
