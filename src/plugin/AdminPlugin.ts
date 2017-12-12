@@ -17,6 +17,8 @@ import {CombinationUrlService} from "../service/CombinationUrlService";
 import events = require("events");
 import { CombinationUrlPlugin } from "./CombinationUrlPlugin";
 import { config } from "bluebird";
+
+import {CombinationService} from "../service/CombinationService";
 class AdminPlugin{
 
     /**
@@ -103,7 +105,7 @@ class AdminPlugin{
         await apiInfoService.loadData(apiInfo);
         // 将API注册信息加载到内存
         let registerPlugin: RegisterPlugin = new RegisterPlugin();
-        registerPlugin.loadData(url, combiantionUrlApiinfos).catch(function(err){
+        registerPlugin.loadData(url).catch(function(err){
             console.log(err);
         });
         let config: Config = new Config();
@@ -353,35 +355,26 @@ class AdminPlugin{
         let url: string = req.query.url;
         let config: Config = new Config();
         // 获取组合API的原子API ID
-        let combinationUrlService: CombinationUrlService = new CombinationUrlService();
-        // let queryResult: GeneralResult = await combinationUrlService.query({url:url});
-        // // 判断该url是否存在
-        // if(queryResult.getResult() == false || queryResult.getDatum().length == 0){
-        //     res.json(new GeneralResult(false, "该API不存在", url + "该url不存在").getReturn());
-        //     return;
-        // }
-        // let id: string[] = queryResult.getDatum()[0].atom_url.split(",");
-        // // 根据API的id查询API对应的url,并存储在urls中
-        // let urls: string [] = [];
-        // let apiInfoService: ApiInfoService = new ApiInfoService();
-        // for(let i = 0; i < id.length; i++){
-        //     let result: GeneralResult = await apiInfoService.queryById(id[i]);
-        //     urls[i] = (result.getDatum())[0].URL;
-        // }
-        let result: GeneralResult = await combinationUrlService.getAtomUrl(url);
+        let combinationService: CombinationService = new CombinationService();
+        let result: GeneralResult = await combinationService.query({combination_url: url});
         if(result.getResult() == false || result.getDatum().length == 0){
             res.json(result.getReturn());
             return;
         }
         // 保存所有的原子API
-        let urls: string[] = result.getDatum();
+        let urls: string[] = [];
+        for(let i =0; i < result.getDatum().lenth; i++){
+            urls[i] = result.getDatum()[i].URL;
+        }
+        
         // 保存测试结果
         let data: Map<string, any> = new Map();
         let adminPlugin: AdminPlugin = new AdminPlugin();
         data = await adminPlugin.testAPI(urls);
+        let host: string = config.getApiServer().host + ":" + config.getApiServer().port;
         // 测试复合API的URL
         if(data.get("flag") == true){
-            let result: boolean = await adminPlugin._request("http://www.linyimin.club:8000" + url);
+            let result: boolean = await adminPlugin._request(host + url);
             if(result == true){
                 data.set(url, "suceess");
                 res.json(new GeneralResult(true, null, adminPlugin._mapToObject(data)).getReturn());
@@ -418,9 +411,10 @@ class AdminPlugin{
         // flag为true表示所有原子API都可用
         let flag: boolean = true;
         let data: Map<string, any> = new Map();
-        console.log(urls);
+        let config: Config = new Config();
+        let host: string = config.getApiServer().host + ":" + config.getApiServer().port;
         for (let i = 0; i < urls.length; i++) {
-            let result: boolean = await this._request("http://www.linyimin.club:8000" + urls[i]);
+            let result: boolean = await this._request(host + urls[i]);
             if (result !== true) {
                 flag = false;
                 data.set(urls[i], "fail");

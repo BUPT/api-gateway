@@ -179,6 +179,20 @@ class PerformanceMonitorPlugin{
      * @param req 
      * @param res 
      */
+     public viewSoursePerformanceKeys(req, res):any{
+        let keys = [];
+        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
+            keys.push(key);
+        });
+        res.json(new GeneralResult(true,null,keys));
+        return ;
+    }
+    /**
+     * 返回二级能力平台性能监控数据
+     * 通过http://localhost:8001/viewSoursePerformance?name=/bookBack 返回json
+     * @param req 
+     * @param res 
+     */
     public viewSoursePerformance(req, res):any{
         // /user?name=tobi
         let serverName :String= req.param('name');

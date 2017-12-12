@@ -7,7 +7,7 @@ import {CombinationUrlService} from "../service/CombinationUrlService";
 import { ApiInfoService } from "../service/ApiInfoService";
 import { GeneralResult } from "../general/GeneralResult";
 import {AdminPlugin} from "../plugin/AdminPlugin";
-import { CombinationUrlPlugin } from "./CombinationUrlPlugin";
+import { CombinationPlugin } from "./CombinationPlugin";
 import { UrlService } from "../service/UrlService";
 import { config } from "bluebird";
 import { Config } from "../config/config";
@@ -25,20 +25,22 @@ class RegisterPlugin{
      * 重新加载注册API
      * @param url 
      */
-    public async loadData(url: { [key: string]: any }[], combiantionUrlApiinfos:{[key: string]: any}[]): Promise<void>{
+    public async loadData(url: { [key: string]: any }[]): Promise<void>{
         let data = new Map();
         // 保存真实的API服务地址
         let config: Config = new Config();
         let realhost: string = config.getApiServer().host + ":" + config.getApiServer().port;
+        let combinationPlugin: CombinationPlugin = new CombinationPlugin();
         // _router数组存在数据，则清空
         if(this._registerApp._router){
             this._registerApp._router.stack.length = 2;
         }
         // 加载数据
         for(let i = 0; i < url.length; i++){
-            let value = { "to": url[i].to, "status": url[i].status};
-            data.set(url[i].from, value);
-            if(url[i].status == 0){
+            // 注册原子API
+            if(url[i].status == 0 && url[i].is_atom === "1"){
+                let value = { "to": url[i].to, "status": url[i].status };
+                data.set(url[i].from, value);
                 let performanceMonitorPlugin:PerformanceMonitorPlugin =  new PerformanceMonitorPlugin();
                 performanceMonitorPlugin.soursePerformanceHost = url[i].to ;
                 this._registerApp.use(url[i].from,performanceMonitorPlugin.soursePerformanceMonitor.bind(performanceMonitorPlugin),proxy(url[i].to, {
@@ -47,43 +49,23 @@ class RegisterPlugin{
                     }
                 }));
                 // 为相关的API标注，以便后期注销
-                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[0].APPId;
-                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url[0].from;
+                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[i].APPId;
+                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url[i].from;
             }
-        }
-
-        // 加载组合API数据
-        let combinationUrlService: CombinationUrlService = new CombinationUrlService();
-        let apiInfoService: ApiInfoService = new ApiInfoService();
-        let urlService: UrlService = new UrlService();
-        let combinationUrls: GeneralResult = await combinationUrlService.query({});
-        // 存在组合API
-        if(combinationUrls.getResult() == true){
-            let combinationUrlPlugin: CombinationUrlPlugin = new CombinationUrlPlugin();
-            for(let i = 0; i < (combinationUrls.getDatum()).length; i++){
-                let url: string = combinationUrls.getDatum()[i].url;
-                let atomUrls: string [] = (await combinationUrlService.getAtomUrl(url)).getDatum();
-                let adminPlugin: AdminPlugin = new AdminPlugin();
-                let result: Map<string, any> = await adminPlugin.testAPI(atomUrls);
-                if(result.get("flag") == true){
-                    registerApp.use(url, combinationUrlPlugin.combinationService);
-
-                    // 获取url对应的APPId
-                    let apiInfo: GeneralResult = await apiInfoService.query({url: atomUrls[0]});
-                    // 为相关的API标注，以便后期注销
-                    this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = apiInfo.getDatum()[0].appId;
-                    this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url;
-                    data.set(url, {to: realhost, status:"0"});
-                }
+            // 注册分子API
+            if (url[i].status == 0 && url[i].is_atom === "0") {
+                let value = { "to": url[i].to, "status": url[i].status };
+                data.set(url[i].from, value);
+                this._registerApp.use(url[i].from, combinationPlugin.combinationService);
+                // 为相关的API标注，以便后期注销
+                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[0].appId;
+                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url[i];
+                data.set(url[i].from, { to: realhost, status: "0" });
             }
         }
         console.log(data);
     }
 
-
-    public async loadCombinationData(): Promise<void>{
-
-    }
 
     /**
      * 添加注册
@@ -129,11 +111,7 @@ class RegisterPlugin{
         let apiInfoService: ApiInfoService = new ApiInfoService();
         // 获取url表中的所有数据
         let urlResult: GeneralResult = await urlService.query({});
-        // 获取API_info表中的所有数据
-        let apiInfoResult: GeneralResult = await apiInfoService.query({});
-        // 保存组合API的信息(API_info)
-        let combiantionUrlApiinfos: GeneralResult = await apiInfoService.query({ "type": "组合" });
-        await this.loadData(urlResult.getDatum(), combiantionUrlApiinfos.getDatum());
+        await this.loadData(urlResult.getDatum());
         
     }
 }

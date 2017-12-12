@@ -4,7 +4,7 @@
 class CombinationFlowModel {
     private _combinationFlow: any = null;
     constructor(db: any) {
-        this._combinationFlow = db.define("combination", {
+        this._combinationFlow = db.define("combination_flow", {
             id: Number,
             combination_url: String,
             flow: String
