@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>健康检查</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #table1,#table2,#table3,#table4{
+            overflow:hidden;
+            margin:3% auto 0;
+            -moz-border-radius:5px;
+            -webkit-border-radius:5px;
+            border-radius:5px;
+            -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+            -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+            width: 850px;
+        }
+        .jump{
+            background-color: #EEEEEE;
+            padding: 10px;
+            margin-bottom: 30px;
+            font-size: 21px;
+            font-weight: 200;
+            line-height: 2.1428571435;
+            color: inherit;
+            height: 740px;
+        }
+    </style>
+</head>
+<body>
+<form name="form">
+    <div class="jump text-center">
+        <div style="margin-top: 50px;">
+            <h3 class="title">check-up</h3>
+        </div>
+        <div class="row">
+            <!--zContent对于一级平台：（根据整个api网关的监测）-->
+            <!--<div class="col-lg-6 col-xs-12 col-sm-12" >-->
+                   <!--<div class="table-responsive" id="table1">-->
+                        <!--<table class="table">-->
+                            <!--<tr>-->
+                                <!--<td>总访问次数</td>-->
+                                <!--<td>次</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>单位时间总访问次数</td>-->
+                                <!--<td>次</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>并发数</td>-->
+                                <!--<td>次</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>cpu memory iops监控</td>-->
+                                <!--<td>次</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>均响应时间</td>-->
+                                <!--<td>次</td>-->
+                            <!--</tr>-->
+                        <!--</table>-->
+                    <!--</div>-->
+            <!--</div>-->
+            <!--zcount中内容：（根据某个服务的监测）-->
+            <div class="col-lg-12 col-xs-12 col-sm-12" >
+                <div class="table-responsive" id="table2">
+                    <table class="table">
+                        <tr>
+                            <td>API名称</td>
+                            <td>总访问次数</td>
+                            <td>单位时间内总访问次数</td>
+                            <td>当前并发量</td>
+                            <td>平均响应时间</td>
+                        </tr>
+                        <!--<tr>-->
+                            <!--<td>www.linyimin.club:10010/bookTo</td>-->
+                            <!--<td>1次</td>-->
+                            <!--<td>1次</td>-->
+                            <!--<td>0</td>-->
+                            <!--<td>11ms</td>-->
+                        <!--</tr>-->
+                        <tr ng-repeat="v in api">
+                            <td ng-bind="v._serverName"></td>
+                            <td>{{v._totleVisit}}次</td>
+                            <td>{{v._unitTimeTotleVisit}}次</td>
+                            <td>{{v._concurrentVolume}}次</td>
+                            <td>{{v._averageResponseTime}}ms</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!--zlog里面的东西：（根据某个访问的log）-->
+            <!--<div class="col-lg-6 col-xs-12 col-sm-12" >-->
+                <!--<div class="table-responsive" id="table3">-->
+                    <!--<table class="table">-->
+                        <!--<tr>-->
+                            <!--<td>访问时间</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>用户名称</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>用户类别</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>ip</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>访问设备</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>访问服务</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>访问状态</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>响应时间</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--zUsrLog（针对某个用户的监测）-->
+            <!--<div class="col-lg-6 col-xs-12 col-sm-12" >-->
+                <!--<div class="table-responsive" id="table4">-->
+                    <!--<table class="table">-->
+                        <!--<tr>-->
+                            <!--<td>用户名</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>访问总次数</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>单位时间访问次数</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>最后一次访问时间</td>-->
+                            <!--<td>次</td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+</form>
+</body>
+</html>

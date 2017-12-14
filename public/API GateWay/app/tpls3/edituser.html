@@ -1,0 +1,50 @@
+<style>
+    h2{
+        text-align: center;
+    }
+    .formborder{
+        width: 600px;
+        margin: 0 auto;
+    }
+    .row{
+        margin-left: 0px;
+    }
+    label{
+        font-size: 20px;
+    }
+    .add{
+        border-radius: 10%;
+    }
+</style>
+<div class="row jumbotron">
+
+    <div class="col-md-12">
+        <div class="formborder">
+        <h2>编辑用户</h2>
+        <form role="form">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" class="form-control" id="username" placeholder="请编辑名称" ng-model="username">
+            </div>
+            <div class="form-group">
+                <label for="realname">真实姓名</label>
+                <input type="text" class="form-control" id="realname" placeholder="请编辑真实姓名"ng-model="realname">
+            </div>
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <input type="email" class="form-control" id="email" placeholder="请编辑邮箱"ng-model="email">
+            </div>
+            <div class="form-group">
+                <label for="pwd">密码</label>
+                <input type="password" class="form-control" id="pwd" placeholder="请编辑密码"ng-model="pwd">
+            </div>
+            <div class="form-group">
+                <label for="role">角色</label>
+                <input type="password" class="form-control" id="role" placeholder="请编辑角色"ng-model="role">
+            </div>
+
+            <button type="submit" class="btn btn-info add" ng-click="edituser()">提交修改</button>
+        </form>
+    </div>
+</div>
+</div>

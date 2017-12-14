@@ -1,0 +1,119 @@
+* {
+    transition: 0.2s ease;
+    outline: none;
+}
+
+#sdtDropCanvas {
+    background: url("bc.png") top center;
+}
+
+.left,
+.cent,
+.right {
+    float: left;
+}
+
+.sdt-drag-element {
+    width: 144px;
+    height: 36px;
+    padding: 6px;
+    margin: 8px 12px;
+}
+
+button {
+    display: block;
+    height: 36px;
+    width: 144px;
+    margin: 14px 18px;
+    border-radius: 4px;
+    border: none;
+    background-color: #6B95A0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+button:hover {
+    background-color: #84A7B7;
+}
+
+button:active {
+    background-color: #547D87;
+}
+
+.right {
+    color: #999;
+    width: 300px;
+    margin-left: 40px;
+}
+
+main {
+    width: 1160px;
+    margin: 0 auto;
+}
+
+.buttons {
+    padding-top: 128px;
+}
+
+.ps {
+    font-size: 12px;
+    width: 160px;
+    margin: 180px 0px 14px 40px;
+}
+
+.title {
+    width: 156px;
+    height: 96px;
+    padding: 6px;
+    margin: -12px 0px 0px 12px;
+    font-size: 72px;
+}
+
+.title2 {
+    width: 156px;
+    height: 36px;
+    padding: 6px;
+    margin: -12px 0px 0px 12px;
+    font-size: 28px;
+}
+
+.left {
+    margin-left: -80px;
+}
+
+.back {
+    width: 160px;
+    margin: 18px 0px 14px 40px;
+}
+
+.even {
+    background: lightgray;
+}
+
+.odd {
+    background: white;
+}
+
+.console {
+    margin-left: 10px;
+    border: 1px solid grey;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#jsontext {
+    height: 500px;
+    overflow-x: auto;
+    overflow: auto;
+    max-height: 500px;
+    width: 300px;
+}
+
+#consoletext {
+    height: 100px;
+    overflow-x: auto;
+    overflow: auto;
+    max-height: 100px;
+    width: 700px;
+}
