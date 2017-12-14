@@ -201,3 +201,27 @@
 0 2017-12-14 09:16:38 null null ::ffff:10.108.210.102 application/json,*/* /static/uploads/swagger/CM.yaml succeed 
 0 2017-12-14 09:16:38 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/favicon-32x32.png succeed 
 0 2017-12-14 09:16:38 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/favicon-16x16.png succeed 
+0 2017-12-14 16:56:34 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /apis/register succeed 
+0 2017-12-14 16:56:34 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /static/index.html succeed 
+0 2017-12-14 16:56:34 null null ::1 zh-CN /static/swagger-ui.css succeed 
+0 2017-12-14 16:56:34 null null ::1 zh-CN /static/swagger-ui-bundle.js succeed 
+0 2017-12-14 16:56:34 null null ::1 zh-CN /static/swagger-ui-standalone-preset.js succeed 
+0 2017-12-14 16:56:36 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /static/uploads/swagger/test.yaml succeed 
+0 2017-12-14 16:57:34 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /viewSoursePerformance?name=/bookTo succeed 
+0 2017-12-14 16:57:45 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /viewSoursePerformanceKeys succeed 
+0 2017-12-14 16:58:00 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /viewSoursePerformance?name=www.linyimin.club:10010/bookTo succeed 
+0 2017-12-14 16:58:26 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /viewUserPerformance succeed 
+0 2017-12-14 16:58:54 chen common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/register?username=chen&pwd=chen succeed 
+0 2017-12-14 17:00:40 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/doLogin succeed 
+0 2017-12-14 17:00:57 sunmeijie common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/doLogin?username=sunmeijie&pwd=15f6a32dae745accce3c5f4fdf2e17e23ebf2c9dc83eb5d5117dc78ae58e6a83 succeed 
+0 2017-12-14 17:01:08 sun common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/doLogin?username=sun&pwd=1 succeed 
+0 2017-12-14 17:01:15 chen common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/doLogin?username=chen&pwd=chen succeed 
+0 2017-12-14 17:01:40 chen common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/register?username=chen&pwd=chen succeed 
+0 2017-12-14 17:01:45 chen common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/doLogin?username=chen&pwd=chen succeed 
+0 2017-12-14 17:02:13 chen common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/doLogin?username=chen&pwd=chen succeed 
+0 2017-12-14 17:05:03 chenyuanxing common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/register?username=chenyuanxing&pwd=chen succeed 
+0 2017-12-14 17:05:10 chenyuanxing common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/doLogin?username=chenyuanxing&pwd=chen succeed 
+0 2017-12-14 17:05:22 chenyuanxing common ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/doLogin?username=chenyuanxing&pwd=chen succeed 
+0 2017-12-14 17:05:46 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /viewUserPerformance succeed 
+0 2017-12-14 17:06:46 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /viewUserPerformance succeed 
+0 2017-12-14 17:09:26 null null ::1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063 /user/getAllUser succeed 

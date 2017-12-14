@@ -40,6 +40,8 @@ class AdminRouter{
         this._router.all('/viewSoursePerformanceKeys',performanceMonitor.viewSoursePerformanceKeys);
         //api这一级监控数据
         this._router.all('/viewSoursePerformance',performanceMonitor.viewSoursePerformance);
+        //用户监控数据查看
+        this._router.all('/viewUserPerformance',performanceMonitor.viewUserPerformance);
         // 对管理员操作进行basic-auth身份认证
         //this._router.all("/apis/*", adminPlugin.basicAuth);
         /**
