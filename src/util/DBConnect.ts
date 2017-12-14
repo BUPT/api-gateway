@@ -6,10 +6,18 @@
 import ORM = require("orm");
 import {Config} from "../config/config";
 
+// 保存数据库连接的全局变量
+let db = null;
 class DBConnect{
     private _db: Promise<any> = null;
     constructor(){
-        this._db = (async () => { return await this.createConnect(); })();
+        this._db = (async () => { 
+            if (db === null) {
+                db = await this.createConnect();
+                console.log("数据库连接");
+            }
+            return db;
+        })();
     }
 
     public getDB(): Promise<any>{
