@@ -193,7 +193,7 @@ class CombinationPlugin{
         registerApp._router.stack[registerApp._router.stack.length - 1].appId = appId;
         registerApp._router.stack[registerApp._router.stack.length - 1].url = combinationUrl;
         
-        res.json({"flowJson": flow});
+        res.json(new GeneralResult(true, null, { "flowJson": flow }).getReturn());
     }
 
 
@@ -206,11 +206,11 @@ class CombinationPlugin{
         // 获取流程文件
         let combinationFlowService: CombinationFlowService = new CombinationFlowService();
         let temp: GeneralResult = await combinationFlowService.query({combination_url: req.baseUrl});
-        //let flowJson: { [key: string]: string } = JSON.parse(temp.getDatum()[0].flow).childEles[0].childEles[0];
-        let flowJson: { [key: string]: string } = JSON.parse(temp.getDatum()[0].flow)
+        let flowJson: { [key: string]: string } = JSON.parse(temp.getDatum()[0].flow).childEles[0].childEles[0];
+        //let flowJson: { [key: string]: string } = JSON.parse(temp.getDatum()[0].flow)
         //await combinationFlowService.query({ combination_url: combinationUrl})
         run(flowJson);
-        res.json({"data": flowJson});
+        res.json(new GeneralResult(true, null, {"data": flowJson}).getReturn());
     }
 
     /**
@@ -221,10 +221,6 @@ class CombinationPlugin{
     public publish(req, res){
         eventEmitter.emit(req.query.event);
         res.json({data:"发布事件"});
-    }
-
-    public async initCombinationService(): Promise<void>{
-
     }
 }
 
