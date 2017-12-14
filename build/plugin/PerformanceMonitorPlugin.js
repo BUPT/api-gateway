@@ -177,33 +177,35 @@ class PerformanceMonitorPlugin {
      * @param req
      * @param res
      */
-    viewSoursePerformanceKeys(req, res) {
-        let keys = [];
-        SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
-            keys.push(key);
-        });
-        res.json(new GeneralResult_1.GeneralResult(true, null, keys));
-        return;
-    }
-    /**
-     * 返回二级能力平台性能监控数据
-     * 通过http://localhost:8001/viewSoursePerformance?name=/bookBack 返回json
-     * @param req
-     * @param res
-     */
     viewSoursePerformance(req, res) {
         // /user?name=tobi
         let serverName = req.param('name');
-        console.log(serverName);
-        console.log(serverName);
-        SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.forEach(function (value, key, map) {
-            if (key == serverName) {
-                res.json(new GeneralResult_1.GeneralResult(true, null, JSON.stringify(value)));
-                return;
-            }
-        });
-        // res.json(new GeneralResult(false,null,{'data':'name dose not visit'}))
-        return;
+        if (SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.has(serverName)) {
+            res.json(new GeneralResult_1.GeneralResult(false, null, SoursePerformanceModel_1.SoursePerformanceModel._soursePerformanceMap.get(serverName)));
+            return;
+        }
+        else {
+            res.json(new GeneralResult_1.GeneralResult(false, null, { 'data': 'name dose not visit' }));
+            return;
+        }
+    }
+    /**
+     * 返回用户监控数据
+     * 通过http://localhost:8001/viewUserPerformance?username= 返回json
+     * @param req
+     * @param res
+     */
+    viewUserPerformance(req, res) {
+        // /user?name=tobi
+        let userName = req.param('username');
+        if (userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.has(userName)) {
+            res.json(new GeneralResult_1.GeneralResult(true, null, userPerformanceModel_1.UserPerformanceModel._userPerformanceMap.get(userName)));
+            return;
+        }
+        else {
+            res.json(new GeneralResult_1.GeneralResult(false, null, { 'data': 'username dose not visit' }));
+            return;
+        }
     }
     viewTopPerformance(req, res) {
         res.json(new GeneralResult_1.GeneralResult(true, null, TopPerformanceModel_1.TopPerformanceModel.topPerformance));
