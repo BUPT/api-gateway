@@ -1,0 +1,83 @@
+<style>
+    .adduser {
+        margin-left: 50px;
+        border-radius: 50%;
+        height: 40px;
+    }
+    .buttonuniform{
+        border-radius: 50%;
+    }
+    table tr:nth-child(odd){
+        background-color: #ffffff;
+    }
+    table tr td{
+        height: 55px;
+    }
+    .searchbtn{
+        margin-left: 20px;
+        border-radius: 10%;
+        height: 40px;
+    }
+    .search{
+        width: 200px;
+        margin-top: -50px;
+    }
+    .btn-large {
+        height: 40px;
+        line-height: 35px;
+    }
+    .btn-floating.btn-large {
+         width: 45px;
+         height: 45px;
+    }
+</style>
+<div class="jumbotron text-center">
+    <div style="margin-bottom: 30px;margin-top: 40px">
+        <h4 style="float: left;margin-top: 5px;color: #ee6e73">用户管理</h4>
+        <input type="text" class="search" placeholder="Search">
+        <button type="submit" class="btn btn-info searchbtn">Submit</button>
+        <a href="#/index/" class="btn-floating waves-effect waves-light right" style="margin-right: 100px" ng-click="add()">
+            <span class="glyphicon glyphicon-plus"></span>
+        </a>
+    </div>
+<div class="table-responsive">
+<table class="table table-hover">
+    <thead>
+    <tr class="active">
+        <th>用户ID</th>
+        <th >用户名</th>
+        <th>真实姓名</th>
+        <th>权限</th>
+        <th>创建时间</th>
+        <th  style="width:300px">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="table-tr" ng-repeat="list in names track by $index">
+        <td>{{ list.ID }}</td>
+        <!--<td ng-bind="list.id"></td>-->
+        <td ng-bind="list.name"></td>
+        <td ng-bind="list.appId"></td>
+        <td>{{list.URL}}</td>
+        <td>{{ $index + 1 }}</td>
+        <td>
+            <button class="btn-floating waves-effect waves-light right" ng-click="edit()">
+                <span class="glyphicon glyphicon-pencil" ></span>
+            </button>
+            <button class="btn-floating waves-effect waves-light right" ng-click="pluginmng1()">
+                <span class="glyphicon glyphicon-th-list"></span>
+            </button>
+            <button class="btn-floating waves-effect waves-light right" ng-controller="popup" ng-click="clickToOpen()">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+</div>
+
+
+
+
+
