@@ -201,3 +201,14 @@
 0 2017-12-14 09:16:38 null null ::ffff:10.108.210.102 application/json,*/* /static/uploads/swagger/CM.yaml succeed 
 0 2017-12-14 09:16:38 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/favicon-32x32.png succeed 
 0 2017-12-14 09:16:38 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/favicon-16x16.png succeed 
+0 2017-12-14 22:28:48 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /apis/uploads succeed 
+0 2017-12-14 22:28:48 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/jquery-3.2.1.min.js succeed 
+0 2017-12-14 22:28:48 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /favicon.ico succeed 
+0 2017-12-14 22:29:08 null null ::ffff:10.108.210.102 6376 /apis/uploads succeed 
+0 2017-12-14 22:29:09 null null ::ffff:10.108.210.102 max-age=0 /static/index.html succeed 
+0 2017-12-14 22:29:09 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/swagger-ui.css succeed 
+0 2017-12-14 22:29:09 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/swagger-ui-bundle.js succeed 
+0 2017-12-14 22:29:09 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/swagger-ui-standalone-preset.js succeed 
+0 2017-12-14 22:29:10 null null ::ffff:10.108.210.102 application/json,*/* /static/uploads/swagger/CM.yaml succeed 
+0 2017-12-14 22:29:10 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/favicon-32x32.png succeed 
+0 2017-12-14 22:29:10 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/favicon-16x16.png succeed 
