@@ -141,7 +141,7 @@ class PerformanceMonitorPlugin{
      */
     public userPerformanceMonitor(req, res, next): void{
         //用户性能监控的的服务名称
-        let username = req.require.username;
+        let username = req.query.username;
         if(username==undefined){
         }else{
             let userPerformance :UserPerformanceModel;
@@ -179,35 +179,36 @@ class PerformanceMonitorPlugin{
      * @param req 
      * @param res 
      */
-     public viewSoursePerformanceKeys(req, res):any{
-        let keys = [];
-        SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
-            keys.push(key);
-        });
-        res.json(new GeneralResult(true,null,keys));
-        return ;
-    }
-    /**
-     * 返回二级能力平台性能监控数据
-     * 通过http://localhost:8001/viewSoursePerformance?name=/bookBack 返回json
-     * @param req 
-     * @param res 
-     */
     public viewSoursePerformance(req, res):any{
         // /user?name=tobi
         let serverName :String= req.param('name');
-        console.log(serverName);
-            console.log(serverName);
-            SoursePerformanceModel._soursePerformanceMap.forEach(function(value,key,map){
-                if(key ==serverName){
-                    res.json(new GeneralResult(true,null,JSON.stringify(value)));
-                    return ;
-                }
-                
-            });
-           // res.json(new GeneralResult(false,null,{'data':'name dose not visit'}))
-        return ;
+        if(SoursePerformanceModel._soursePerformanceMap.has(serverName)){
+            res.json(new GeneralResult(false,null,SoursePerformanceModel._soursePerformanceMap.get(serverName)));
+            return ;
+        }else{
+            res.json(new GeneralResult(false,null,{'data':'name dose not visit'}));
+            return ;
+        }
+          
     }
+    /**
+     * 返回用户监控数据
+     * 通过http://localhost:8001/viewUserPerformance?username= 返回json
+     * @param req 
+     * @param res 
+     */
+    public viewUserPerformance(req, res):any{
+        // /user?name=tobi
+        let userName :String= req.param('username');
+            if(UserPerformanceModel._userPerformanceMap.has(userName)){
+                res.json(new GeneralResult(true,null,UserPerformanceModel._userPerformanceMap.get(userName)));
+                return ;
+            }else{
+                res.json(new GeneralResult(false,null,{'data':'username dose not visit'}));
+                return ;
+            }
+    }
+    
     public viewTopPerformance(req, res):any{
         res.json(new GeneralResult(true,null,TopPerformanceModel.topPerformance));
         return ;
