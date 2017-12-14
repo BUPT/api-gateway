@@ -1,5 +1,5 @@
 # API Gateway
-## What is a API Gateway for?
+## What is API Gateway for?
 ## What is our API Gateway for?
 A API Gateway System Implemented by TypeScript
 
