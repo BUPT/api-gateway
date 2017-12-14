@@ -74,7 +74,7 @@ class YamlParse {
             }
             API = ("/" != basePath) ? (basePath + paths[i]) : paths[i];
             API_info[i] = { "ID": ID, "name": name, "type": type, "argument": argument, "event": event, "URL": API, "appId": appId };
-            url[i] = { "from": API, "to": realHost, "status": status, "is_new": is_new, "APPId": appId };
+            url[i] = { "from": API, "to": realHost, "status": status, "is_new": is_new, "APPId": appId, "is_atom": "1" };
         }
         return [url, API_info];
     }

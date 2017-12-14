@@ -14,10 +14,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const ORM = require("orm");
 const config_1 = require("../config/config");
+// 保存数据库连接的全局变量
+let db = null;
 class DBConnect {
     constructor() {
         this._db = null;
-        this._db = (() => __awaiter(this, void 0, void 0, function* () { return yield this.createConnect(); }))();
+        this._db = (() => __awaiter(this, void 0, void 0, function* () {
+            if (db === null) {
+                db = yield this.createConnect();
+                console.log("数据库连接");
+            }
+            return db;
+        }))();
     }
     getDB() {
         return this._db;
