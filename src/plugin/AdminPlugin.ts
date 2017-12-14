@@ -236,8 +236,8 @@ class AdminPlugin{
         // 获取url表中的所有信息
         let urlResult: GeneralResult = await urlService.query({});
         if(urlResult.getResult() === true && urlResult.getDatum().length > 0){
-            let temp: {[key: string]: string} = {};
             for(let i = 0; i < urlResult.getDatum().length; i++){
+                let temp: { [key: string]: string } = {};
                 let apiInfoResult: GeneralResult = await apiInfoService.query({URL: urlResult.getDatum()[i].from});
                 if(apiInfoResult.getResult() === true && apiInfoResult.getDatum().length > 0){
                     temp.method = urlResult.getDatum()[i].method;
