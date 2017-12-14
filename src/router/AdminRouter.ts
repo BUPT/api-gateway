@@ -509,7 +509,7 @@ class AdminRouter{
         /**
          * @swagger
          * /apis/registerCombinationAPI:
-         *   get:
+         *   post:
          *       description: 注册组合API
          *       deprecated: false
          *       tags:
@@ -551,7 +551,7 @@ class AdminRouter{
          *         200:
          *           description:OK
          */
-        this._router.get("/apis/registerCombinationAPI", combinationPlugin.registerCombinationAPI);
+        this._router.post("/apis/registerCombinationAPI", combinationPlugin.registerCombinationAPI);
         this._router.get("/call", combinationPlugin.publish);
     }
 }
