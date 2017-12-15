@@ -131,7 +131,7 @@ The page of Managing APIs include descriptions of the fields to which the API se
 
   #### Dependencies
 
-  1. angular.js 
+1. angular
 2. bootstrap
 
   ------ 
@@ -143,7 +143,7 @@ Import the JavaScript file:  
 <script src="js/angular-animate.js"></script>
  <script src="js/angular-ui-router.js">
 </script> <script src="UIRoute3.js"></script> 
-``` 
+```
 
 ### Run 
 
@@ -151,9 +151,7 @@ Download UI-Router: 
 
 ```
  https://angular-ui.github.io/ 
-``` 
-
-------  
+```
 
 You can now run your API GateWay by opening UIRoute3.html in your browser.
 
