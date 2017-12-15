@@ -134,7 +134,7 @@ The page of Managing APIs include descriptions of the fields to which the API se
 1. angular
 2. bootstrap
 
-  ------ 
+------
 
 Import the JavaScript file:  
 
@@ -155,4 +155,4 @@ Download UI-Router: 
 
 You can now run your API GateWay by opening UIRoute3.html in your browser.
 
-  ------ 
+------
