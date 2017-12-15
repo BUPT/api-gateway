@@ -60,3 +60,5 @@ typings/
 .env
 
 # 编译之后的js文件
+.DS_Store
+.idea
