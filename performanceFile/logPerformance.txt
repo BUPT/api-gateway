@@ -273,3 +273,10 @@
 0 2017-12-15 00:54:16 null null ::ffff:10.215.17.8 application/json,*/* /static/uploads/json/file.json succeed 
 0 2017-12-15 00:54:16 null null ::ffff:10.215.17.8 no-cache /static/favicon-16x16.png succeed 
 0 2017-12-15 00:54:17 null null ::ffff:10.215.17.8 Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36 /static/favicon-32x32.png succeed 
+0 2017-12-15 13:30:34 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /apis/viewAPIs succeed 
+0 2017-12-15 13:30:34 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/viewAPIs.html succeed 
+0 2017-12-15 13:30:34 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/swagger-ui.css succeed 
+0 2017-12-15 13:30:34 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/swagger-ui-bundle.js succeed 
+0 2017-12-15 13:30:34 null null ::ffff:10.108.210.102 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 /static/swagger-ui-standalone-preset.js succeed 
+0 2017-12-15 13:30:34 null null ::ffff:10.108.210.102 application/json,*/* /static/uploads/json/file.json succeed 
+0 2017-12-15 13:31:03 null null ::ffff:10.108.210.102 application/json /apis/getAtomApiInfo?moduleId=12 succeed 
