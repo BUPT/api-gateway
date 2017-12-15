@@ -92,7 +92,7 @@ class CombinationPlugin{
         temp.is_async = req.query.isAsync || "";
         temp.condition = req.query.condition || "";
         atomApiInfo[count++] = temp;
-        res.json(atomApiInfo);
+        res.json(new GeneralResult(true, null,atomApiInfo).getReturn());
     }
 
     /**
@@ -110,7 +110,7 @@ class CombinationPlugin{
             if(result.getResult() === true && result.getDatum().length >0){
                 res.json(result.getReturn());
             }else{
-                res.json(new GeneralResult(false, "该模块对应的API不存在", null));
+                res.json(new GeneralResult(false, "该模块对应的API不存在", null).getReturn());
             }
             return;
         }
@@ -123,7 +123,7 @@ class CombinationPlugin{
                 }
             }
         }
-        res.json(new GeneralResult(false, "该模块对应的API不存在", null));
+        res.json(new GeneralResult(false, "该模块对应的API不存在", null).getReturn());
     }
 
     public async registerCombinationAPI(req, res): Promise<void>{
@@ -132,7 +132,7 @@ class CombinationPlugin{
         let combinationFlowService: CombinationFlowService = new CombinationFlowService();
         let result: GeneralResult = await combinationFlowService.query({combination_url: combinationUrl});
         if(result.getResult() === true && result.getDatum().length > 0){
-            res.json(new GeneralResult(false, "该组合url已经存在", null));
+            res.json(new GeneralResult(false, "该组合url已经存在", null).getReturn());
             return;
         }
         let flow: string = req.query.flowJson;
