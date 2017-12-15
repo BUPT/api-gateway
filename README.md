@@ -90,19 +90,19 @@ The system can combine a composite API by dragging and dropping atomic atom API,
 
 #### Dependencies
 
-    1.angular
-    2.bootstrap
-    3.jquery
-    4.SDT
+1.angular
+2.bootstrap
+3.jquery
+4.SDT
 
-    All js files are imported via the <script> tag：
+All js files are imported via the <script> tag：
 
-    ```
-    <script src="framework/jquery.min.js" type="text/javascript"></script>
-    <script src="framework/bootstrap.min.js"></script>
-    <script src="framework/angular.js"></script>
-    <script src="framework/SDT.js" type="text/javascript" defer="defer" charset="utf-8"></script>
-    ```
+```
+<script src="framework/jquery.min.js" type="text/javascript"></script>
+<script src="framework/bootstrap.min.js"></script>
+<script src="framework/angular.js"></script>
+<script src="framework/SDT.js" type="text/javascript" defer="defer" charset="utf-8"></script>
+```
 
 ### Run
 
