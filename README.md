@@ -1,5 +1,7 @@
 # API Gateway
 ## What is API Gateway for?
+
+An API Gateway sits in front of your application(s) and/or services and manages the heavy lifting of authorisation, access control and throughput limiting to your services. Ideally, it should mean that you can focus on creating services instead of implementing management infrastructure. For example, if you have written a really awesome web service, and you want to make it public, integrating an API gateway is a faster, more secure route than writing your own authorisation middleware.
 ## What is our API Gateway for?
 A API Gateway System Implemented by TypeScript
 
