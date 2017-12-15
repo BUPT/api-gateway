@@ -131,7 +131,7 @@ The page of Managing APIs include descriptions of the fields to which the API se
 
   #### Dependencies
 
-1. angular
+1. angular.js
 2. bootstrap
 
 ------
