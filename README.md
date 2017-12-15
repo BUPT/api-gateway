@@ -141,8 +141,8 @@ Import the JavaScript file:  
 ```
  <script src="js/angular-1.3.0.js"></script> 
 <script src="js/angular-animate.js"></script>
- <script src="js/angular-ui-router.js">
-</script> <script src="UIRoute3.js"></script> 
+ <script src="js/angular-ui-router.js"></script> 
+<script src="UIRoute3.js"></script> 
 ```
 
 ### Run 
