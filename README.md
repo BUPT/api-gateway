@@ -116,3 +116,45 @@ All types of APIs are displayed on the left side of the system. By dragging and 
 After setting up all the atomic APIs, click "Register" to register the combined combination API into the API gateway and use it.
 
 ------
+
+## Module 4 
+
+@konghuihui 
+
+API GateWay is a scalable, open source API Layer. API GateWay provides functionalities and services such as requests routing, authentication, Service monitoring, etc. 
+
+### Managing APIs 
+
+The page of Managing APIs include descriptions of the fields to which the API sets belong. Click on a field to view the classification information of all  API information and add, modify, and delete the specified APIs. 
+
+### Install
+
+  #### Dependencies
+
+  1. angular.js 
+2. bootstrap
+
+  ------ 
+
+Import the JavaScript file:  
+
+```
+ <script src="js/angular-1.3.0.js"></script> 
+<script src="js/angular-animate.js"></script>
+ <script src="js/angular-ui-router.js">
+</script> <script src="UIRoute3.js"></script> 
+``` 
+
+### Run 
+
+Download UI-Router: 
+
+```
+ https://angular-ui.github.io/ 
+``` 
+
+------  
+
+You can now run your API GateWay by opening UIRoute3.html in your browser.
+
+  ------ 
