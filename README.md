@@ -156,3 +156,29 @@ Download UI-Router: 
 You can now run your API GateWay by opening UIRoute3.html in your browser.
 
 ------
+
+
+## Module 5
+
+@WuChaoYu
+
+According to different rules, the gateway forwards user requests
+
+### Install
+
+#### Dependencies
+
+1. Node.js >= 8 (8 is recommended)
+2. TypeScript >= 1.2
+
+### Run
+
+When run the whole system using the Following instructions,this module will work.
+
+```
+npm start
+```
+
+------
+You can now visit :localhost:8002/?type=xxx,  xxx Indicates different request parameters。
+
