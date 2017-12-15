@@ -56,15 +56,20 @@ htpp://localhost:8001/apis/viewAPIs?fileName=yourRegisterfileName
 
 ## Module 2
 
-@someone
+@sunmeijie
 
 Here is the module description
 
+User management of API Gateway (Provide sub-user management functions)
 
 ### Install
 
 Here descript how to install this module, i.e.: environment dependencies.
 
+Import the required JavaScript file
+
 ### Run
 
 Here descript how to run this module.
+
+Open in browser
