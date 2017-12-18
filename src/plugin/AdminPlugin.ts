@@ -246,7 +246,7 @@ class AdminPlugin{
                     temp.interface = urlResult.getDatum()[i].from;
                     temp.uris = urlResult.getDatum()[i].to;
                     temp.upstreamUrl = urlResult.getDatum()[i].to + temp.interface;
-                    temp.time = "2017-12-07 12:09:22";
+                    temp.time = urlResult.getDatum()[i].register_time;
                     result[i] = temp;
                 }
             }
