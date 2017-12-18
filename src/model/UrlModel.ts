@@ -12,7 +12,8 @@ class UrlModel{
             status: String,
             is_new: String,
             method: String,
-            is_atom: String
+            is_atom: String,
+            register_time: String
         });
     }
 

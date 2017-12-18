@@ -175,6 +175,7 @@ class CombinationPlugin{
         url.is_new = "1";
         url.method = "get";
         url.is_atom = "0";
+        url.register_time = new Date().toLocaleString();
 
         urlService.insert([url]);
 
