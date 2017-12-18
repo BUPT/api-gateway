@@ -48,6 +48,8 @@ class YamlParse{
         let status: string = "";
         // API是否加载进内存,0表示未加载，1表示已加载
         let is_new: string = "1";
+        // API的访问方法
+        let method: string = "";
         let paths:{[key: string]: any} = Object.keys(data.paths);
         for (let i = 0; i < paths.length; i++) {
             // 过滤"/swagger"路径
@@ -59,6 +61,9 @@ class YamlParse{
             name = pathsObject["x-name"];
             for (let j = 0; j < this._METHOD.length; j++) {
                 if (pathsObject[this._METHOD[j]]) {
+                    // API的访问方法
+                    method = this._METHOD[j];
+                    // API所处的类型
                     type = pathsObject[this._METHOD[j]].tags[0];
                     if (pathsObject[this._METHOD[j]].parameters) {
                         argument = JSON.stringify(pathsObject[this._METHOD[j]].parameters);
@@ -75,7 +80,7 @@ class YamlParse{
             API_info[i] = { "ID": ID, "name": name, "type": type, "argument": argument, "event": event, "URL": API, "appId": appId };
             // 注册时间
             let timeString: string = new Date().toLocaleString();
-            url[i] = { "from": API, "to": realHost, "status": status, "is_new": is_new, "APPId": appId, "is_atom": "1", "register_time": timeString};
+            url[i] = { "from": API, "to": realHost, "status": status, "is_new": is_new, "APPId": appId, "is_atom": "1", "register_time": timeString, "method": method};
         }
         return [url, API_info];
     }
