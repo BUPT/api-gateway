@@ -5,35 +5,38 @@
  */
 
 import { EventEmitter } from "events";
+import { APPEvent } from "./APPEvent";
 
 
-class Event{
-    public static readonly appEvent: Event = new Event();
+class NotifyEvent implements APPEvent{
+    public static readonly notifyEvent: NotifyEvent = new NotifyEvent();
 
     private eventEmitter: EventEmitter = new EventEmitter();
 
-    private Event(){
+    private NotifyEvent(){
 
     }
 
+    public handler(arg1?: any, arg2?: any, arg3?: any): void{
+
+    }
     /**
      * 发布事件
-     * @param event 
-     * @param data 
+     * @param appEvent 
      */
-    public publish(event: string, data?: any): void{
-        if(data !== undefined){
-            this.eventEmitter.emit(event, data);
+    public publish(appEvent: APPEvent): void{
+        if(appEvent.data !== undefined){
+            this.eventEmitter.emit(appEvent.event, appEvent.data);
         }else{
-            this.eventEmitter.emit(event);
+            this.eventEmitter.emit(appEvent.event);
         }
     }
 
-    public subscribe(event: string, handler: (data?: any) => void):void{
-        
+    public subscribe(appEvent: APPEvent):void{
+        this.eventEmitter.on(appEvent.event, appEvent.handler);
     }
 
-    public unSubscribe(): void{
-
+    public unSubscribe(appEvent: APPEvent): void{
+        this.eventEmitter.removeAllListeners(appEvent.event);
     }
 }
