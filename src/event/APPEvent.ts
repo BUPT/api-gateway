@@ -9,3 +9,5 @@ interface APPEvent{
     // 处理函数
     handler : (arg1? : any, arg2? : any, arg3? : any) => void;
 }
+
+export{APPEvent};
