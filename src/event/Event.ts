@@ -17,8 +17,28 @@ class NotifyEvent implements APPEvent{
 
     }
 
-    public handler(arg1?: any, arg2?: any, arg3?: any): void{
+    event : string;
 
+    public setEvent(event: string): void{
+        this.event = event;
+    }
+
+    public getEvent(): string{
+        return this.event;
+    }
+
+    data: any;
+
+    public setData(data : any){
+        this.data = data;
+    }
+
+    public getData(): any{
+        return this.data;
+    }
+
+    public handler(arg1?: any, arg2?: any, arg3?: any): void{
+        
     }
     /**
      * 发布事件
