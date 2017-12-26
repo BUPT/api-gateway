@@ -33,3 +33,9 @@ http.createServer(
      }   
  
 ).listen(8002);
+
+process.on("uncaughtException", function(err){
+    console.log(err);
+})
+
+
