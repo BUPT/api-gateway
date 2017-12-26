@@ -260,6 +260,29 @@ class AdminRouter{
          */
         this._router.get("/user/updateUser", userPlugin.updateUser);
 
+
+        /**
+         * @swagger
+         * /user/logout:
+         *   get:
+         *       description: 用户注销
+         *       deprecated: false
+         *       tags:
+         *           - "用户管理"
+         *       parameters:
+         *         - name: username
+         *           in: query
+         *           description: 用户名
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/user/logout", userPlugin.logout);
+
         /**
          * @swagger
          * /apis/single:

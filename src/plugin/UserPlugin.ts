@@ -158,6 +158,16 @@ class UserPlugin{
         
     }
 
+    /**
+     * 用户退出
+     * @param req 
+     * @param res 
+     */
+    public logout(req, res) : void{
+        let username : string = req.query.username;
+        res.json(new GeneralResult(true, null, username + "已经成功退出").getReturn());
+    }
+
 
 }
 
