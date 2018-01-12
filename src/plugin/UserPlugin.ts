@@ -55,7 +55,7 @@ class UserPlugin{
             if (userLists.length > 0) {
                 password = crypto.createHmac('sha256', password).update(userLists[0].salt).digest('hex');
                 if (password === userLists[0].password) {
-                    res.json(new GeneralResult(true, null, null).getReturn());
+                    res.json(new GeneralResult(true, null, { userName: userLists[0].user_name, realName: userLists[0].real_name, role: userLists[0].role, email: userLists[0].mail}).getReturn());
                 } else {
                     res.json(new GeneralResult(false, "用户名或密码不正确!", null).getReturn());
                 }
