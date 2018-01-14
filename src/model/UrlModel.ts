@@ -13,7 +13,8 @@ class UrlModel{
             is_new: String,
             method: String,
             is_atom: String,
-            register_time: String
+            register_time: String,
+            publisher: String
         });
     }
 
