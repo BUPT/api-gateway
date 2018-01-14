@@ -76,7 +76,7 @@ class RegisterPlugin{
         // 先清空之前已经注册公司的数据，再重新重新注册改公司的API数据
         let appId: string = url[0].APPId;
         if(this._registerApp._router && this._registerApp.stack){
-            for(let i = 2; i < this._registerApp._router.satck.length; i++){
+            for(let i = 2; i < this._registerApp._router.stack.length; i++){
                 if(this._registerApp._router.stack[i].appId === appId){
                     // 删除一个元素
                     this._registerApp._router.stack.splice(i, 1);
