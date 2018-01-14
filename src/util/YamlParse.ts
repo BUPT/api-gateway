@@ -33,7 +33,7 @@ class YamlParse{
         // 真实服务器地址
         let realHost = data.info["x-realhost"];
         // 发布者姓名
-        let publisher = data.info(["x-publisher"]);
+        let publisher = data.info["x-publisher"];
         // API的ID
         let ID: string = "";
         // API名称
