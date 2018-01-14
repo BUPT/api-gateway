@@ -182,3 +182,75 @@ npm start
 ------
 You can now visit :localhost:8002/?type=xxx,  xxx Indicates different request parameters。
 
+
+
+A template of swagger file:
+```
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  # 指定需要注册API服务的公司标号
+  x-appId: "001"
+  # 服务实际提供服务的域名地址
+  x-realhost: www.linyimin.club:10010
+  # 发布者名称
+  x-publisher: 林贻民
+  # 指定项目名称
+  title: A simple API Gateway
+   
+# API网关向外提供访问服务的域名地址
+host: www.linyimin.club:8000
+# 所有API相同的前缀 
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+# Description of API service
+paths:
+  /bookTo:
+    # API对应的标识号
+    x-ID: "001"
+    # API的名称
+    x-name: "airlineBookTo"
+    get:
+      description: 预订往航班机票
+      deprecated: false
+      tags:
+        - "机票"
+      parameters:
+        - name: isBuy
+          in: query
+          description: 机票购买是否成功，true为成功，false为失败
+          required: false
+          type: boolean
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ServiceResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+# complex objects have schema definitions
+definitions:
+  ServiceResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+```
+
