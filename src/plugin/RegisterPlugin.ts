@@ -17,9 +17,9 @@ let registerApp = express();
  * 注册API数据
  */
 class RegisterPlugin{
-    private _registerApp = registerApp;
+    private static _registerApp = registerApp;
     public getRegisterApp(){
-        return this._registerApp;
+        return RegisterPlugin._registerApp;
     }
 
     /**
@@ -33,8 +33,8 @@ class RegisterPlugin{
         let realhost: string = config.getApiServer().host + ":" + config.getApiServer().port;
         let combinationPlugin: CombinationPlugin = new CombinationPlugin();
         // _router数组存在数据，则清空
-        if(this._registerApp._router){
-            this._registerApp._router.stack.length = 2;
+        if (RegisterPlugin._registerApp._router){
+            RegisterPlugin._registerApp._router.stack.length = 2;
         }
         // 加载数据
         for(let i = 0; i < url.length; i++){
@@ -44,23 +44,23 @@ class RegisterPlugin{
                 data.set(url[i].from, value);
                 let performanceMonitorPlugin:PerformanceMonitorPlugin =  new PerformanceMonitorPlugin();
                 performanceMonitorPlugin.soursePerformanceHost = url[i].to ;
-                this._registerApp.use(url[i].from,performanceMonitorPlugin.soursePerformanceMonitor.bind(performanceMonitorPlugin),proxy(url[i].to, {
+                RegisterPlugin._registerApp.use(url[i].from,performanceMonitorPlugin.soursePerformanceMonitor.bind(performanceMonitorPlugin),proxy(url[i].to, {
                     proxyReqPathResolver: function (req) {
                         return req.originalUrl;
                     }
                 }));
                 // 为相关的API标注，以便后期注销
-                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[i].APPId;
-                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url[i].from;
+                RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].appId = url[i].APPId;
+                RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].url = url[i].from;
             }
             // 注册分子API
             if (url[i].status == 0 && url[i].is_atom === "0") {
                 let value = { "to": url[i].to, "status": url[i].status };
                 data.set(url[i].from, value);
-                this._registerApp.use(url[i].from, combinationPlugin.combinationService);
+                RegisterPlugin._registerApp.use(url[i].from, combinationPlugin.combinationService);
                 // 为相关的API标注，以便后期注销
-                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[0].appId;
-                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url[i];
+                RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].appId = url[0].appId;
+                RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].url = url[i];
                 data.set(url[i].from, { to: realhost, status: "0" });
             }
         }
@@ -77,11 +77,11 @@ class RegisterPlugin{
         let data = new Map();
         // 先清空之前已经注册公司的数据，再重新重新注册改公司的API数据
         let appId: string = url[0].APPId;
-        if(this._registerApp._router && this._registerApp.stack){
-            for(let i = 2; i < this._registerApp._router.stack.length; i++){
-                if(this._registerApp._router.stack[i].appId === appId){
+        if (RegisterPlugin._registerApp._router && RegisterPlugin._registerApp.stack){
+            for (let i = 2; i < RegisterPlugin._registerApp._router.stack.length; i++){
+                if (RegisterPlugin._registerApp._router.stack[i].appId === appId){
                     // 删除一个元素
-                    this._registerApp._router.stack.splice(i, 1);
+                    RegisterPlugin._registerApp._router.stack.splice(i, 1);
                     i--;
                 }
             }
@@ -91,14 +91,14 @@ class RegisterPlugin{
             let value = {"to": url[i].to, "status": url[i].status};
             data.set(url[i].from, value);
             if(url[i].status == 0){
-                this._registerApp.use(url[i].from, proxy(url[i].to, {
+                RegisterPlugin._registerApp.use(url[i].from, proxy(url[i].to, {
                     proxyReqPathResolver: function (req) {
                         return req.originalUrl;
                     }
                 }));
                 // 为相关的API标注，以便后期注销
-                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url[0].appId;
-                this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url[i].from;
+                RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].appId = url[0].appId;
+                RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].url = url[i].from;
             }
         }
         console.log(data);
@@ -122,39 +122,39 @@ class RegisterPlugin{
         let apiInfoResult: GeneralResult = await apiInfoService.query({"appId": APPId, "URL": oldURL});
 
         // 修改单个API
-        if(urlResult.getResult() === false){
-            res.json(new GeneralResult(false, "需要修改的API对应的URL不存在，请检查输入是否正确", null).getReturn());
+        if(urlResult.getResult() === true && urlResult.getDatum().length > 0){
+            // 数据库表url对应的字段
+            let url: { [key: string]: any } = {
+                "APPId": APPId,
+                "from": newURL,
+                "to": urlResult.getDatum()[0].to,
+                "status": req.query.status || "",
+                "is_new": 1,
+                "method": req.query.method || "",
+                "is_atom": 1,
+                "register_time": "",
+                "publisher": ""
+            };
+            let apiInfo: { [key: string]: any } = {
+                "appId": APPId,
+                "name": req.query.name || "",
+                "type": req.query.type || "",
+                "argument": req.query.argument,
+                "event": req.query.event,
+                "URL": newURL,
+                "status": req.query.status || ""
+            }
+            RegisterPlugin.removeSingleAPIFromMemory(url);
+            url.from = url.newFrom;
+            RegisterPlugin.addSingleAPIToMemory(url);
+
+            // 数据持久化存储
+            urlService.updateSelectiveByAPPIdAndFrom(url);
+            apiInfoService.updateSelectiveByAppIdAndURL(apiInfo);
+            res.json(new GeneralResult(true, null, "更新成功").getReturn());
             return;
         }
-        // 数据库表url对应的字段
-        let url: {[key: string]: any} = {
-            "APPId": APPId,
-            "from": newURL,
-            "to": urlResult.getDatum()[0].to,
-            "status": req.query.status || "",
-            "is_new": 1,
-            "method": req.query.method || "",
-            "is_atom": 1,
-            "register_time": "",
-            "publisher": ""
-        };
-        let apiInfo: {[key: string]: any} = {
-            "appId": APPId,
-            "name": req.query.name || "",
-            "type": req.query.type || "",
-            "argument": req.query.argument,
-            "event": req.query.event,
-            "URL": newURL,
-            "status": req.query.status || ""
-        } 
-        this.removeSingleAPIFromMemory(url);
-        url.from = url.newFrom;
-        this.addSingleAPIToMemory(url);
-
-        // 数据持久化存储
-        urlService.updateSelectiveByAPPIdAndFrom(url);
-        apiInfoService.updateSelectiveByAppIdAndURL(apiInfo);
-        res.json(new GeneralResult(true, null, "更新成功").getReturn());
+        res.json(new GeneralResult(false, "需要修改的API对应的URL不存在，请检查输入是否正确", null).getReturn());
     }
 
     /**
@@ -170,24 +170,25 @@ class RegisterPlugin{
         let apiInfoService: ApiInfoService = new ApiInfoService();
         let generalResult: GeneralResult = await urlService.query({"from": from, "APPId": APPId});
         // 注销单个API
-        if(generalResult.getResult() === false){
+        if(generalResult.getResult() === true && generalResult.getDatum().length === 0){
             res.json(new GeneralResult(false, "需要注销的url不存在，请检查您的输入", null).getReturn());
             return;
         }
-        let result: Boolean = this.removeSingleAPIFromMemory({"from": from, "APPId": APPId});
+        let result: Boolean = RegisterPlugin.removeSingleAPIFromMemory({"from": from, "APPId": APPId});
         // 数据库表url对应的字段
         let url: {[key: string]: any} = {
             "APPId": APPId,
             "from": from,
             "to": "",
             "status": "1",
-            "is_new": "1",
-            "method": req.query.method || "",
-            "is_atom": "1",
+            "is_new": "",
+            "method": "",
+            "is_atom": "",
             "register_time": "",
             "publisher": ""
         };
         let apiInfo: {[key: string]: any} = {
+            "ID": "",
             "appId": APPId,
             "name": "",
             "type": "",
@@ -207,8 +208,8 @@ class RegisterPlugin{
      * @param APIInfo 数据库表API_info对应的字段
      */
     public async addSingleAPI(req: Request, res: Response){
-        let from: string = req.body.from;
-        let APPId: string = req.body.APPId;
+        let from: string = req.query.from;
+        let APPId: string = req.query.APPId;
         // 查询要更改的API对应的信息是否存在
         let urlService: UrlService = new UrlService();
         let apiInfoService: ApiInfoService = new ApiInfoService();
@@ -222,24 +223,24 @@ class RegisterPlugin{
         let url: {[key: string]: any} = {
             "APPId": APPId,
             "from": from,
-            "to": req.body.to,
+            "to": req.query.to,
             "status": req.query.status,
             "is_new": 1,
             "method": req.query.method,
             "is_atom": 1,
             "register_time": new Date().toLocaleString(),
-            "publisher": req.body.userName
+            "publisher": req.query.userName
         };
         let apiInfo: {[key: string]: any} = {
             "appId": APPId,
-            "name": req.body.name || "",
-            "type": req.body.type || "",
-            "argument": req.body.argument || "",
-            "event": req.body.event || "",
+            "name": req.query.name || "",
+            "type": req.query.type || "",
+            "argument": req.query.argument || "",
+            "event": req.query.event || "",
             "URL": from,
-            "status": req.body.status
+            "status": req.query.status
         } 
-        this.addSingleAPIToMemory(url);
+        RegisterPlugin.addSingleAPIToMemory(url);
         // 持久化存储
         urlService.insert([url]);
         apiInfoService.insert([apiInfo]);
@@ -253,14 +254,14 @@ class RegisterPlugin{
      * @param res 
      */
     public async recoverySingleAPI(req: Request, res: Response): Promise<void>{
-        let from: string = req.body.from;
-        let APPId: string = req.body.APPId;
+        let from: string = req.query.from;
+        let APPId: string = req.query.APPId;
         let urlService: UrlService = new UrlService();
         let apiInfoService: ApiInfoService = new ApiInfoService();
         let urlResult: GeneralResult = await urlService.query({"from": from, "APPId": APPId});
         if(urlResult.getResult() == true && urlResult.getDatum().length > 0){
             urlResult.getDatum()[0].status = "0";
-            this.addSingleAPIToMemory(urlResult.getDatum()[0]);
+            RegisterPlugin.addSingleAPIToMemory(urlResult.getDatum()[0]);
             // 持久化存储
             urlService.updateSelectiveByAPPIdAndFrom(urlResult.getDatum()[0]);
             let apiInfoResult: GeneralResult = await apiInfoService.query({"appId": APPId, "URL": from});
@@ -278,19 +279,19 @@ class RegisterPlugin{
      * 注册一个API
      * @param url 
      */
-    private addSingleAPIToMemory(url: {[key: string]: any}): Boolean{
+    private static addSingleAPIToMemory(url: {[key: string]: any}): Boolean{
         let data = new Map();
         let value = {"to": url.to, "status": url.status};
         data.set(url.from, value);
         if(url.status == 0){
-            this._registerApp.use(url.from, proxy(url.to, {
+            RegisterPlugin._registerApp.use(url.from, proxy(url.to, {
                 proxyReqPathResolver: function (req) {
                     return req.originalUrl;
                 }
             }));
             // 为相关的API标注，以便后期注销
-            this._registerApp._router.stack[this._registerApp._router.stack.length - 1].appId = url.appId;
-            this._registerApp._router.stack[this._registerApp._router.stack.length - 1].url = url.from;
+            RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].appId = url.appId;
+            RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].url = url.from;
             return true;
         }
         return false;
@@ -300,15 +301,15 @@ class RegisterPlugin{
      * 注销一个API
      * @param url 
      */
-    private removeSingleAPIFromMemory(url: {[key: string]: any}): Boolean{
+    private static removeSingleAPIFromMemory(url: {[key: string]: any}): Boolean{
         let data = new Map();
         // 先清空之前已经注册公司的数据，再重新重新注册改公司的API数据
         let appId: string = url.APPId;
-        if(this._registerApp._router && this._registerApp.stack){
-            for(let i = 2; i < this._registerApp._router.stack.length; i++){
-                if(this._registerApp._router.stack[i].appId === appId && this._registerApp._router.stack[i].url === url.from){
+        if (RegisterPlugin._registerApp._router && RegisterPlugin._registerApp.stack){
+            for (let i = 2; i < RegisterPlugin._registerApp._router.stack.length; i++){
+                if (RegisterPlugin._registerApp._router.stack[i].appId === appId && this._registerApp._router.stack[i].url === url.from){
                     // 删除一个元素
-                    this._registerApp._router.stack.splice(i, 1);
+                    RegisterPlugin._registerApp._router.stack.splice(i, 1);
                     return true;
                 }
             }
