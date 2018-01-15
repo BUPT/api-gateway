@@ -123,7 +123,8 @@ class RegisterPlugin{
 
         // 修改单个API
         if(urlResult.getResult() === false){
-            return new GeneralResult(false, "需要修改的API对应的URL不存在，请检查输入是否正确", null).getReturn();
+            res.json(new GeneralResult(false, "需要修改的API对应的URL不存在，请检查输入是否正确", null).getReturn());
+            return;
         }
         // 数据库表url对应的字段
         let url: {[key: string]: any} = {
@@ -153,7 +154,7 @@ class RegisterPlugin{
         // 数据持久化存储
         urlService.updateSelectiveByAPPIdAndFrom(url);
         apiInfoService.updateSelectiveByAppIdAndURL(apiInfo);
-        return new GeneralResult(true, null, null).getReturn();
+        res.json(new GeneralResult(true, null, "更新成功").getReturn());
     }
 
     /**
@@ -170,7 +171,8 @@ class RegisterPlugin{
         let generalResult: GeneralResult = await urlService.query({"from": from, "APPId": APPId});
         // 注销单个API
         if(generalResult.getResult() === false){
-            return new GeneralResult(false, "需要注销的url不存在，请检查您的输入", null).getReturn();
+            res.json(new GeneralResult(false, "需要注销的url不存在，请检查您的输入", null).getReturn());
+            return;
         }
         let result: Boolean = this.removeSingleAPIFromMemory({"from": from, "APPId": APPId});
         // 数据库表url对应的字段
@@ -196,7 +198,7 @@ class RegisterPlugin{
         } 
         urlService.updateSelectiveByAPPIdAndFrom(url);
         apiInfoService.updateSelectiveByAppIdAndURL(apiInfo);
-        return new GeneralResult(true, null, null);
+        res.json(new GeneralResult(true, null, "注销成功").getReturn());
     }
         
     /**
@@ -213,7 +215,8 @@ class RegisterPlugin{
         let generalResult: GeneralResult = await urlService.query({"from": from, "APPId": APPId});
         // 增加单个API
         if(generalResult.getResult() === true){
-            return new GeneralResult(false, "此URL已经存在，无法添加", null).getReturn();
+            res.json(new GeneralResult(false, "此URL已经存在，无法完成注册", null).getReturn());
+            return;
         }
         // 数据库表url对应的字段
         let url: {[key: string]: any} = {
@@ -240,9 +243,36 @@ class RegisterPlugin{
         // 持久化存储
         urlService.insert([url]);
         apiInfoService.insert([apiInfo]);
-        return new GeneralResult(true, null, null).getReturn();
+        res.json(new GeneralResult(true, null, "注册成功").getReturn());
     }
 
+
+    /**
+     * 恢复一个已注销的API
+     * @param req 
+     * @param res 
+     */
+    public async recoverySingleAPI(req: Request, res: Response): Promise<void>{
+        let from: string = req.body.from;
+        let APPId: string = req.body.APPId;
+        let urlService: UrlService = new UrlService();
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let urlResult: GeneralResult = await urlService.query({"from": from, "APPId": APPId});
+        if(urlResult.getResult() == true && urlResult.getDatum().length > 0){
+            urlResult.getDatum()[0].status = "0";
+            this.addSingleAPIToMemory(urlResult.getDatum()[0]);
+            // 持久化存储
+            urlService.updateSelectiveByAPPIdAndFrom(urlResult.getDatum()[0]);
+            let apiInfoResult: GeneralResult = await apiInfoService.query({"appId": APPId, "URL": from});
+            apiInfoResult.getDatum()[0].status = "0";
+            apiInfoService.updateSelectiveByAppIdAndURL(apiInfoResult.getDatum()[0]);
+            res.json(new GeneralResult(true, null, "恢复成功").getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, "需要恢复的API对应的URL不存在", null).getReturn());
+
+    }
+    
 
     /**
      * 注册一个API
@@ -286,6 +316,9 @@ class RegisterPlugin{
         }
         return true;
     }
+
+
+    
 
     /**
      * 初始化系统时从数据库读取数据进行注册

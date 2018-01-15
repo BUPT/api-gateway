@@ -218,6 +218,35 @@ class AdminRouter{
          */
         this._router.post("/apis/addSingleAPI", registerPlugin.addSingleAPI);
 
+
+
+        /**
+         * @swagger
+         * /apis/recoverySingleAPI:
+         *   post:
+         *       description: 恢复单个已注销API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: APPId
+         *           in: query
+         *           description: 注册API公司对应的APPId
+         *           required: true
+         *           type: string
+         *         - name: from
+         *           in: query
+         *           description: 需要注销API对应的URL
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/apis/recoverySingleAPI", registerPlugin.recoverySingleAPI);
+
         /**
          * @swagger
          * /apis/uploads:
