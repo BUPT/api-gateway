@@ -223,27 +223,39 @@ class ApiInfoService{
     public async updateSelectiveByAppIdAndURL(apiInfo: {[key: string]: any}): Promise<void> {
         let queryResult: GeneralResult = await this.query({"appId": apiInfo.appId, "URL": apiInfo.URL});
         // 若记录存在，先删除，在插入
-        if(queryResult.getResult() === true){
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
             await this.remove({"appId": apiInfo.appId, "URL": apiInfo.URL});
+            if(apiInfo.ID === ""){
+                apiInfo.ID = queryResult.getDatum()[0].ID;
+                console.log(apiInfo.ID);
+            }
+            if (apiInfo.name === "") {
+                apiInfo.name = queryResult.getDatum()[0].name;
+            }
+            if (apiInfo.type === "") {
+                apiInfo.type = queryResult.getDatum()[0].type;
+            }
+            if (apiInfo.argument === "") {
+                apiInfo.argument = queryResult.getDatum()[0].argument;
+            }
+            if (apiInfo.event === "") {
+                apiInfo.event = queryResult.getDatum()[0].event;
+            }
+            if (apiInfo.status === "") {
+                apiInfo.status = queryResult.getDatum()[0].status;
+            }
         }
-        // 否则直接插入
-        
-        if(apiInfo.name === ""){
-            apiInfo.name = queryResult.getDatum()[0].name;
+        let apiInfoTemp: {[key: string]: any} = {
+            "appId": apiInfo.appId,
+            "URL": apiInfo.URL,
+            "ID": apiInfo.ID,
+            "name": apiInfo.name,
+            "type": apiInfo.type,
+            "argument": apiInfo.argument,
+            "event": apiInfo.event,
+            "status": apiInfo.status
         }
-        if(apiInfo.type === ""){
-            apiInfo.type = queryResult.getDatum()[0].type;
-        }
-        if(apiInfo.argument === ""){
-            apiInfo.argument = queryResult.getDatum()[0].argument;
-        }
-        if(apiInfo.event === ""){
-            apiInfo.event = queryResult.getDatum()[0].event;
-        }
-        if(apiInfo.status === ""){
-            apiInfo.status = queryResult.getDatum()[0].status;
-        }
-        this.insert([apiInfo]);
+        this.insert([apiInfoTemp]);
     }
 }  
 export{ApiInfoService};
