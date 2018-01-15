@@ -183,7 +183,48 @@ npm start
 ------
 You can now visit :localhost:8002/?type=xxx,  xxx Indicates different request parameters。
 
+------
 
+
+## Module 6
+
+@chenyuanxing
+
+Performance monitoring.It is mainly to monitor the performance of the gateway system.
+
+### Install
+
+#### Dependencies
+
+1. Node.js >= 8 (8 is recommended)
+2. TypeScript >= 1.2
+
+### Run
+
+When run the whole system using the Following instructions,this module will work.
+
+```
+npm start
+```
+------
+This module expose several APIs for Performance monitor.
+1.Gateway monitoring data
+```
+http://localhost:8001/viewTopPerformance
+```
+2.Get all APIs' name that have been visited.
+```
+http://localhost:8001/viewSoursePerformanceKeys
+```
+3.Get monitoring info about the api.
+```
+http://localhost:8001/viewSoursePerformance?name= <APIname>
+```
+4.Get monitoring data about the user.
+```
+http://localhost:8001/viewUserPerformance?username= <username>
+```
+------
 
 ### A template of swagger file:
 
