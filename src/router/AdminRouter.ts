@@ -105,6 +105,8 @@ class AdminRouter{
          *         - name: type
          *           in: query
          *           description: API对应的类型
+         *           required: false
+         *           type: string
          *         - name: argument
          *           in: query
          *           description: API对应的参数
@@ -113,8 +115,6 @@ class AdminRouter{
          *         - name: event
          *           in: query
          *           description: API对应的响应
-         *           required: false
-         *           type: string
          *           required: false
          *           type: string
          *       produces:
