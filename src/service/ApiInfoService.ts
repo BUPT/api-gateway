@@ -2,6 +2,7 @@ import {DBConnect} from "../util/DBConnect";
 import {ApiInfoModel} from "../model/ApiInfoModel";
 import {GeneralResult} from "../general/GeneralResult";
 import {CombinationUrlService} from "./CombinationUrlService";
+import { appendFile } from "fs";
 
 class ApiInfoService{
     // 连接数据库
@@ -213,6 +214,36 @@ class ApiInfoService{
         }else {
             return new GeneralResult(false, null, null);
         }
+    }
+
+    /**
+     * 根据appId和URL选择性更新指定记录
+     * @param apiInfo 
+     */
+    public async updateSelectiveByAppIdAndURL(apiInfo: {[key: string]: any}): Promise<void> {
+        let queryResult: GeneralResult = await this.query({"appId": apiInfo.appId, "URL": apiInfo.URL});
+        // 若记录存在，先删除，在插入
+        if(queryResult.getResult() === true){
+            await this.remove({"appId": apiInfo.appId, "URL": apiInfo.URL});
+        }
+        // 否则直接插入
+        
+        if(apiInfo.name === ""){
+            apiInfo.name = queryResult.getDatum()[0].name;
+        }
+        if(apiInfo.type === ""){
+            apiInfo.type = queryResult.getDatum()[0].type;
+        }
+        if(apiInfo.argument === ""){
+            apiInfo.argument = queryResult.getDatum()[0].argument;
+        }
+        if(apiInfo.event === ""){
+            apiInfo.event = queryResult.getDatum()[0].event;
+        }
+        if(apiInfo.status === ""){
+            apiInfo.status = queryResult.getDatum()[0].status;
+        }
+        this.insert([apiInfo]);
     }
 }  
 export{ApiInfoService};

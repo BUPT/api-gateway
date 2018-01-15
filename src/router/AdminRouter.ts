@@ -44,6 +44,8 @@ class AdminRouter{
         this._router.all('/viewUserPerformance',performanceMonitor.viewUserPerformance);
         // 对管理员操作进行basic-auth身份认证
         //this._router.all("/apis/*", adminPlugin.basicAuth);
+
+
         /**
          * @swagger
          * /apis/register:
@@ -54,6 +56,167 @@ class AdminRouter{
          *           - "API管理"
          */
         this._router.get("/apis/register", adminPlugin.APIRegister);
+
+
+        /**
+         * @swagger
+         * /apis/updateSingleAPI:
+         *   post:
+         *       description: 更新单个已注册API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: oldURL
+         *           in: query
+         *           description: 需要修改的API对应的URL
+         *           required: true
+         *           type: string
+         *         - name: userName
+         *           in: query
+         *           description: 发布者姓名
+         *           required: true
+         *           type: string
+         *         - name: newURL
+         *           in: query
+         *           description: 新API对应的URL
+         *           required: false
+         *           type: string
+         *         - name: APPId
+         *           in: query
+         *           description: 将API服务注册在API网关的公司对应的ID标识
+         *           required: true
+         *           type: string
+         *         - name: status
+         *           in: query
+         *           description: 标识API是否有效，0为有效，1为无效
+         *           required: false
+         *           type: string
+         *         - name: method
+         *           in: query
+         *           description: API对应的访问方法
+         *           required: false
+         *           type: string
+         *         - name: name
+         *           in: query
+         *           description: API对应的名称
+         *           required: false
+         *           type: string
+         *         - name: type
+         *           in: query
+         *           description: API对应的类型
+         *         - name: argument
+         *           in: query
+         *           description: API对应的参数
+         *           required: false
+         *           type: string
+         *         - name: event
+         *           in: query
+         *           description: API对应的响应
+         *           required: false
+         *           type: string
+         *           required: false
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/apis/updateSingleAPI", registerPlugin.updateSingleAPI);
+
+        /**
+         * @swagger
+         * /apis/removeSingleAPI:
+         *   post:
+         *       description: 注销单个已注册API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: APPId
+         *           in: query
+         *           description: 注册API公司对应的APPId
+         *           required: true
+         *           type: string
+         *         - name: from
+         *           in: query
+         *           description: 需要注销API对应的URL
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/apis/removeSingleAPI", registerPlugin.removeSingleAPI);
+
+
+        /**
+         * @swagger
+         * /apis/addSingleAPI:
+         *   post:
+         *       description: 注册单个API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+          *         - name: userName
+         *           in: query
+         *           description: 登录用户名(对应API发布者)
+         *           required: true
+         *           type: string
+         *         - name: URL
+         *           in: query
+         *           description: 需要增加API对应的URL
+         *           required: true
+         *           type: string
+         *         - name: APPId
+         *           in: query
+         *           description: 将API服务注册在API网关的公司对应的ID标识
+         *           required: true
+         *           type: string
+         *         - name: to
+         *           in: query
+         *           description: API服务实际所在服务器域名
+         *           required: true
+         *           type: string
+         *         - name: status
+         *           in: query
+         *           description: 标识API是否有效，0为有效，1为无效
+         *           required: true
+         *           type: string
+         *         - name: method
+         *           in: query
+         *           description: API对应的访问方法
+         *           required: true
+         *           type: string
+         *         - name: name
+         *           in: query
+         *           description: API对应的名称
+         *           required: false
+         *           type: string
+         *         - name: type
+         *           in: query
+         *           description: API对应的类型
+         *         - name: argument
+         *           in: query
+         *           description: API对应的参数
+         *           required: false
+         *           type: string
+         *         - name: event
+         *           in: query
+         *           description: API对应的响应
+         *           required: false
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/apis/addSingleAPI", registerPlugin.addSingleAPI);
 
         /**
          * @swagger
