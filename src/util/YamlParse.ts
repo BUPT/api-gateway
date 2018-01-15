@@ -86,7 +86,8 @@ class YamlParse{
                 "argument": argument, 
                 "event": event, 
                 "URL": API, 
-                "appId": appId
+                "appId": appId,
+                "status": status
              };
             // 注册时间
             let timeString: string = new Date().toLocaleString();
