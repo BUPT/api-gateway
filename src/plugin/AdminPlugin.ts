@@ -21,6 +21,7 @@ import { config } from "bluebird";
 import {Request, Response} from "express";
 
 import {CombinationService} from "../service/CombinationService";
+import { ProjectService } from "../service/ProjectService";
 class AdminPlugin{
 
     /**
@@ -447,6 +448,32 @@ class AdminPlugin{
         }
         data.set("flag", flag);
         return data;
+    }
+
+
+    /**
+     * 添加一个项目
+     * @param req 
+     * @param res 
+     */
+    public async addProject(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName;
+        let projectDescription: string = req.query.projectDescription;
+        let publisher: string = req.query.publisher;
+        let projectService: ProjectService = new ProjectService();
+        let queryResult: GeneralResult = await projectService.query({"name": projectName, "publisher": publisher});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            res.json(new GeneralResult(false, "项目名称已经存在", null).getReturn());
+            return;
+        }
+        let projectInfo: {[key: string]: any} = {
+            "name": projectName,
+            "description": projectDescription,
+            "publisher": publisher,
+            "create_time": new Date().toLocaleString()
+        }
+        projectService.insert([projectInfo]);
+        res.json(new GeneralResult(true, null, null).getReturn());
     }
 }
 export{AdminPlugin};

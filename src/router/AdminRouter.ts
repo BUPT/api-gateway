@@ -798,6 +798,41 @@ class AdminRouter{
          */
         this._router.post("/apis/registerCombinationAPI", combinationPlugin.registerCombinationAPI);
         this._router.get("/call", combinationPlugin.publish);
+
+
+
+
+        /**
+         * @swagger
+         * /project/addProject:
+         *   get:
+         *       description: 添加一个项目
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 新增项目名称
+         *           required: true
+         *           type: string
+         *         - name: projectDescription
+         *           in: query
+         *           description: 项目信息简介
+         *           required: false
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 项目创建和API注册发布者
+         *           required: false
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/addProject", adminPlugin.addProject);
     }
 }
 export{AdminRouter};
