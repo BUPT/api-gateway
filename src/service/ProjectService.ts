@@ -77,5 +77,31 @@ class ProjectService {
             });
         })
     }
+
+    /**
+     * 选择性更新project数据库表
+     * @param data 
+     * @param condition 
+     */
+    public async updateSelective(data: { [key: string]: any }, condition: { [key: string]: any }): Promise<void>{
+        let queryResult: GeneralResult = await this.query(condition);
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            await this.remove(condition);
+            data.create_time = queryResult.getDatum()[0].create_time;
+            if(data.name === ""){
+                data.name = queryResult.getDatum()[0].name;
+            }
+            if(data.description === ""){
+                data.description = queryResult.getDatum()[0].description;
+            }
+            if(data.create_time === ""){
+                data.create_time = queryResult.getDatum()[0].create_time;
+            }
+            if(data.publisher === ""){
+                data.publisher = queryResult.getDatum()[0].publisher;
+            }
+        }
+        this.insert([data]);
+    }
 }
 export { ProjectService };
