@@ -18,6 +18,8 @@ import events = require("events");
 import { CombinationUrlPlugin } from "./CombinationUrlPlugin";
 import { config } from "bluebird";
 
+import {Request, Response} from "express";
+
 import {CombinationService} from "../service/CombinationService";
 class AdminPlugin{
 
@@ -255,6 +257,26 @@ class AdminPlugin{
         }else{
             res.json(new GeneralResult(false, "您还没有注册相关API", null).getReturn());
         }
+    }
+
+
+
+    /**
+     * 根据APPId和URL获取API信息
+     * @param req 
+     * @param res 
+     */
+    public async getAPIInfoByAPPIdAndURL(req: Request, res: Response): Promise<void>{
+
+        let appId: string = req.query.appId;
+        let url: string = req.query.url;
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let queryResult: GeneralResult = await apiInfoService.query({"appId": appId, "URL": url});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            res.json(new GeneralResult(true, null, queryResult.getDatum()[0].getReturn()));
+            return;
+        }
+        res.json(new GeneralResult(false, "对应的url不存在", null).getReturn());
     }
 
     /**

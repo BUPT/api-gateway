@@ -538,6 +538,34 @@ class AdminRouter{
 
         /**
          * @swagger
+         * /apis/getAPIInfoByAPPIdAndURL:
+         *   get:
+         *       description: 根据API的appId和url获取API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: appId
+         *           in: query
+         *           description: 注册API的公司的appId
+         *           required: true
+         *           type: string
+         *         - name: url
+         *           in: query
+         *           description: API服务对应的url
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getAPIInfoByAPPIdAndURL", adminPlugin.getAPIInfoByAPPIdAndURL);
+
+
+        /**
+         * @swagger
          * /apis/getApiInfoByType:
          *   get:
          *       description: 根据API的类型获取API信息
