@@ -29,7 +29,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
         $scope.window2 = "";
 
         $scope.help = "帮助";
-        $scope.help1 = "";
+        $scope.help1 = "API帮助";
         $scope.help2 = "";
 
         $scope.show = function() { //生成JSON树结构
@@ -83,6 +83,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
                         node.name = name;
                         $("#nodeid").children('text').html(node.name);
                         node.url = url;
+                        node.isfirst = 0;
                         alert("设置成功！");
                         return;
                     }
@@ -91,7 +92,31 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
                     }
                 }
             }
-            json(Json);
+            //json(Json);
+
+            $http({
+                method: 'get',
+                url: 'http://www.linyimin.club:8001/apis/storeAtomApiInfo',
+                params: {
+                    "moduleId": nodeid,
+                    "type": type,
+                    "name": name,
+                    "id": id,
+                    "argument": input,
+                    "response": output,
+                    "URL":url,
+                    "isAsync":asn,
+                    "condition":condition
+                }, // 传递数据作为字符串，从前台传到后台  
+            }).success(function(data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
+                if (data.result == true) {
+                    json(Json);
+                } else {
+                    alert(data.reason);
+                }
+            }).error(function(data, status, headers, config) {
+                alert("错误");
+            });
         };
 
         $scope.register = function() { //点击注册

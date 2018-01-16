@@ -76,64 +76,135 @@ function findnode(oob) { //找到被点击的节点对象
 }
 
 function showattr(node, oob) { //显示被点击节点对象属性
-    var tp = node.type;
-    if (node.type == 'HJKZ') {
-        tp = "呼叫控制类";
-    }
-    if (node.type == 'HMGB') {
-        tp = "号码改变类";
-    }
-    if (node.type == 'WH') {
-        tp = "外呼类";
-    }
-    if (node.type == 'DFTH') {
-        tp = "多方通话类";
-    }
-    if (node.type == 'IVR') {
-        tp = "IVR类";
-    }
-    if (node.type == 'QOS') {
-        tp = "QOS类";
-    }
-    if (node.type == 'XX') {
-        tp = "消息类";
-    }
-    $("#tp").val(tp);
-    $("#nodeid").val(node.id);
-
-    $.ajax({
-        type: "get",
-        url: 'http://www.linyimin.club:8001/apis/getApiInfoByType',
-        async: true,
-        dataType: "json",
-        data: { "APIType": tp },
-        crossDomain: true,
-        success: function(data) {
-            if (data.result == true) {
-                var $select = $('#name');
-                $("#name").empty();
-                for (var i = 0, len = data.datum.length; i < len; i++) {
-                    $select.append('<option value="' + data.datum[i].ID + '">' + data.datum[i].name + '</option>');
-                }
-
-                next(data.datum, oob);
-            } else {
-                alert(data.reason);
-            }
-        },
-        error: function(data) {
-            console.log(JSON.stringify(data));
-            alert(JSON.stringify(data));
+    if (node.isfirst == 1) {
+        var tp = node.type;
+        if (node.type == 'HJKZ') {
+            tp = "呼叫控制类";
         }
-    });
+        if (node.type == 'HMGB') {
+            tp = "号码改变类";
+        }
+        if (node.type == 'WH') {
+            tp = "外呼类";
+        }
+        if (node.type == 'DFTH') {
+            tp = "多方通话类";
+        }
+        if (node.type == 'IVR') {
+            tp = "IVR类";
+        }
+        if (node.type == 'QOS') {
+            tp = "QOS类";
+        }
+        if (node.type == 'XX') {
+            tp = "消息类";
+        }
+        $("#tp").val(tp);
+        $("#nodeid").val(node.id);
+
+        $.ajax({
+            type: "get",
+            url: 'http://www.linyimin.club:8001/apis/getApiInfoByType',
+            async: true,
+            dataType: "json",
+            data: { "APIType": tp },
+            crossDomain: true,
+            success: function (data) {
+                if (data.result == true) {
+                    var $select = $('#name');
+                    $("#name").empty();
+                    for (var i = 0, len = data.datum.length; i < len; i++) {
+                        $select.append('<option value="' + data.datum[i].ID + '">' + data.datum[i].name + '</option>');
+                    }
+
+                    next(data.datum, oob);
+                } else {
+                    alert(data.reason);
+                }
+            },
+            error: function (data) {
+                console.log(JSON.stringify(data));
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+    else {
+        var blockid = oob.attr('id');
+        $.ajax({
+            type: "get",
+            url: 'http://www.linyimin.club:8001/apis/getAtomApiInfo',
+            async: true,
+            dataType: "json",
+            data: {
+                "moduleId": blockid,
+                "combinationUrl": ""
+            },
+            crossDomain: true,
+            success: function (data) {
+                if (data.result == true) {
+                    $("#nodeid").val(data.datum.module_id);
+                    $("#tp").val(data.datum.type);
+
+                    $.ajax({
+                        type: "get",
+                        url: 'http://www.linyimin.club:8001/apis/getApiInfoByType',
+                        async: true,
+                        dataType: "json",
+                        data: { "APIType": data.datum.type },
+                        crossDomain: true,
+                        success: function (data1) {
+                            if (data1.result == true) {
+                                var $select = $('#name');
+                                $("#name").empty();
+                                for (var i = 0, len = data1.datum.length; i < len; i++) {
+                                    $select.append('<option value="' + data1.datum[i].ID + '">' + data1.datum[i].name + '</option>');
+                                }
+                                for (var j = 0, len1 = data1.datum.length; j < len1; j++) {
+                                    if (data.datum.api_id == data1.datum[j].ID) {
+                                        $("#name").val(data.datum.api_id);
+                                    }
+                                }
+                                next(data1.datum, oob);
+                            } else {
+                                alert(data.reason);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(JSON.stringify(data));
+                            alert(JSON.stringify(data));
+                        }
+                    });
+
+                    $("#idid").val(data.datum.api_id);
+                    $("#inputt").val(data.datum.argument);
+                    $("#output").val(data.datum.response);
+                    $("#url").val(data.datum.URL);
+                    if (data.datum.is_async == "0") {
+                        $("#asn").val("0");
+                    }
+                    if (data.datum.is_async == "1") {
+                        $("#asn").val("1");
+                    }
+                    $("#condi").val(data.datum.condition);
+                } else {
+                    alert(data.reason);
+                }
+            },
+            error: function (data) {
+                console.log(JSON.stringify(data));
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+
 }
 
 function next(data, oob) {
     //alert(111);
-    $(document).ready(function() {
+    $(document).ready(function () {
         var select = document.getElementById('name');
 
-        select.onclick = function() {
+        select.onclick = function () {
             var s_id = $("#name").val();
             var namee = $("#name").find("option:selected").text();
             //alert(s_id);
@@ -147,6 +218,7 @@ function next(data, oob) {
                     oob.children('text').html(namee);
                 }
             }
+            $("#condi").val("");
         }
     });
 }

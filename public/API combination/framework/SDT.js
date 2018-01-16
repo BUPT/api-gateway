@@ -77,6 +77,7 @@ var SDT = (function() {
         this.url = ""; //API的URL
         this.asntype = 0; //是否异步
         this.condition = ""; //条件
+        this.isfirst = 1;//是否是第一次点击
     }
     //元素类型对象构造函数
     function TypeEleCount(countType) {
@@ -190,6 +191,7 @@ var SDT = (function() {
                 provisionalSDTTreeEle.url = "urlurlurlurlurlurlurl";
                 provisionalSDTTreeEle.asntype = 0;
                 provisionalSDTTreeEle.condition = "conditonconditoncondition";
+                provisionalSDTTreeEle.isfirst = 1;
                 typeEleCountList.forEach(function(element) {
                     if (element.countType === provisionalSDTTreeEle.type) {
                         provisionalSDTTreeEle.id = provisionalSDTTreeEle.type + (element.countNumber + 1);
@@ -254,6 +256,7 @@ var SDT = (function() {
                 typeObj.url = element.url;
                 typeObj.asntype = element.asntype;
                 typeObj.condition = element.condition;
+                typeObj.isfirst = element.isfirst;
             }
         });
         return typeObj;
