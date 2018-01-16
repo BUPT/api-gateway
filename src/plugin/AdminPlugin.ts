@@ -273,7 +273,7 @@ class AdminPlugin{
         let apiInfoService: ApiInfoService = new ApiInfoService();
         let queryResult: GeneralResult = await apiInfoService.query({"appId": appId, "URL": url});
         if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
-            res.json(new GeneralResult(true, null, queryResult.getDatum()[0].getReturn()));
+            res.json(new GeneralResult(true, null, queryResult.getDatum()[0]).getReturn());
             return;
         }
         res.json(new GeneralResult(false, "对应的url不存在", null).getReturn());
