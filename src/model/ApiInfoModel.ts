@@ -11,7 +11,8 @@ class ApiInfoModel {
             type: String,
             argument: String,
             event: String,
-            URL: String
+            URL: String,
+            status: String
         });
     }
 

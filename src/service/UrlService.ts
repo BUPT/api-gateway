@@ -94,5 +94,41 @@ class UrlService{
             });
         })
     }
+
+
+    /**
+     * 选择性更新指定记录
+     * @param url 
+     */
+    public async updateSelectiveByAPPIdAndFrom(url: {[key: string]: any}): Promise<void>{
+        let queryResult: GeneralResult = await this.query({"APPId": url.APPId, "from": url.from});
+        // 记录存在，先删除在插入
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            await this.remove({"APPId": url.APPId, "from": url.from});
+            if(url.to === ""){
+                url.to = queryResult.getDatum()[0].to;
+            }
+            if (url.status === "") {
+                url.status = queryResult.getDatum()[0].status;
+            }
+            if (url.is_new === "") {
+                url.is_new = queryResult.getDatum()[0].is_new;
+            }
+            if (url.method === "") {
+                url.method = queryResult.getDatum()[0].method;
+            }
+            if (url.is_atom === "") {
+                url.is_atom = queryResult.getDatum()[0].is_atom;
+            }
+            if (url.register_time === "") {
+                url.register_time = queryResult.getDatum()[0].register_time;
+            }
+            if (url.publisher === "") {
+                url.publisher = queryResult.getDatum()[0].publisher;
+            }
+        }
+        // 记录不存在，直接插入
+        this.insert([url]);
+    }
 }
 export{UrlService};

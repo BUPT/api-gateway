@@ -81,6 +81,21 @@ class CombinationPlugin{
      * @param res 
      */
     public storeAtomApiInfo(req, res){
+        for(let i = 0; i < atomApiInfo.length; i++){
+            if (atomApiInfo[i].module_id === req.query.moduleId){
+                atomApiInfo[i].module_id = req.query.moduleId || "";
+                atomApiInfo[i].type = req.query.type || "";
+                atomApiInfo[i].name = req.query.name || "";
+                atomApiInfo[i].api_id = req.query.id || "";
+                atomApiInfo[i].argument = req.query.argument || "";
+                atomApiInfo[i].response = req.query.response || "";
+                atomApiInfo[i].URL = req.query.URL || "";
+                atomApiInfo[i].is_async = req.query.isAsync || "";
+                atomApiInfo[i].condition = req.query.condition || "";
+                res.json(new GeneralResult(true, null, atomApiInfo).getReturn());
+                return;
+            }
+        }
         let temp: {[key: string]: string} = {};
         temp.module_id = req.query.moduleId || "";
         temp.type = req.query.type || "";
