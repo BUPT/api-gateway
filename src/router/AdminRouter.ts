@@ -824,7 +824,7 @@ class AdminRouter{
          *         - name: publisher
          *           in: query
          *           description: 项目创建和API注册发布者
-         *           required: false
+         *           required: true
          *           type: string
          *       produces:
          *         - application/json
@@ -833,6 +833,43 @@ class AdminRouter{
          *           description:OK
          */
         this._router.get("/project/addProject", adminPlugin.addProject);
+
+        /**
+         * @swagger
+         * /project/editProject:
+         *   get:
+         *       description: 添加一个项目
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: oldProjectName
+         *           in: query
+         *           description: 原项目名称
+         *           required: true
+         *           type: string
+         *         - name: newProjectName
+         *           in: query
+         *           description: 新项目名称
+         *           required: false
+         *           type: string
+         *         - name: projectDescription
+         *           in: query
+         *           description: 项目信息简介
+         *           required: false
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 项目创建和API注册发布者
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/editProject", adminPlugin.editProject);
     }
 }
 export{AdminRouter};
