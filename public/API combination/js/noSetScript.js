@@ -40,7 +40,7 @@ var set_o = {
         "lineColor": "#547D87", // 值为颜色色值字符串 连线颜色为此色值
         "treeCenterX": "0", //值为数字（不带单位，非字符串） 树的中心 X 坐标
         "treeCenterY": "150", //值为数字（不带单位，非字符串） 树的中心 Y 坐标
-        "treeEleMargin": "16" //值为数字（不带单位，非字符串） 元素的上下边距
+        "treeEleMargin": "2" //值为数字（不带单位，非字符串） 元素的上下边距
     }
 };
 SDT.SVGDragComponent(set_o); //对组件进行配置，参数为上方定义好的参数
