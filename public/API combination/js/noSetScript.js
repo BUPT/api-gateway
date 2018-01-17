@@ -1,21 +1,21 @@
 var set_o = {
     "SDTTreeElements": [{ //元素配置
-        "type": "HJKZ", //值为字符串 表示元素类型
+        "type": "CallControl", //值为字符串 表示元素类型
         "dropSwitch": true, //值为 true 或 false 当值为 true 时元素可直接放置于画布
         "foresideType": ["all"], //值为一个字符串 type 间由 "," 隔开 当值为空时，则任何元素都将不接受其的放置；当值为 all 时所有元素都接受其放置；当值为合法 type 串时，type 串中所代表的类型元素将接受其放置
         "leanRight": true //值为 true 或 false 当值为 true 时元素默认放置于右侧树
     }, {
-        "type": "HMGB",
+        "type": "NumberChange",
         "dropSwitch": true,
         "foresideType": ["all"],
         "leanRight": true
     }, {
-        "type": "WH",
+        "type": "OutBound",
         "dropSwitch": true,
         "foresideType": ["all"],
         "leanRight": true
     }, {
-        "type": "DFTH",
+        "type": "MultiCall",
         "dropSwitch": true,
         "foresideType": ["all"],
         "leanRight": true
@@ -30,7 +30,7 @@ var set_o = {
         "foresideType": ["all"],
         "leanRight": true
     }, {
-        "type": "XX",
+        "type": "Message",
         "dropSwitch": true,
         "foresideType": ["all"],
         "leanRight": true
@@ -78,16 +78,16 @@ function findnode(oob) { //找到被点击的节点对象
 function showattr(node, oob) { //显示被点击节点对象属性
     if (node.isfirst == 1) {
         var tp = node.type;
-        if (node.type == 'HJKZ') {
+        if (node.type == 'CallControl') {
             tp = "呼叫控制类";
         }
-        if (node.type == 'HMGB') {
+        if (node.type == 'NumberChange') {
             tp = "号码改变类";
         }
-        if (node.type == 'WH') {
+        if (node.type == 'OutBound') {
             tp = "外呼类";
         }
-        if (node.type == 'DFTH') {
+        if (node.type == 'MultiCall') {
             tp = "多方通话类";
         }
         if (node.type == 'IVR') {
@@ -96,7 +96,7 @@ function showattr(node, oob) { //显示被点击节点对象属性
         if (node.type == 'QOS') {
             tp = "QOS类";
         }
-        if (node.type == 'XX') {
+        if (node.type == 'Message') {
             tp = "消息类";
         }
         $("#tp").val(tp);
