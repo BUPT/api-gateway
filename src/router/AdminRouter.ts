@@ -538,6 +538,34 @@ class AdminRouter{
 
         /**
          * @swagger
+         * /apis/getAPIInfoByAPPIdAndURL:
+         *   get:
+         *       description: 根据API的appId和url获取API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: appId
+         *           in: query
+         *           description: 注册API的公司的appId
+         *           required: true
+         *           type: string
+         *         - name: url
+         *           in: query
+         *           description: API服务对应的url
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getAPIInfoByAPPIdAndURL", adminPlugin.getAPIInfoByAPPIdAndURL);
+
+
+        /**
+         * @swagger
          * /apis/getApiInfoByType:
          *   get:
          *       description: 根据API的类型获取API信息
@@ -770,6 +798,128 @@ class AdminRouter{
          */
         this._router.post("/apis/registerCombinationAPI", combinationPlugin.registerCombinationAPI);
         this._router.get("/call", combinationPlugin.publish);
+
+
+
+
+        /**
+         * @swagger
+         * /project/addProject:
+         *   get:
+         *       description: 添加一个项目
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 新增项目名称
+         *           required: true
+         *           type: string
+         *         - name: projectDescription
+         *           in: query
+         *           description: 项目信息简介
+         *           required: false
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 项目创建和API注册发布者
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/addProject", adminPlugin.addProject);
+
+        /**
+         * @swagger
+         * /project/editProject:
+         *   get:
+         *       description: 添加一个项目
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: oldProjectName
+         *           in: query
+         *           description: 原项目名称
+         *           required: true
+         *           type: string
+         *         - name: newProjectName
+         *           in: query
+         *           description: 新项目名称
+         *           required: false
+         *           type: string
+         *         - name: projectDescription
+         *           in: query
+         *           description: 项目信息简介
+         *           required: false
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 项目创建和API注册发布者
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/editProject", adminPlugin.editProject);
+
+
+        /**
+         * @swagger
+         * /project/deleteProject:
+         *   get:
+         *       description: 删除一个项目
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 需要删除的项目名称
+         *           required: true
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 项目创建和API注册发布者
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/deleteProject", adminPlugin.deleteProject);
+
+        /**
+         * @swagger
+         * /project/queryProject:
+         *   get:
+         *       description: 根据项目名称查找项目信息
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 需要查找的项目名称
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/queryProject", adminPlugin.queryProject);
     }
 }
 export{AdminRouter};

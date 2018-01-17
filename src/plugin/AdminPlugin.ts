@@ -18,7 +18,11 @@ import events = require("events");
 import { CombinationUrlPlugin } from "./CombinationUrlPlugin";
 import { config } from "bluebird";
 
+import {Request, Response} from "express";
+
 import {CombinationService} from "../service/CombinationService";
+import { ProjectService } from "../service/ProjectService";
+
 class AdminPlugin{
 
     /**
@@ -248,6 +252,7 @@ class AdminPlugin{
                     temp.upstreamUrl = urlResult.getDatum()[i].to + temp.interface;
                     temp.time = urlResult.getDatum()[i].register_time;
                     temp.publisher = urlResult.getDatum()[i].publisher;
+                    temp.appId = urlResult.getDatum()[i].APPId
                     result[i] = temp;
                 }
             }
@@ -255,6 +260,26 @@ class AdminPlugin{
         }else{
             res.json(new GeneralResult(false, "您还没有注册相关API", null).getReturn());
         }
+    }
+
+
+
+    /**
+     * 根据APPId和URL获取API信息
+     * @param req 
+     * @param res 
+     */
+    public async getAPIInfoByAPPIdAndURL(req: Request, res: Response): Promise<void>{
+
+        let appId: string = req.query.appId;
+        let url: string = req.query.url;
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let queryResult: GeneralResult = await apiInfoService.query({"appId": appId, "URL": url});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            res.json(new GeneralResult(true, null, queryResult.getDatum()[0]).getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, "对应的url不存在", null).getReturn());
     }
 
     /**
@@ -425,6 +450,99 @@ class AdminPlugin{
         }
         data.set("flag", flag);
         return data;
+    }
+
+
+    /**
+     * 添加一个项目
+     * @param req 
+     * @param res 
+     */
+    public async addProject(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName;
+        let projectDescription: string = req.query.projectDescription;
+        let publisher: string = req.query.publisher;
+        let projectService: ProjectService = new ProjectService();
+        let queryResult: GeneralResult = await projectService.query({"name": projectName, "publisher": publisher});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            res.json(new GeneralResult(false, "项目名称已经存在", null).getReturn());
+            return;
+        }
+        let projectInfo: {[key: string]: any} = {
+            "name": projectName,
+            "description": projectDescription,
+            "publisher": publisher,
+            "create_time": new Date().toLocaleString()
+        }
+        projectService.insert([projectInfo]);
+        res.json(new GeneralResult(true, null, `${projectName}添加成功`).getReturn());
+    }
+
+
+    /**
+     * 编辑项目信息
+     * @param req 
+     * @param res 
+     */
+    public async editProject(req: Request, res: Response): Promise<void>{
+        let oldProjectName: string = req.query.oldProjectName;
+        let newProjectName: string = req.query.newProjectName || "";
+        let publisher: string = req.query.publisher;
+        let description: string = req.query.projectDescription || "";
+        let projectService: ProjectService = new ProjectService();
+        // 重新命名的项目名称已经存在
+        let newResult: GeneralResult = await projectService.query({ "name": newProjectName, "publisher": publisher });
+        if (newResult.getResult() === true && newResult.getDatum().length > 0){
+            res.json(new GeneralResult(false, `${newProjectName}对应的项目已经存在，请重新输入`, null).getReturn());
+            return;
+        }
+        let queryResult: GeneralResult = await projectService.query({"name": oldProjectName, "publisher": publisher});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            let data: {[key: string]: any} = {
+                "name": newProjectName,
+                "description": description,
+                "publisher": "",
+                "create_time": ""
+            }
+            let condition: {[key: string]:any} = {
+                "name": oldProjectName,
+                "publisher": publisher
+            }
+            projectService.updateSelective(data, condition);
+            res.json(new GeneralResult(true, null, `${oldProjectName}编辑成功`).getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, `${oldProjectName}对应的项目不存在，无法进行更改`,null));
+    }
+
+    /**
+     * 删除一个项目
+     * @param req 
+     * @param res 
+     */
+    public async deleteProject(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName;
+        let publisher: string = req.query.publisher;
+        let projectService: ProjectService = new ProjectService();
+        let queryResult: GeneralResult =await projectService.query({"name": projectName, "publisher": publisher});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            projectService.remove({ "name": projectName, "publisher": publisher });
+            res.json(new GeneralResult(true, null, `${projectName}项目删除成功`).getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, `项目${projectName}不存在`, null).getReturn());
+    }
+
+
+    public async queryProject(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName;
+        let projectService: ProjectService = new ProjectService();
+        let queryResult: GeneralResult = await projectService.query({"name": projectName});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            res.json(queryResult.getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, `项目${projectName}不存在`, null).getReturn());
     }
 }
 export{AdminPlugin};
