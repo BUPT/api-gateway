@@ -174,6 +174,8 @@ class ApiInfoService{
             data.argument = dataum[0].argument;
             data.event = dataum[0].event;
             data.URL = dataum[0].URL;
+            data.status = dataum[0].status;
+            data.publisher = dataum[0].publisher;
             let insertResult: GeneralResult = await apiInfoService.insert([data]);
             return insertResult;
         }else{
@@ -244,6 +246,9 @@ class ApiInfoService{
             if (apiInfo.status === "") {
                 apiInfo.status = queryResult.getDatum()[0].status;
             }
+            if(apiInfo.publisher === ""){
+                apiInfo.publisher = queryResult.getDatum()[0].publisher;
+            }
         }
         let apiInfoTemp: {[key: string]: any} = {
             "appId": apiInfo.appId,
@@ -253,7 +258,8 @@ class ApiInfoService{
             "type": apiInfo.type,
             "argument": apiInfo.argument,
             "event": apiInfo.event,
-            "status": apiInfo.status
+            "status": apiInfo.status,
+            "publisher": apiInfo.publisher
         }
         this.insert([apiInfoTemp]);
     }

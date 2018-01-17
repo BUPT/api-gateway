@@ -12,7 +12,8 @@ class ApiInfoModel {
             argument: String,
             event: String,
             URL: String,
-            status: String
+            status: String,
+            publisher: String
         });
     }
 
