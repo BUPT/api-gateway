@@ -898,6 +898,28 @@ class AdminRouter{
          *           description:OK
          */
         this._router.get("/project/deleteProject", adminPlugin.deleteProject);
+
+        /**
+         * @swagger
+         * /project/queryProject:
+         *   get:
+         *       description: 根据项目名称查找项目信息
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 需要查找的项目名称
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/queryProject", adminPlugin.queryProject);
     }
 }
 export{AdminRouter};

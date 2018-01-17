@@ -531,5 +531,17 @@ class AdminPlugin{
         }
         res.json(new GeneralResult(false, `项目${projectName}不存在`, null).getReturn());
     }
+
+
+    public async queryProject(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName;
+        let projectService: ProjectService = new ProjectService();
+        let queryResult: GeneralResult = await projectService.query({"name": projectName});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            res.json(queryResult.getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, `项目${projectName}不存在`, null).getReturn());
+    }
 }
 export{AdminPlugin};
