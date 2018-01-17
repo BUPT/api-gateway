@@ -238,7 +238,8 @@ class RegisterPlugin{
             "argument": req.query.argument || "",
             "event": req.query.event || "",
             "URL": from,
-            "status": req.query.status
+            "status": req.query.status,
+            "publisher": req.query.publisher
         } 
         RegisterPlugin.addSingleAPIToMemory(url);
         // 持久化存储
