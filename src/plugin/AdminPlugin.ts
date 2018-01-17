@@ -474,7 +474,7 @@ class AdminPlugin{
             "create_time": new Date().toLocaleString()
         }
         projectService.insert([projectInfo]);
-        res.json(new GeneralResult(true, null, null).getReturn());
+        res.json(new GeneralResult(true, null, `${projectName}添加成功`).getReturn());
     }
 
 
@@ -508,10 +508,28 @@ class AdminPlugin{
                 "publisher": publisher
             }
             projectService.updateSelective(data, condition);
-            res.json(new GeneralResult(true, null, null));
+            res.json(new GeneralResult(true, null, `${oldProjectName}编辑成功`).getReturn());
             return;
         }
         res.json(new GeneralResult(false, `${oldProjectName}对应的项目不存在，无法进行更改`,null));
+    }
+
+    /**
+     * 删除一个项目
+     * @param req 
+     * @param res 
+     */
+    public async deleteProject(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName;
+        let publisher: string = req.query.publisher;
+        let projectService: ProjectService = new ProjectService();
+        let queryResult: GeneralResult =await projectService.query({"name": projectName, "publisher": publisher});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            projectService.remove({ "name": projectName, "publisher": publisher });
+            res.json(new GeneralResult(true, null, `${projectName}项目删除成功`).getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, `项目${projectName}不存在`, null).getReturn());
     }
 }
 export{AdminPlugin};
