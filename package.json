@@ -30,19 +30,33 @@
     "orm": "^4.0.1",
     "request": "^2.83.0",
     "swagger-jsdoc": "^1.9.7",
+    "ts-node": "^4.1.0",
     "yamljs": "^0.3.0"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.18",
     "@types/request-promise": "^4.1.39",
+    "async": "^2.6.0",
     "bluebird": "^3.5.1",
+    "debug": "^3.1.0",
+    "enforce": "^0.1.7",
+    "express": "^4.16.2",
     "express-http-proxy": "^1.1.0",
     "finalhandler": "^1.1.0",
     "formidable": "^1.1.1",
+    "forwarded": "^0.1.2",
+    "hat": "^0.0.3",
+    "inherits": "^2.0.3",
+    "ipaddr.js": "^1.5.4",
     "json2yaml": "^1.1.0",
-    "os-utils": "0.0.14",
+    "lodash": "^4.17.4",
+    "orm": "^4.0.2",
+    "os-utils": "^0.0.14",
+    "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "silly-datetime": "^0.1.2",
-    "xml2js": "^0.4.19"
+    "sql-query": "^0.1.26",
+    "xml2js": "^0.4.19",
+    "yamljs": "^0.3.0"
   }
 }
