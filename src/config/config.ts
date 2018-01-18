@@ -1,5 +1,5 @@
 class Config{
-    private _baseDir = "F:/项目/api-gateway";
+    private _baseDir = "/home/linyimin/项目/api-gateway";
     private _storage = {
         "host": '111.207.243.66',
         "user": 'root',
