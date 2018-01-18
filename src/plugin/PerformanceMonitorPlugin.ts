@@ -4,13 +4,13 @@ import {TopPerformanceModel} from "../model/TopPerformanceModel";
 import {SoursePerformanceModel} from "../model/SoursePerformanceModel";
 
 import sd = require('silly-datetime');
-import {GetIP} from "../util/GetIp"
+import {GetIP} from "../util/GetIP"
 import fs = require("fs");
 import util = require("util")
 import os = require("os")
 import osUtils = require("os-utils");
 import { print } from "util";
-import { UserPerformanceModel } from "../model/userPerformanceModel";
+import { UserPerformanceModel } from "../model/UserPerformanceModel";
 import {PerformanceService} from "../service/PerformanceService"
 import { GeneralResult } from "../general/GeneralResult";
 /**
