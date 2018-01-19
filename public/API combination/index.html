@@ -38,7 +38,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-bind="file"></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#" ng-bind="file1"></a>
+                                <a href="javascript:location.reload();" ng-bind="file1"></a>
                             </li>
                             <li class="divider"></li>
                             <li>
@@ -46,19 +46,15 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="#" ng-bind="file3"></a>
+                                <a href="#" ng-bind="file3" ng-click="lookall()"></a>
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="#" ng-bind="file4"></a>
+                                <a href="#" ng-bind="file4" ng-click="rename()"></a>
                             </li>
                             <li class="divider"></li>
                             <li>
                                 <a href="#" ng-bind="file5"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="file6"></a>
                             </li>
                         </ul>
                     </li>
@@ -107,7 +103,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-bind="window"></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#" ng-bind="window1"></a>
+                                <a href="#" ng-bind="window1" ng-click="newwindow()"></a>
                             </li>
                             <li class="divider"></li>
                             <li>
@@ -197,6 +193,67 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </script>
+
+    <!-- 查看所有组合API弹窗 -->
+    <script type="text/ng-template" id="lookall.html">
+        <div class="ui-dialog-title">
+            查看组合API
+        </div>
+        <div class="ui-dialog-content" style="margin-top:40px;">
+            <table class="table table-hover" style="word-break:break-all;word-wrap:break-all;table-layout: fixed; ">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>参数</th>
+                        <th>输出</th>
+                        <th>URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in datas">
+                        <td>{{data.ID}}</td>
+                        <td>{{data.name}}</td>
+                        <td>{{data.type}}</td>
+                        <td>{{data.argument}}</td> 
+                        <td>{{data.event}}</td>
+                        <td>{{data.URL}}</td>   
+                    </tr>
+                </tbody>
+            </table>                   
+        </div>
+    </script>
+
+    <!-- 重命名弹窗 -->
+    <script type="text/ng-template" id="rename.html">
+        <div class="ui-dialog-title">
+            组合API重命名
+        </div>
+        <div class="ui-dialog-content" style="margin-top:40px;">
+            <table class="table table-hover" style="table-layout: fixed; ">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in datas">
+                        <td>{{data.ID}}</td>
+                        <td>
+                            <input type="text" class="form-control" disabled="disabled" value={{data.URL}}></input>
+                        </td>
+                        <td>
+                            <button type="button" class="btn" style="outline:none;" ng-click="modify(data,$event,$index)">修改</button>
+                            <button type="button" class="btn" style="outline:none;" ng-click="ok(data,$event,$index)">确定</button>
+                        </td> 
+                    </tr>
+                </tbody>
+            </table>                   
         </div>
     </script>
 
