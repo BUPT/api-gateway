@@ -3,7 +3,7 @@ import {LogModel} from "../model/LogModel";
 import fs = require("fs");
 import {TopPerformanceModel} from "../model/TopPerformanceModel";
 import {SoursePerformanceModel} from "../model/SoursePerformanceModel";
-import { UserPerformanceModel } from "../model/userPerformanceModel";
+import { UserPerformanceModel } from "../model/UserPerformanceModel";
 import {PerformanceMonitorPlugin} from "../plugin/PerformanceMonitorPlugin"
 class PerformanceService{
     /**
