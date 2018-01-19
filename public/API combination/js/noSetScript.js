@@ -116,7 +116,7 @@ function showattr(node, oob) { //显示被点击节点对象属性
                     for (var i = 0, len = data.datum.length; i < len; i++) {
                         $select.append('<option value="' + data.datum[i].ID + '">' + data.datum[i].name + '</option>');
                     }
-
+                    $("#condi").val("");
                     next(data.datum, oob);
                 } else {
                     alert(data.reason);

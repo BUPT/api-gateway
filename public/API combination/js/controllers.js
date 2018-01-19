@@ -1,7 +1,7 @@
 var apiGatewayCtrls = angular.module('apiGatewayCtrls', []);
 
 apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
-    function($scope, $http, ngDialog) {
+    function ($scope, $http, ngDialog) {
         $scope.title = "可视化API组合系统";
 
         $scope.file = "文件";
@@ -9,8 +9,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
         $scope.file2 = "打开";
         $scope.file3 = "查看";
         $scope.file4 = "重命名";
-        $scope.file5 = "用户管理";
-        $scope.file6 = "退出";
+        $scope.file5 = "退出";
 
         $scope.operate = "操作";
         $scope.operate1 = "生成json格式树";
@@ -25,21 +24,21 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
         $scope.tool3 = "";
 
         $scope.window = "窗口";
-        $scope.window1 = "";
+        $scope.window1 = "打开新窗口";
         $scope.window2 = "";
 
         $scope.help = "帮助";
-        $scope.help1 = "API帮助";
-        $scope.help2 = "";
+        $scope.help1 = "Swagger帮助";
+        $scope.help2 = "使用说明";
 
-        $scope.show = function() { //生成JSON树结构
+        $scope.show = function () { //生成JSON树结构
             console.log(JSON.stringify(SDT.returnTree()[0])); //返回树，接受一个参数，参数类型为值为 true 或 false 的变量，若值为 true 则返回精简树（元素只包含 id 、 name 、 foresideObjId 、 childEles 信息），不可用于重绘；若值为 false 则返回完整树，完整树可用于重绘 注: 重绘要求有页面有图标信息，即相应的 class = "sdt-drag-element-lis" 的 <div> 标签所包涵的图标列表
             console.log(JSON.stringify(SDT.returnTree()[1]));
             console.log(JSON.stringify(SDT.returnTree()[2]));
             document.getElementById("jsontext").innerHTML = JSON.stringify(SDT.returnTree()[0], null, 2);
         };
 
-        $scope.outjson = function() { //json格式树导出
+        $scope.outjson = function () { //json格式树导出
             var txtdata = JSON.stringify(SDT.returnTree()[0], null, 2);
             // alert(txtdata);
             var content = "" + txtdata;
@@ -51,11 +50,11 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
         //     SDT.backCenter(); //返回画布中心，不接受参数
         // };
 
-        $scope.goback = function() { //撤销
+        $scope.goback = function () { //撤销
             SDT.removeELe(); //删除元素，接受一个参数，参数类型为数组，数组元素应为要删除的元素的 id 注: 若不传入参数则删除最近放置的元素            
         };
 
-        $scope.save = function() { //存储设置
+        $scope.save = function () { //存储设置
             var condition = $scope.condition;
             //alert(condition);
             var nodeid = $("#nodeid").val();
@@ -104,30 +103,30 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
                     "id": id,
                     "argument": input,
                     "response": output,
-                    "URL":url,
-                    "isAsync":asn,
-                    "condition":condition
+                    "URL": url,
+                    "isAsync": asn,
+                    "condition": condition
                 }, // 传递数据作为字符串，从前台传到后台  
-            }).success(function(data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
+            }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
                 if (data.result == true) {
                     json(Json);
                 } else {
                     alert(data.reason);
                 }
-            }).error(function(data, status, headers, config) {
+            }).error(function (data, status, headers, config) {
                 alert("错误");
             });
         };
 
-        $scope.register = function() { //点击注册
+        $scope.register = function () { //点击注册
             ngDialog.open({
                 template: 'register.html',
                 className: 'ngdialog-theme-default',
-                controller: function($scope) {
-                    $scope.show = function() {
+                controller: function ($scope) {
+                    $scope.show = function () {
                         $scope.closeThisDialog(); //关闭弹窗
                     };
-                    $scope.registeryes = function() {
+                    $scope.registeryes = function () {
                         $http({
                             method: 'post',
                             url: 'http://www.linyimin.club:8001/apis/registerCombinationAPI',
@@ -139,14 +138,14 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
                                 "combinationUrl": $scope.r_url,
                                 "flowJson": JSON.stringify(SDT.returnTree()[0], null, 2)
                             }, // 传递数据作为字符串，从前台传到后台  
-                        }).success(function(data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
+                        }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
                             if (data.result == true) {
                                 alert("注册成功！");
                                 $scope.closeThisDialog(); //关闭弹窗
                             } else {
                                 alert(data.reason);
                             }
-                        }).error(function(data, status, headers, config) {
+                        }).error(function (data, status, headers, config) {
                             alert("错误");
                         });
                     }
@@ -154,29 +153,29 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
             });
         };
 
-        $scope.debug = function() { //点击调试
+        $scope.debug = function () { //点击调试
             ngDialog.open({
                 template: 'debug.html',
                 className: 'ngdialog-theme-default',
-                controller: function($scope) {
-                    $scope.show = function() {
+                controller: function ($scope) {
+                    $scope.show = function () {
                         $scope.closeThisDialog(); //关闭弹窗
                     };
-                    $scope.debugyes = function() {
+                    $scope.debugyes = function () {
                         $http({
                             method: 'get',
                             url: 'http://www.linyimin.club:8001/apis/debugAPI',
                             params: {
                                 "url": $scope.d_url
                             }, // 传递数据作为字符串，从前台传到后台  
-                        }).success(function(data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
+                        }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
                             // if (data.result == false) {
                             //     alert("见控制台处信息");
                             $scope.debuginformation = data.result;
                             // } else {
                             //     alert(data.reason);
                             // }
-                        }).error(function(data, status, headers, config) {
+                        }).error(function (data, status, headers, config) {
                             alert("true");
                             $scope.debuginformation = data.result;
                         });
@@ -184,6 +183,102 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
                 }
             });
         };
+
+        $scope.newwindow = function () {//打开新窗口
+            window.open("index.html");
+        };
+
+        $scope.lookall = function () {//查看所有组合API
+            var combination = [];
+            $http({
+                method: 'get',
+                url: 'http://www.linyimin.club:8001/apis/getAllAPI',
+                params: {}, // 传递数据作为字符串，从前台传到后台  
+            }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
+                if (data.result == true) {
+                    ngDialog.open({
+                        template: 'lookall.html',
+                        className: 'ngdialog-theme-default',
+                        controller: function ($scope) {
+                            $scope.show = function () {
+                                $scope.closeThisDialog(); //关闭弹窗
+                            };
+                            angular.forEach(data.datum, function (data) {                               
+                                if (data.type == "组合") {
+                                    combination.push(data);
+                                }
+                            });
+                            $scope.datas = combination;
+                        }
+                    });
+                }
+                else {
+                    alert(data.reason);
+                }
+            }).error(function (data, status, headers, config) {
+                alert("错误");
+            });
+
+        };
+
+        $scope.rename = function () {//重命名
+            var combination_r = [];
+            $http({
+                method: 'get',
+                url: 'http://www.linyimin.club:8001/apis/getAllAPI',
+                params: {}, // 传递数据作为字符串，从前台传到后台  
+            }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
+                if (data.result == true) {
+                    ngDialog.open({
+                        template: 'rename.html',
+                        className: 'ngdialog-theme-default',
+                        controller: function ($scope) {
+                            $scope.show = function () {
+                                $scope.closeThisDialog(); //关闭弹窗
+                            };
+                            angular.forEach(data.datum, function (data) {                               
+                                if (data.type == "组合") {
+                                    combination_r.push(data);
+                                }
+                            });
+                            $scope.datas = combination_r;
+                            $scope.modify = function (item, $event, index) {//点击修改
+                                $($event.target).parent().parent().children('td').eq(1).children('input').removeAttr("disabled");
+                            };
+                            $scope.ok = function (item, $event, index) {//点击确定
+                                var newname = $($event.target).parent().parent().children('td').eq(1).children('input').val();
+                                $http({
+                                    method: 'get',
+                                    url: 'http://www.linyimin.club:8001/apis/renameServiceName',
+                                    params: {
+                                        "url": item.URL,
+                                        "serviceName": newname
+                                    }, // 传递数据作为字符串，从前台传到后台  
+                                }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
+                                    if (data.result == true) {
+                                        alert("修改成功！");
+                                        $($event.target).parent().parent().children('td').eq(1).children('input').val(data.datum[0].URL);
+                                        $($event.target).parent().parent().children('td').eq(1).children('input').attr("disabled", "disabled");
+                                    }
+                                    else {
+                                        alert("失败");
+                                        alert(data.reason);
+                                    }
+                                }).error(function (data, status, headers, config) {
+                                    alert("错误");
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    alert("失败");
+                    alert(data.reason);
+                }
+            }).error(function (data, status, headers, config) {
+                alert("错误");
+            });
+        }
 
     }
 ]);
