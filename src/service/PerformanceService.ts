@@ -5,7 +5,6 @@ import {TopPerformanceModel} from "../model/TopPerformanceModel";
 import {SoursePerformanceModel} from "../model/SoursePerformanceModel";
 import { UserPerformanceModel } from "../model/UserPerformanceModel";
 import {PerformanceMonitorPlugin} from "../plugin/PerformanceMonitorPlugin"
-import {} from "./p"
 class PerformanceService{
     /**
      * 日志存放到本地文件中
