@@ -11,7 +11,7 @@ class PerformanceService{
      * @param 
      */
     public logPerformanceToFile(log:LogModel):void{
-        fs.appendFileSync("./performanceFile/logPerformance.txt",log.getAll()+'\n');
+        fs.appendFileSync("../performanceFile/logPerformance.txt",log.getAll()+'\n');
     }
 
      /**
@@ -20,21 +20,21 @@ class PerformanceService{
      */
     public topPerformanceToFile():void{
         PerformanceMonitorPlugin.topPerformanceMonitorCommen();
-        fs.writeFileSync('./performanceFile/topPerformance.txt',TopPerformanceModel.getAll()); 
+        fs.writeFileSync('../performanceFile/topPerformance.txt',TopPerformanceModel.getAll()); 
     }
      /**
      * Api监控数据存放到本地文件中
      * @param 
      */
     public SoursePerformanceToFile():void{
-        fs.writeFileSync('./performanceFile/SoursePerformance.txt',SoursePerformanceModel.getAll());         
+        fs.writeFileSync('../performanceFile/SoursePerformance.txt',SoursePerformanceModel.getAll());         
     }
      /**
      * 用户访问监控数据存放到本地文件中
      * @param 
      */
     public userPerformanceToFile():void{
-        fs.writeFileSync('./performanceFile/userPerformance.txt',UserPerformanceModel.getAll());                 
+        fs.writeFileSync('../performanceFile/userPerformance.txt',UserPerformanceModel.getAll());                 
     }
      
 }

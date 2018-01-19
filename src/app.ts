@@ -1,4 +1,5 @@
 import express = require("express");
+import {Timing} from "./util/Timing"
 import {AdminRouter} from "./router/AdminRouter";
 import {RegisterPlugin} from "./plugin/RegisterPlugin";
 import {Router} from "./router/Router"
@@ -15,6 +16,9 @@ registerApp.listen(8000);
 let swaggerFile: SwaggerFile = new SwaggerFile();
 swaggerFile.generateFile();
 
+// 单位时间内单位时间访问次数重置
+new Timing().topPerformanceTimingReset();
+new Timing().soursePerformanceTimingReset();
 
 
 let adminApp = express();
