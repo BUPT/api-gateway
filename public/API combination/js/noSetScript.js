@@ -222,3 +222,80 @@ function next(data, oob) {
         }
     });
 }
+
+
+function shownodeattr1(node, oob, url) {
+    var blockid = oob.attr('id');
+    $.ajax({
+        type: "get",
+        url: 'http://www.linyimin.club:8001/apis/getAtomApiInfo',
+        async: true,
+        dataType: "json",
+        data: {
+            "moduleId": blockid,
+            "combinationUrl": url
+        },
+        crossDomain: true,
+        success: function (data) {
+            if (data.result == true) {
+                $("#nodeid").val(data.datum.module_id);
+                $("#tp").val(data.datum.type);
+
+                $.ajax({
+                    type: "get",
+                    url: 'http://www.linyimin.club:8001/apis/getApiInfoByType',
+                    async: true,
+                    dataType: "json",
+                    data: { "APIType": data.datum.type },
+                    crossDomain: true,
+                    success: function (data1) {
+                        if (data1.result == true) {
+                            var $select = $('#name');
+                            $("#name").empty();
+                            for (var i = 0, len = data1.datum.length; i < len; i++) {
+                                $select.append('<option value="' + data1.datum[i].ID + '">' + data1.datum[i].name + '</option>');
+                            }
+                            for (var j = 0, len1 = data1.datum.length; j < len1; j++) {
+                                if (data.datum.api_id == data1.datum[j].ID) {
+                                    $("#name").val(data.datum.api_id);
+                                }
+                            }
+                            next(data1.datum, oob);
+                        } else {
+                            alert(data.reason);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(JSON.stringify(data));
+                        alert(JSON.stringify(data));
+                    }
+                });
+
+                $("#idid").val(data.datum.api_id);
+                $("#inputt").val(data.datum.argument);
+                $("#output").val(data.datum.response);
+                $("#url").val(data.datum.URL);
+                if (data.datum.is_async == "0") {
+                    $("#asn").val("0");
+                }
+                if (data.datum.is_async == "1") {
+                    $("#asn").val("1");
+                }
+                $("#condi").val(data.datum.condition);
+
+                // 名称、是否异步、执行条件、保存键改为不可点击
+                $("#name").attr("disabled", true);
+                $("#asn").attr("disabled", true);
+                $("#condi").attr("disabled", true);
+                $("#savebutton").css({ "display": "none" });
+
+            } else {
+                alert(data.reason);
+            }
+        },
+        error: function (data) {
+            console.log(JSON.stringify(data));
+            alert(JSON.stringify(data));
+        }
+    });
+}

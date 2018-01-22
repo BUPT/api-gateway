@@ -199,11 +199,12 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
                     ngDialog.open({
                         template: 'lookall.html',
                         className: 'ngdialog-theme-default',
+                        width: 1100,
                         controller: function ($scope) {
                             $scope.show = function () {
                                 $scope.closeThisDialog(); //关闭弹窗
                             };
-                            angular.forEach(data.datum, function (data) {                               
+                            angular.forEach(data.datum, function (data) {
                                 if (data.type == "组合") {
                                     combination.push(data);
                                 }
@@ -232,11 +233,12 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
                     ngDialog.open({
                         template: 'rename.html',
                         className: 'ngdialog-theme-default',
+                        width: 900,
                         controller: function ($scope) {
                             $scope.show = function () {
                                 $scope.closeThisDialog(); //关闭弹窗
                             };
-                            angular.forEach(data.datum, function (data) {                               
+                            angular.forEach(data.datum, function (data) {
                                 if (data.type == "组合") {
                                     combination_r.push(data);
                                 }
@@ -267,6 +269,153 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
                                 }).error(function (data, status, headers, config) {
                                     alert("错误");
                                 });
+                            }
+                        }
+                    });
+                }
+                else {
+                    alert("失败");
+                    alert(data.reason);
+                }
+            }).error(function (data, status, headers, config) {
+                alert("错误");
+            });
+        };
+
+        $scope.openapi = function () {// 打开某组合api
+            var combination_r = [];
+            $http({
+                method: 'get',
+                url: 'http://www.linyimin.club:8001/apis/getAllAPI',
+                params: {}, // 传递数据作为字符串，从前台传到后台  
+            }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
+                if (data.result == true) {
+                    ngDialog.open({
+                        template: 'openapi.html',
+                        className: 'ngdialog-theme-default',
+                        width: 900,
+                        controller: function ($scope) {
+                            $scope.show = function () {
+                                $scope.closeThisDialog(); //关闭弹窗
+                            };
+                            angular.forEach(data.datum, function (data) {
+                                if (data.type == "组合") {
+                                    combination_r.push(data);
+                                }
+                            });
+                            $scope.datas = combination_r;
+
+                            $scope.open = function (item, $event, index) {//点击打开
+                                // var intTree = { "id": "SDTTree", "objHeight": 0, "childEles": [{ "id": "SDTTreeRight", "objHeight": 3, "childEles": [{ "type": "CallControl", "dropSwitch": true, "foresideType": ["all"], "id": "CallControl1", "name": "呼叫事件订阅接口", "foresideObjId": "SDTTreeRight", "objHeight": 2, "childEles": [{ "type": "Message", "dropSwitch": true, "foresideType": ["all"], "id": "Message1", "name": "SendMessage", "foresideObjId": "CallControl1", "objHeight": 1, "childEles": [], "objRelativelyHeight": -1, "objcolumn": 2, "leanRight": true, "url": "/oneapi/sms/SendMessage", "asntype": "0", "condition": "345", "isfirst": 0 }, { "type": "CallControl", "dropSwitch": true, "foresideType": ["all"], "id": "CallControl2", "name": "notifyCallEvent", "foresideObjId": "CallControl1", "objHeight": 1, "childEles": [], "objRelativelyHeight": 0, "objcolumn": 2, "leanRight": true, "url": "/voice/notifyCallEvent", "asntype": "0", "condition": "567", "isfirst": 0 }], "objRelativelyHeight": -0.5, "objcolumn": 1, "leanRight": true, "url": "/subscriptions/callevents/notifications", "asntype": "0", "condition": "123", "isfirst": 0 }, { "type": "NumberChange", "dropSwitch": true, "foresideType": ["all"], "id": "NumberChange1", "name": "NumberAdd", "foresideObjId": "SDTTreeRight", "objHeight": 1, "childEles": [], "objRelativelyHeight": 1, "objcolumn": 1, "leanRight": true, "url": "/callconfig/NumberAdd", "asntype": "0", "condition": "123", "isfirst": 0 }], "objRelativelyHeight": 0, "objcolumn": 0 }, { "id": "SDTTreeLeft", "objHeight": 0, "childEles": [], "objRelativelyHeight": 0, "objcolumn": 0 }], "objRelativelyHeight": 0, "objcolumn": 0 };
+                                // var str_intTree = '[' + JSON.stringify(intTree) + ']';
+                                // SDT.drawInputTree(JSON.parse(str_intTree)); //重绘树，接受一个参数，参数类型为完整树 ，调用后会清空目标画布，并立即重绘
+                                // function json(jsontree) { //遍历树
+                                //     if ((typeof jsontree == 'object') && (jsontree.constructor == Object.prototype.constructor)) {
+                                //         var arrey = [];
+                                //         arrey.push(jsontree);
+                                //     } else arrey = jsontree;
+                                //     for (var i = 0; i < arrey.length; i++) {
+                                //         var node = arrey[i];
+                                //         (function () {
+                                //             var oob = $('#' + node.id);
+                                //             oob.click(function () {
+                                //                 shownodeattr(oob);
+                                //             })
+                                //         })();
+                                //         if (node.childEles && node.childEles.length > 0) {
+                                //             json(node.childEles);
+                                //         }
+                                //     }
+                                // }
+                                // json(intTree);
+                                // $scope.closeThisDialog();
+
+                                // function shownodeattr(oob) {//显示打开的组合api中某个原子api的属性
+                                //     alert(oob.attr('id'));
+                                //     var Json = SDT.returnTree()[0];
+
+                                //     function json(jsontree) { //根据id找到相应树节点
+                                //         if ((typeof jsontree == 'object') && (jsontree.constructor == Object.prototype.constructor)) {
+                                //             var arrey = [];
+                                //             arrey.push(jsontree);
+                                //         } else arrey = jsontree;
+                                //         for (var i = 0; i < arrey.length; i++) {
+                                //             var node = arrey[i];
+                                //             if (node.id == oob.attr('id')) {
+                                //                 shownodeattr1(node, oob);
+                                //                 return;
+                                //             }
+                                //             if (node.childEles && node.childEles.length > 0) {
+                                //                 json(node.childEles);
+                                //             }
+                                //         }
+                                //     }
+                                //     json(intTree);
+                                // }
+
+                                $http({
+                                    method: 'get',
+                                    url: 'http://www.linyimin.club:8001',
+                                    params: {
+                                        "url": item.URL,
+                                        "username": ''
+                                    }, // 传递数据作为字符串，从前台传到后台  
+                                }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
+                                    if (data.result == true) {
+                                        var intTree = data.datum.flow;//注意问一下返回的是json还是字符串！！！！！！！！！！！！！！
+                                        var str_intTree = '[' + JSON.stringify(intTree) + ']';
+                                        SDT.drawInputTree(JSON.parse(str_intTree)); //重绘树，接受一个参数，参数类型为完整树 ，调用后会清空目标画布，并立即重绘
+                                        $scope.closeThisDialog();
+
+                                        function json(jsontree) { //遍历树
+                                            if ((typeof jsontree == 'object') && (jsontree.constructor == Object.prototype.constructor)) {
+                                                var arrey = [];
+                                                arrey.push(jsontree);
+                                            } else arrey = jsontree;
+                                            for (var i = 0; i < arrey.length; i++) {
+                                                var node = arrey[i];
+                                                (function () {
+                                                    var oob = $('#' + node.id);
+                                                    oob.click(function () {
+                                                        shownodeattr(oob);
+                                                        //alert(oob.attr('id'))
+                                                    })
+                                                })();
+                                                if (node.childEles && node.childEles.length > 0) {
+                                                    json(node.childEles);
+                                                }
+                                            }
+                                        }
+                                        json(intTree); //这里的inTree需要是json格式！！！！！！！！！！！！！！
+
+                                        function shownodeattr(oob) {//显示打开的组合api中某个原子api的属性 
+                                            function json(jsontree) { //根据id找到相应树节点
+                                                if ((typeof jsontree == 'object') && (jsontree.constructor == Object.prototype.constructor)) {
+                                                    var arrey = [];
+                                                    arrey.push(jsontree);
+                                                } else arrey = jsontree;
+                                                for (var i = 0; i < arrey.length; i++) {
+                                                    var node = arrey[i];
+                                                    if (node.id == oob.attr('id')) {
+                                                        shownodeattr1(node, oob, item.URL);
+                                                        return;
+                                                    }
+                                                    if (node.childEles && node.childEles.length > 0) {
+                                                        json(node.childEles);
+                                                    }
+                                                }
+                                            }
+                                            json(intTree);
+                                        }
+                                    }
+                                    else {
+                                        alert("失败");
+                                        alert(data.reason);
+                                    }
+                                }).error(function (data, status, headers, config) {
+                                    alert("错误");
+                                });
+
                             }
                         }
                     });

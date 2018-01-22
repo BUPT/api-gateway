@@ -24,6 +24,11 @@
 
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/index.css" rel="stylesheet">
+    <style>
+        .table tbody tr td {
+            vertical-align: middle;
+        }
+    </style>
 </head>
 
 <body ng-controller="StartCtrl">
@@ -42,7 +47,7 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="#" ng-bind="file2"></a>
+                                <a href="#" ng-bind="file2" ng-click="openapi()"></a>
                             </li>
                             <li class="divider"></li>
                             <li>
@@ -248,9 +253,38 @@
                             <input type="text" class="form-control" disabled="disabled" value={{data.URL}}></input>
                         </td>
                         <td>
-                            <button type="button" class="btn" style="outline:none;" ng-click="modify(data,$event,$index)">修改</button>
-                            <button type="button" class="btn" style="outline:none;" ng-click="ok(data,$event,$index)">确定</button>
+                            <button type="button" class="btn" style="outline:none;width: 76px;margin-top: 0px;" ng-click="modify(data,$event,$index)">修改</button>
+                            <button type="button" class="btn" style="outline:none;width: 76px;margin-top: 0px;" ng-click="ok(data,$event,$index)">确定</button>
                         </td> 
+                    </tr>
+                </tbody>
+            </table>                   
+        </div>
+    </script>
+
+    <!-- 打开组合API弹窗 -->
+    <script type="text/ng-template" id="openapi.html">
+        <div class="ui-dialog-title">
+            所有组合API
+        </div>
+        <div class="ui-dialog-content" style="margin-top:40px;">
+            <table class="table table-hover" style="word-break:break-all;word-wrap:break-all;table-layout: fixed; ">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>URL</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in datas">
+                        <td>{{data.name}}</td>
+                        <td>{{data.type}}</td>
+                        <td>{{data.URL}}</td> 
+                        <td>
+                            <button type="button" class="btn" style="outline:none;margin-top: 0px;" ng-click="open(data,$event,$index)">打开</button>
+                        </td>  
                     </tr>
                 </tbody>
             </table>                   
@@ -296,51 +330,51 @@
                     <div class="sdt-drag-element-lis">
                         <div class="sdt-drag-element" data-sdt-type="CallControl">
                             <svg width="100" height="50">
-                                    <use xlink:href="#Icon1" x="-15" y="5"></use>
-                                    <text x="0" y="10" style="font-size: 11px; font-weight: 600;">呼叫控制类</text>
-                                </svg>
+                                <use xlink:href="#Icon1" x="-15" y="5"></use>
+                                <text x="0" y="10" style="font-size: 11px; font-weight: 600;">呼叫控制类</text>
+                            </svg>
                         </div>
                         <div style="height:2px;"></div>
                         <div class="sdt-drag-element" data-sdt-type="NumberChange">
                             <svg width="100" height="50">
-                                    <use xlink:href="#Icon2" x="-15" y="5"></use>
-                                    <text x="0" y="10" style="font-size: 11px; font-weight: 600;">号码改变类</text>
-                                </svg>
-                        </div>   
-                        <div style="height:2px;"></div>  
+                                <use xlink:href="#Icon2" x="-15" y="5"></use>
+                                <text x="0" y="10" style="font-size: 11px; font-weight: 600;">号码改变类</text>
+                            </svg>
+                        </div>
+                        <div style="height:2px;"></div>
                         <div class="sdt-drag-element" data-sdt-type="OutBound">
                             <svg width="100" height="50">
-                                    <use xlink:href="#Icon3" x="-15" y="5"></use>
-                                    <text x="8" y="10" style="font-size: 11px; font-weight: 600;">外呼类</text>
-                                </svg>
+                                <use xlink:href="#Icon3" x="-15" y="5"></use>
+                                <text x="8" y="10" style="font-size: 11px; font-weight: 600;">外呼类</text>
+                            </svg>
                         </div>
                         <div style="height:2px;"></div>
                         <div class="sdt-drag-element" data-sdt-type="MultiCall">
                             <svg width="100" height="50">
-                                    <use xlink:href="#Icon4" x="-15" y="5"></use>
-                                    <text x="0" y="10" style="font-size: 11px; font-weight: 600;">多方通话类</text>
-                                </svg>
+                                <use xlink:href="#Icon4" x="-15" y="5"></use>
+                                <text x="0" y="10" style="font-size: 11px; font-weight: 600;">多方通话类</text>
+                            </svg>
                         </div>
                         <div style="height:2px;"></div>
                         <div class="sdt-drag-element" data-sdt-type="IVR">
                             <svg width="100" height="50">
-                                    <use xlink:href="#Icon5" x="-15" y="5"></use>
-                                    <text x="10" y="10" style="font-size: 11px; font-weight: 600;">IVR类</text>
-                                </svg>
+                                <use xlink:href="#Icon5" x="-15" y="5"></use>
+                                <text x="10" y="10" style="font-size: 11px; font-weight: 600;">IVR类</text>
+                            </svg>
                         </div>
                         <div style="height:2px;"></div>
                         <div class="sdt-drag-element" data-sdt-type="QOS">
                             <svg width="100" height="50">
-                                    <use xlink:href="#Icon6" x="-15" y="5"></use>
-                                    <text x="8" y="10" style="font-size: 11px; font-weight: 600;">QOS类</text>
-                                </svg>
+                                <use xlink:href="#Icon6" x="-15" y="5"></use>
+                                <text x="8" y="10" style="font-size: 11px; font-weight: 600;">QOS类</text>
+                            </svg>
                         </div>
                         <div style="height:2px;"></div>
                         <div class="sdt-drag-element" data-sdt-type="Message">
                             <svg width="100" height="50">
-                                    <use xlink:href="#Icon7" x="-15" y="5"></use>
-                                    <text x="8" y="10" style="font-size: 11px; font-weight: 600;">消息类</text>
-                                </svg>
+                                <use xlink:href="#Icon7" x="-15" y="5"></use>
+                                <text x="8" y="10" style="font-size: 11px; font-weight: 600;">消息类</text>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -363,8 +397,12 @@
             </div>
             <div class="col-md-3">
                 <ul id="myTab" class="nav nav-tabs">
-                    <li class="active"><a href="#home" data-toggle="tab">属性设置</a></li>
-                    <li><a href="#json" data-toggle="tab">JSON</a></li>
+                    <li class="active">
+                        <a href="#home" data-toggle="tab">属性设置</a>
+                    </li>
+                    <li>
+                        <a href="#json" data-toggle="tab">JSON</a>
+                    </li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
                     <div class="tab-pane fade in active" id="home">
@@ -428,7 +466,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-6">
-                                    <button class="btn btn-default" ng-click="save()">保存</button>
+                                    <button id="savebutton" class="btn btn-default" ng-click="save()">保存</button>
                                 </div>
                             </div>
                         </form>
