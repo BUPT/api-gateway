@@ -10,9 +10,22 @@ class SoursePerformanceModel {
     private _concurrentVolume:number=0;
     private _averageResponseTime:number=0;
 
-    constructor() {
-       
-    }
+    private _totleVisitList:number[];
+    private _unitTimeTotleVisitList:number[];
+    private _averageResponseTimeList:number[];
+    public constructor() {
+        this._totleVisitList = new Array();
+        this._unitTimeTotleVisitList = new Array();
+        this._averageResponseTimeList = new Array();
+ 
+        for(var i = 0;i<30;i++){
+            this._totleVisitList.push(Math.ceil(Math.random()*1000));
+        }
+        for(var i = 0;i<24;i++){
+            this._unitTimeTotleVisitList.push(Math.ceil(Math.random()*10));
+            this._averageResponseTimeList.push(Math.ceil(Math.random()*100));
+         }
+     }
     
     public get(): any {
         return this._serverName;
@@ -55,6 +68,24 @@ class SoursePerformanceModel {
         return this._averageResponseTime;
     }
 
+    set totleVisitList(totleVisitList:number[]){
+        this._totleVisitList  =totleVisitList;
+    }
+    get totleVisitList():number[]{
+        return this._totleVisitList;
+    }
+    set unitTimeTotleVisitList(unitTimeTotleVisitList:number[]){
+        this._unitTimeTotleVisitList  =unitTimeTotleVisitList;
+    }
+    get unitTimeTotleVisitList():number[]{
+        return this._unitTimeTotleVisitList;
+    }
+    set averageResponseTimeList(averageResponseTimeList:number[]){
+        this._averageResponseTimeList  =averageResponseTimeList;
+    }
+    get averageResponseTimeList():number[]{
+        return this._averageResponseTimeList;
+    }
 
 }
 
