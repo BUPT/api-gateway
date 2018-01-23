@@ -17,8 +17,7 @@ let swaggerFile: SwaggerFile = new SwaggerFile();
 swaggerFile.generateFile();
 
 // 单位时间内单位时间访问次数重置
-new Timing().topPerformanceTimingReset();
-new Timing().soursePerformanceTimingReset();
+new Timing().initTiming();
 
 
 let adminApp = express();
