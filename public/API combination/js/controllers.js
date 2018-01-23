@@ -1,7 +1,7 @@
 var apiGatewayCtrls = angular.module('apiGatewayCtrls', []);
 
-apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
-    function ($scope, $http, ngDialog) {
+apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window',
+    function ($scope, $http, ngDialog, $window) {
         $scope.title = "可视化API组合系统";
 
         $scope.file = "文件";
@@ -25,7 +25,9 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
 
         $scope.window = "窗口";
         $scope.window1 = "打开新窗口";
-        $scope.window2 = "";
+        $scope.window2 = "关闭窗口";
+        $scope.window3 = "全屏显示";
+        $scope.window4 = "退出全屏";
 
         $scope.help = "帮助";
         $scope.help1 = "Swagger帮助";
@@ -182,10 +184,6 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
                     }
                 }
             });
-        };
-
-        $scope.newwindow = function () {//打开新窗口
-            window.open("index.html");
         };
 
         $scope.lookall = function () {//查看所有组合API
@@ -427,7 +425,63 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog',
             }).error(function (data, status, headers, config) {
                 alert("错误");
             });
+        };
+
+        $scope.newwindow = function () {//打开新窗口
+            window.open("index.html");
+        };
+
+        $scope.systemClose = function () {//关闭窗口
+            if (confirm("您确定要关闭该窗口吗？")) {
+                //$window.close();
+                //window.location.href = "about:blank";
+                if (navigator.userAgent.indexOf("Firefox") != -1 || navigator.userAgent.indexOf("Chrome") != -1) {
+                    window.location.href = "about:blank";
+                    window.close();
+                } else {
+                    window.opener = null;
+                    window.open("", "_self");
+                    window.close();
+                }
+            }
+        };
+
+        $scope.fullScreen = function () {//全屏显示
+            var obj = document.getElementById("navnav");
+            obj.style.cssText = "margin-bottom:70px;";
+            var docElm = document.documentElement;
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            }
+            else if (docElm.msRequestFullscreen) {
+                docElm = document.body; //overwrite the element (for IE)
+                docElm.msRequestFullscreen();
+            }
+            else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            }
+            else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+        };
+
+        $scope.exitScreen = function () {//退出全屏
+            var obj = document.getElementById("navnav");
+            obj.style.cssText = "";
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+            else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            }
+            else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
         }
+
 
     }
 ]);
