@@ -375,14 +375,17 @@ class AdminPlugin{
      * @param res 
      */
     public async debugAPI(req, res){
-        let eventEmitter = new events.EventEmitter();
         let url: string = req.query.url;
         let config: Config = new Config();
         // 获取组合API的原子API ID
         let combinationService: CombinationService = new CombinationService();
         let result: GeneralResult = await combinationService.query({combination_url: url});
-        if(result.getResult() == false || result.getDatum().length == 0){
+        if(result.getResult() == false){
             res.json(result.getReturn());
+            return;
+        }
+        if(! result.getDatum() || result.getDatum().length === 0){
+            res.json(new GeneralResult(false, `测试的组合API${url}不存在`, null));
             return;
         }
         // 保存所有的原子API
@@ -390,7 +393,6 @@ class AdminPlugin{
         for(let i =0; i < result.getDatum().lenth; i++){
             urls[i] = result.getDatum()[i].URL;
         }
-        
         // 保存测试结果
         let data: Map<string, any> = new Map();
         let adminPlugin: AdminPlugin = new AdminPlugin();
