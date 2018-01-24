@@ -576,5 +576,42 @@ class AdminPlugin{
         }
         res.json(new GeneralResult(false, `项目${projectName}不存在`, null).getReturn());
     }
+
+
+    /**
+     * 根据项目名称查找API信息
+     * @param req 
+     * @param res 
+     */
+    public async queryAPIByProjectName(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName;
+        let urlService: UrlService = new UrlService();
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let config: Config = new Config();
+        let result: {[key: string]: string}[] = [];
+        // 获取url表中的所有信息
+        let urlResult: GeneralResult = await urlService.query({"appId": projectName});
+        if(urlResult.getResult() === true && urlResult.getDatum().length > 0){
+            for(let i = 0; i < urlResult.getDatum().length; i++){
+                let temp: { [key: string]: string } = {};
+                let apiInfoResult: GeneralResult = await apiInfoService.query({URL: urlResult.getDatum()[i].from});
+                if(apiInfoResult.getResult() === true && apiInfoResult.getDatum().length > 0){
+                    temp.method = urlResult.getDatum()[i].method;
+                    temp.name = apiInfoResult.getDatum()[0].name;
+                    temp.host = config .getApiServer().host;
+                    temp.interface = urlResult.getDatum()[i].from;
+                    temp.uris = urlResult.getDatum()[i].to;
+                    temp.upstreamUrl = urlResult.getDatum()[i].to + temp.interface;
+                    temp.time = urlResult.getDatum()[i].register_time;
+                    temp.publisher = urlResult.getDatum()[i].publisher;
+                    temp.appId = urlResult.getDatum()[i].APPId
+                    result[i] = temp;
+                }
+            }
+            res.json(new GeneralResult(true, "", result).getReturn());
+        }else{
+            res.json(new GeneralResult(false, "您还没有注册相关项目", null).getReturn());
+        }
+    }
 }
 export{AdminPlugin};

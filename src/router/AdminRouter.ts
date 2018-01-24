@@ -950,6 +950,28 @@ class AdminRouter{
          *           description:OK
          */
         this._router.get("/project/queryProject", adminPlugin.queryProject);
+
+        /**
+         * @swagger
+         * /project/queryAPIByProjectName:
+         *   get:
+         *       description: 根据项目名称查找其项下的API信息
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 需要查找的项目名称
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/queryAPIByProjectName", adminPlugin.queryAPIByProjectName);
     }
 }
 export{AdminRouter};
