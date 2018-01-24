@@ -797,8 +797,38 @@ class AdminRouter{
          *           description:OK
          */
         this._router.post("/apis/registerCombinationAPI", combinationPlugin.registerCombinationAPI);
+
+
+
         this._router.get("/call", combinationPlugin.publish);
 
+
+        /**
+         * @swagger
+         * /apis/getCombinationAPIFlow:
+         *   get:
+         *       description: 获取组合API的流程树信息
+         *       deprecated: false
+         *       tags:
+         *           - "组合API管理"
+         *       parameters:
+         *         - name: combinationUrl
+         *           in: query
+         *           description: 组合API对应的url
+         *           required: true
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 组合API的发布者
+         *           required: false
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getCombinationAPIFlow", combinationPlugin.getCombinationAPIFlow);
 
 
 
