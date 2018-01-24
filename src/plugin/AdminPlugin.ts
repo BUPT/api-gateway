@@ -13,9 +13,8 @@ import fs = require("fs");
 import {SwaggerFile} from "../util/SwaggerFile";
 import { GeneralResult } from "../general/GeneralResult";
 import rq = require("request-promise");
-import {CombinationUrlService} from "../service/CombinationUrlService";
 import events = require("events");
-import { CombinationUrlPlugin } from "./CombinationUrlPlugin";
+import { CombinationPlugin } from "./CombinationPlugin";
 import { config } from "bluebird";
 
 import {Request, Response} from "express";
@@ -306,7 +305,7 @@ class AdminPlugin{
      */
     public async renameServiceName(req, res): Promise<void>{
         let apiInfoService: ApiInfoService = new ApiInfoService();
-        let combinationUrlService: CombinationUrlService = new CombinationUrlService();
+        let combinationService: CombinationService = new CombinationService();
         let url: string = req.query.url;
         let serviceName: string = req.query.serviceName;
 
@@ -315,7 +314,7 @@ class AdminPlugin{
         let registerApp = registerPlugin.getRegisterApp();
         if(registerApp._router && registerApp._router.stack){
             for(let i = 2; i < registerApp._router.stack.length; i++){
-                if(registerApp._router.stack[i].url == url){
+                if(registerApp._router.stack[i].url === url){
                     // 删除原url对应的中间件
                     registerApp._router.stack.splice(i, 1);
                     break;
@@ -323,22 +322,21 @@ class AdminPlugin{
             }
         }
         // 向内存中注册新的url
-        let combinationUrlPlugin: CombinationUrlPlugin = new CombinationUrlPlugin();
-        registerApp.use(serviceName, combinationUrlPlugin.combinationService);
+        let combinationPlugin: CombinationPlugin = new CombinationPlugin();
+        registerApp.use(serviceName, combinationPlugin.combinationService);
 
         // 更新数据库
-        //将URL转换成小驼峰类型的文件名
+        //将URL转换成小驼峰类型
         let adminPlugin: AdminPlugin = new AdminPlugin();
-        let config: Config = new Config();
-        let originName = adminPlugin.urlToUppercase(url);
         let fileName = adminPlugin.urlToUppercase(serviceName);
-        // 更改流程文件的名称
-        let dir: string = config.getPath().combinationFileDir;
-        fs.renameSync(dir + originName + ".json", dir + fileName + ".json");
         // 更新数据库
         let updateResult: GeneralResult = await apiInfoService.update({URL: url}, fileName, serviceName);
-        let updataCombinnationResult: GeneralResult = await combinationUrlService.update({url: url}, serviceName);
-        res.json(updateResult.getReturn());
+        let data:{[key: string]: string} = {
+            combination_url: serviceName,
+            flow: ""
+        };
+        let updataCombinnationResult: GeneralResult = await combinationService.updateSelective({combination_url: url}, data);
+        res.json(updataCombinnationResult.getReturn());
     }
 
     /**
