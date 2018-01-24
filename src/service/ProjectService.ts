@@ -100,6 +100,9 @@ class ProjectService {
             if(data.publisher === ""){
                 data.publisher = queryResult.getDatum()[0].publisher;
             }
+            if(data.img === ""){
+                data.img = queryResult.getDatum()[0].img;
+            }
         }
         this.insert([data]);
     }

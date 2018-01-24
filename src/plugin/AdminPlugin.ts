@@ -496,36 +496,45 @@ class AdminPlugin{
      * @param res 
      */
 
-     //TODO: 添加上传图片的功能
     public async editProject(req: Request, res: Response): Promise<void>{
-        let oldProjectName: string = req.query.oldProjectName;
-        let newProjectName: string = req.query.newProjectName || "";
-        let publisher: string = req.query.publisher;
-        let description: string = req.query.projectDescription || "";
-        let projectService: ProjectService = new ProjectService();
-        // 重新命名的项目名称已经存在
-        let newResult: GeneralResult = await projectService.query({ "name": newProjectName, "publisher": publisher });
-        if (newResult.getResult() === true && newResult.getDatum().length > 0){
-            res.json(new GeneralResult(false, `${newProjectName}对应的项目已经存在，请重新输入`, null).getReturn());
-            return;
-        }
-        let queryResult: GeneralResult = await projectService.query({"name": oldProjectName, "publisher": publisher});
-        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
-            let data: {[key: string]: any} = {
-                "name": newProjectName,
-                "description": description,
-                "publisher": "",
-                "create_time": ""
+
+        let form = new formidable.IncomingForm();
+        form.multiples = true;
+        form.uploadDir = path.join(__dirname, "../../views/img/");
+        form.parse(req, async function(err, fields, files){
+            let oldProjectName: string = req.fields.oldProjectName;
+            let newProjectName: string = req.fields.newProjectName || "";
+            let projectDescription: string = req.fields.projectDescription || "";
+            let publisher: string = req.fields.publisher;
+            let imgPath: string = req.files.avatar.path || "";
+            let imgName: string = (imgPath === "") ? "" : imgPath.split("/")[imgPath.length-1];
+            let projectService: ProjectService = new ProjectService();
+            // 重新命名的项目名称已经存在
+            let newResult: GeneralResult = await projectService.query({ "name": newProjectName, "publisher": publisher });
+            if (newResult.getResult() === true && newResult.getDatum().length > 0){
+                res.json(new GeneralResult(false, `${newProjectName}对应的项目已经存在，请重新输入`, null).getReturn());
+                return;
             }
-            let condition: {[key: string]:any} = {
-                "name": oldProjectName,
-                "publisher": publisher
+            let queryResult: GeneralResult = await projectService.query({"name": oldProjectName, "publisher": publisher});
+            if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+                let data: {[key: string]: any} = {
+                    "name": newProjectName,
+                    "description": projectDescription,
+                    "publisher": "",
+                    "create_time": "",
+                    "img": imgName
+                }
+                let condition: {[key: string]:any} = {
+                    "name": oldProjectName,
+                    "publisher": publisher
+                }
+                projectService.updateSelective(data, condition);
+                res.json(new GeneralResult(true, null, `${oldProjectName}编辑成功`).getReturn());
+                return;
             }
-            projectService.updateSelective(data, condition);
-            res.json(new GeneralResult(true, null, `${oldProjectName}编辑成功`).getReturn());
-            return;
-        }
-        res.json(new GeneralResult(false, `${oldProjectName}对应的项目不存在，无法进行更改`,null));
+            res.json(new GeneralResult(false, `${oldProjectName}对应的项目不存在，无法进行更改`,null));
+            
+            });
     }
 
     /**
