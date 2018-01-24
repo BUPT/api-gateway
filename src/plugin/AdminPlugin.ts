@@ -465,10 +465,11 @@ class AdminPlugin{
         form.uploadDir = path.join(__dirname, "../../views/img/");
         //TODO: 判断添加是否成功，如果添加失败，则删除已经上传的图片
         form.parse(req, async function(err, fields, files){
-            let projectName: string = req.fields.projectName;
-            let projectDescription: string = req.fields.projectDescription;
-            let publisher: string = req.fields.publisher;
-            let imgPath: string = req.files.avatar.path;
+            console.log(fields);
+            let projectName: string = fields.projectName;
+            let projectDescription: string = fields.projectDescription;
+            let publisher: string = fields.publisher;
+            let imgPath: string = files.avatar.path;
             let imgName: string = imgPath.split("/")[imgPath.length-1];
             let projectService: ProjectService = new ProjectService();
             let queryResult: GeneralResult = await projectService.query({"name": projectName, "publisher": publisher});
@@ -502,11 +503,11 @@ class AdminPlugin{
         form.multiples = true;
         form.uploadDir = path.join(__dirname, "../../views/img/");
         form.parse(req, async function(err, fields, files){
-            let oldProjectName: string = req.fields.oldProjectName;
-            let newProjectName: string = req.fields.newProjectName || "";
-            let projectDescription: string = req.fields.projectDescription || "";
-            let publisher: string = req.fields.publisher;
-            let imgPath: string = req.files.avatar.path || "";
+            let oldProjectName: string = fields.oldProjectName;
+            let newProjectName: string = fields.newProjectName || "";
+            let projectDescription: string = fields.projectDescription || "";
+            let publisher: string = fields.publisher;
+            let imgPath: string = files.avatar.path || "";
             let imgName: string = (imgPath === "") ? "" : imgPath.split("/")[imgPath.length-1];
             let projectService: ProjectService = new ProjectService();
             // 重新命名的项目名称已经存在
