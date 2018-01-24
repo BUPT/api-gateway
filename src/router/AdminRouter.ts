@@ -867,7 +867,7 @@ class AdminRouter{
         /**
          * @swagger
          * /project/editProject:
-         *   get:
+         *   post:
          *       description: 添加一个项目
          *       deprecated: false
          *       tags:
@@ -899,7 +899,7 @@ class AdminRouter{
          *         200:
          *           description:OK
          */
-        this._router.get("/project/editProject", adminPlugin.editProject);
+        this._router.post("/project/editProject", adminPlugin.editProject);
 
 
         /**
