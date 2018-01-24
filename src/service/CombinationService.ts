@@ -79,6 +79,11 @@ class CombinationService{
         });
     }
 
+    /**
+     * 更新多条信息
+     * @param condition 
+     * @param data 
+     */
     public async update(condition: {[key: string]: string}, data: {[key: string]: string}[]): Promise<GeneralResult>{
         //先删除相关信息
         let removeResult: GeneralResult = await this.remove(condition);
@@ -86,6 +91,25 @@ class CombinationService{
         let insertResult: GeneralResult = await this.insert(data);
         console.log(insertResult.getDatum());
         return insertResult;
+    }
+
+    /**
+     * 选择性更新结果
+     * @param condition 
+     * @param data 
+     */
+    public async updateSelective(condition:{[key: string]: string}, data: {[key: string]: string}): Promise<GeneralResult>{
+        let queryResult: GeneralResult = await this.query(condition);
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            if(data.combination_url === "" || !data.combination_url){
+                data.combination_url = queryResult.getDatum()[0].combination_url;
+            }
+            if(data.flow === "" || !data.flow){
+                data.flow = queryResult.getDatum()[0].flow;
+            }
+        }
+        this.remove(condition);
+        return this.insert([data]);
     }
 }
 export{CombinationService};
