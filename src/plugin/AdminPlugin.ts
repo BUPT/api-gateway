@@ -16,6 +16,7 @@ import rq = require("request-promise");
 import events = require("events");
 import { CombinationPlugin } from "./CombinationPlugin";
 import { config } from "bluebird";
+import * as path from "path";
 
 import {Request, Response} from "express";
 
@@ -459,23 +460,33 @@ class AdminPlugin{
      * @param res 
      */
     public async addProject(req: Request, res: Response): Promise<void>{
-        let projectName: string = req.query.projectName;
-        let projectDescription: string = req.query.projectDescription;
-        let publisher: string = req.query.publisher;
-        let projectService: ProjectService = new ProjectService();
-        let queryResult: GeneralResult = await projectService.query({"name": projectName, "publisher": publisher});
-        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
-            res.json(new GeneralResult(false, "项目名称已经存在", null).getReturn());
-            return;
-        }
-        let projectInfo: {[key: string]: any} = {
-            "name": projectName,
-            "description": projectDescription,
-            "publisher": publisher,
-            "create_time": new Date().toLocaleString()
-        }
-        projectService.insert([projectInfo]);
-        res.json(new GeneralResult(true, null, `${projectName}添加成功`).getReturn());
+        let form = new formidable.IncomingForm();
+        form.multiples = true;
+        form.uploadDir = path.join(__dirname, "../../views/img/");
+        //TODO: 判断添加是否成功，如果添加失败，则删除已经上传的图片
+        form.parse(req, async function(err, fields, files){
+            let projectName: string = req.fields.projectName;
+            let projectDescription: string = req.fields.projectDescription;
+            let publisher: string = req.fields.publisher;
+            let imgPath: string = req.files.avatar.path;
+            let imgName: string = imgPath.split("/")[imgPath.length-1];
+            let projectService: ProjectService = new ProjectService();
+            let queryResult: GeneralResult = await projectService.query({"name": projectName, "publisher": publisher});
+            if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+                res.json(new GeneralResult(false, "项目名称已经存在", null).getReturn());
+                return;
+            }
+            let projectInfo: {[key: string]: any} = {
+                "name": projectName,
+                "description": projectDescription,
+                "publisher": publisher,
+                "create_time": new Date().toLocaleString(),
+                "img": imgName
+            }
+            projectService.insert([projectInfo]);
+            res.json(new GeneralResult(true, null, `${projectName}添加成功`).getReturn());
+        });
+        
     }
 
 
@@ -484,6 +495,8 @@ class AdminPlugin{
      * @param req 
      * @param res 
      */
+
+     //TODO: 添加上传图片的功能
     public async editProject(req: Request, res: Response): Promise<void>{
         let oldProjectName: string = req.query.oldProjectName;
         let newProjectName: string = req.query.newProjectName || "";
