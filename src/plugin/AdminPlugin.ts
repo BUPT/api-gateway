@@ -547,10 +547,20 @@ class AdminPlugin{
     }
 
 
+    /**
+     * 查询项目信息
+     * @param req 
+     * @param res 
+     */
     public async queryProject(req: Request, res: Response): Promise<void>{
-        let projectName: string = req.query.projectName;
+        let projectName: string = req.query.projectName || "";
         let projectService: ProjectService = new ProjectService();
-        let queryResult: GeneralResult = await projectService.query({"name": projectName});
+        let queryResult: GeneralResult;
+        if(projectName === ""){
+            queryResult = await projectService.query({"name": projectName});
+        }else{
+            queryResult = await projectService.query({"name": projectName});
+        }
         if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
             res.json(queryResult.getReturn());
             return;

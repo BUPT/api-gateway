@@ -933,7 +933,7 @@ class AdminRouter{
          * @swagger
          * /project/queryProject:
          *   get:
-         *       description: 根据项目名称查找项目信息
+         *       description: 根据项目名称查找项目信息，项目名称不存在，则查询全部项目信息，否则查询指定项目信息
          *       deprecated: false
          *       tags:
          *           - "项目管理"
@@ -941,7 +941,7 @@ class AdminRouter{
          *         - name: projectName
          *           in: query
          *           description: 需要查找的项目名称
-         *           required: true
+         *           required: false
          *           type: string
          *       produces:
          *         - application/json
