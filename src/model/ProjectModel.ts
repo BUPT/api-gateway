@@ -10,7 +10,8 @@ class ProjectModel {
             name: String,
             description: String,
             create_time: String,
-            publisher: String
+            publisher: String,
+            img: String
         });
     }
 

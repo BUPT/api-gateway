@@ -229,6 +229,23 @@ class CombinationPlugin{
         res.json(new GeneralResult(true, null, {"data": flowJson}).getReturn());
     }
 
+
+    /**
+     * 获取组合API的流程信息
+     * @param req 
+     * @param res 
+     */
+    public async getCombinationAPIFlow(req, res){
+        let publisher: string = req.query.publisher || "";
+        let combinationUrl: string = req.query.combinationUrl;
+        let combinationFlowService: CombinationFlowService = new CombinationFlowService();
+        let queryResult: GeneralResult = await combinationFlowService.query({"combination_url": combinationUrl});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            res.json(new GeneralResult(true, "", queryResult.getDatum()[0].flow).getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, `组合API${combinationUrl}不存在`, null).getReturn());
+    }
     /**
      * 事件发布
      * @param req 
