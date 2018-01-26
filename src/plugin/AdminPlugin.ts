@@ -509,8 +509,8 @@ class AdminPlugin{
             let newProjectName: string = fields.newProjectName || "";
             let projectDescription: string = fields.projectDescription || "";
             let publisher: string = fields.publisher;
-            let imgPath: string = files.avatar.path || "";
-            let imgName: string = (imgPath === "") ? "" : imgPath.split("/")[imgPath.length-1];
+            let imgPath: string = files.avatar.path;
+            let imgName: string = (imgPath === "") ? "" : imgPath.split("/")[imgPath.split("/").length-1];
             let projectService: ProjectService = new ProjectService();
             // 重新命名的项目名称已经存在
             let newResult: GeneralResult = await projectService.query({ "name": newProjectName, "publisher": publisher });
@@ -535,7 +535,7 @@ class AdminPlugin{
                 res.json(new GeneralResult(true, null, `${oldProjectName}编辑成功`).getReturn());
                 return;
             }
-            res.json(new GeneralResult(false, `${oldProjectName}对应的项目不存在，无法进行更改`,null));
+            res.json(new GeneralResult(false, `${oldProjectName}对应的项目不存在，无法进行更改`,null).getReturn());
             
             });
     }
