@@ -253,6 +253,8 @@ class AdminPlugin{
                     temp.time = urlResult.getDatum()[i].register_time;
                     temp.publisher = urlResult.getDatum()[i].publisher;
                     temp.appId = urlResult.getDatum()[i].APPId
+                    temp.status = urlResult.getDatum()[i].status;
+                    temp.isAtom = urlResult.getDatum()[i].is_atom;
                     result[i] = temp;
                 }
             }
@@ -608,6 +610,8 @@ class AdminPlugin{
                     temp.time = urlResult.getDatum()[i].register_time;
                     temp.publisher = urlResult.getDatum()[i].publisher;
                     temp.appId = urlResult.getDatum()[i].APPId
+                    temp.status = urlResult.getDatum()[i].status;
+                    temp.isAtom = urlResult.getDatum()[i].is_atom;
                     result[i] = temp;
                 }
             }
