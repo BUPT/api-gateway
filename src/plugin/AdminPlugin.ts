@@ -132,16 +132,18 @@ class AdminPlugin{
         // 设置文件存储路径
         form.uploadDir = config.getPath().swaggerDir;
         // 保留后缀
-        form.keppExtendsions = true;
-        form.maxFieldsSize = 2 * 1024 * 1024;
+        form.keepExtendsions = true;
         form.parse(req, function(err, fields, files){
             if(err){
                 console.log(err.message);
             }else{
                 // 获取文件名
-                let fileName: string = fields.fileName;
+                console.log(files);
+                let fileName: string = files.avatar.name;
+                console.log(fileName);
                 let file: string = config.getPath().swaggerDir + fileName;
-                fs.renameSync(files.upload.path, file);
+                console.log(file);
+                fs.renameSync(files.avatar.path, file);
                 let yamlParse: YamlParse = new YamlParse();
                 let data: {[key: string]: any}[][] = yamlParse.parse(file);
                 let url: {[key: string]: string}[] = data[0];
@@ -159,8 +161,9 @@ class AdminPlugin{
                         urlService.insert(url);
                         apiInfoService.insert(api_info);
                         // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
-                        res.cookie("fileName", fileName);
-                        res.redirect(config.getPath().swaggerUIURL);
+                        // res.cookie("fileName", fileName);
+                        // res.redirect(config.getPath().swaggerUIURL);
+                        res.json(new GeneralResult(true, null, "通过swagger文件注册API成功").getReturn());
                     }else{
                         res.json((removeUrl.getResult() == true ? removeUrl : removeApiInfo).getReturn());
                     }
