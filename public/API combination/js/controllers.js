@@ -171,15 +171,16 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                                 "url": $scope.d_url
                             }, // 传递数据作为字符串，从前台传到后台  
                         }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
-                            // if (data.result == false) {
-                            //     alert("见控制台处信息");
-                            $scope.debuginformation = data.result;
-                            // } else {
-                            //     alert(data.reason);
-                            // }
+                             if (data.result == true) {
+                                alert("成功");
+                                $scope.debuginformation = data.result;
+                            }
+                            else {
+                                alert("失败");
+                                $scope.debuginformation = data.reason;
+                            }
                         }).error(function (data, status, headers, config) {
-                            alert("true");
-                            $scope.debuginformation = data.result;
+                            alert("错误");
                         });
                     }
                 }
@@ -257,7 +258,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                                 }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
                                     if (data.result == true) {
                                         alert("修改成功！");
-                                        $($event.target).parent().parent().children('td').eq(1).children('input').val(data.datum[0].URL);
+                                        $($event.target).parent().parent().children('td').eq(1).children('input').val(data.datum[0].combination_url);
                                         $($event.target).parent().parent().children('td').eq(1).children('input').attr("disabled", "disabled");
                                     }
                                     else {
@@ -304,64 +305,18 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                             $scope.datas = combination_r;
 
                             $scope.open = function (item, $event, index) {//点击打开
-                                // var intTree = { "id": "SDTTree", "objHeight": 0, "childEles": [{ "id": "SDTTreeRight", "objHeight": 3, "childEles": [{ "type": "CallControl", "dropSwitch": true, "foresideType": ["all"], "id": "CallControl1", "name": "呼叫事件订阅接口", "foresideObjId": "SDTTreeRight", "objHeight": 2, "childEles": [{ "type": "Message", "dropSwitch": true, "foresideType": ["all"], "id": "Message1", "name": "SendMessage", "foresideObjId": "CallControl1", "objHeight": 1, "childEles": [], "objRelativelyHeight": -1, "objcolumn": 2, "leanRight": true, "url": "/oneapi/sms/SendMessage", "asntype": "0", "condition": "345", "isfirst": 0 }, { "type": "CallControl", "dropSwitch": true, "foresideType": ["all"], "id": "CallControl2", "name": "notifyCallEvent", "foresideObjId": "CallControl1", "objHeight": 1, "childEles": [], "objRelativelyHeight": 0, "objcolumn": 2, "leanRight": true, "url": "/voice/notifyCallEvent", "asntype": "0", "condition": "567", "isfirst": 0 }], "objRelativelyHeight": -0.5, "objcolumn": 1, "leanRight": true, "url": "/subscriptions/callevents/notifications", "asntype": "0", "condition": "123", "isfirst": 0 }, { "type": "NumberChange", "dropSwitch": true, "foresideType": ["all"], "id": "NumberChange1", "name": "NumberAdd", "foresideObjId": "SDTTreeRight", "objHeight": 1, "childEles": [], "objRelativelyHeight": 1, "objcolumn": 1, "leanRight": true, "url": "/callconfig/NumberAdd", "asntype": "0", "condition": "123", "isfirst": 0 }], "objRelativelyHeight": 0, "objcolumn": 0 }, { "id": "SDTTreeLeft", "objHeight": 0, "childEles": [], "objRelativelyHeight": 0, "objcolumn": 0 }], "objRelativelyHeight": 0, "objcolumn": 0 };
-                                // var str_intTree = '[' + JSON.stringify(intTree) + ']';
-                                // SDT.drawInputTree(JSON.parse(str_intTree)); //重绘树，接受一个参数，参数类型为完整树 ，调用后会清空目标画布，并立即重绘
-                                // function json(jsontree) { //遍历树
-                                //     if ((typeof jsontree == 'object') && (jsontree.constructor == Object.prototype.constructor)) {
-                                //         var arrey = [];
-                                //         arrey.push(jsontree);
-                                //     } else arrey = jsontree;
-                                //     for (var i = 0; i < arrey.length; i++) {
-                                //         var node = arrey[i];
-                                //         (function () {
-                                //             var oob = $('#' + node.id);
-                                //             oob.click(function () {
-                                //                 shownodeattr(oob);
-                                //             })
-                                //         })();
-                                //         if (node.childEles && node.childEles.length > 0) {
-                                //             json(node.childEles);
-                                //         }
-                                //     }
-                                // }
-                                // json(intTree);
-                                // $scope.closeThisDialog();
-
-                                // function shownodeattr(oob) {//显示打开的组合api中某个原子api的属性
-                                //     alert(oob.attr('id'));
-                                //     var Json = SDT.returnTree()[0];
-
-                                //     function json(jsontree) { //根据id找到相应树节点
-                                //         if ((typeof jsontree == 'object') && (jsontree.constructor == Object.prototype.constructor)) {
-                                //             var arrey = [];
-                                //             arrey.push(jsontree);
-                                //         } else arrey = jsontree;
-                                //         for (var i = 0; i < arrey.length; i++) {
-                                //             var node = arrey[i];
-                                //             if (node.id == oob.attr('id')) {
-                                //                 shownodeattr1(node, oob);
-                                //                 return;
-                                //             }
-                                //             if (node.childEles && node.childEles.length > 0) {
-                                //                 json(node.childEles);
-                                //             }
-                                //         }
-                                //     }
-                                //     json(intTree);
-                                // }
-
                                 $http({
                                     method: 'get',
-                                    url: 'http://www.linyimin.club:8001',
+                                    url: 'http://www.linyimin.club:8001/apis/getCombinationAPIFlow',
                                     params: {
-                                        "url": item.URL,
-                                        "username": ''
+                                        "combinationUrl": item.URL,
+                                        "publisher": ''
                                     }, // 传递数据作为字符串，从前台传到后台  
                                 }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
                                     if (data.result == true) {
-                                        var intTree = data.datum.flow;//注意问一下返回的是json还是字符串！！！！！！！！！！！！！！
-                                        var str_intTree = '[' + JSON.stringify(intTree) + ']';
+                                        var intTree = data.datum;//返回字符串
+                                        var json_intTree =  JSON.parse(intTree);//转为json格式
+                                        var str_intTree = '[' + intTree + ']';
                                         SDT.drawInputTree(JSON.parse(str_intTree)); //重绘树，接受一个参数，参数类型为完整树 ，调用后会清空目标画布，并立即重绘
                                         $scope.closeThisDialog();
 
@@ -384,7 +339,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                                                 }
                                             }
                                         }
-                                        json(intTree); //这里的inTree需要是json格式！！！！！！！！！！！！！！
+                                        json(json_intTree); //json格式
 
                                         function shownodeattr(oob) {//显示打开的组合api中某个原子api的属性 
                                             function json(jsontree) { //根据id找到相应树节点
@@ -403,7 +358,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                                                     }
                                                 }
                                             }
-                                            json(intTree);
+                                            json(json_intTree);
                                         }
                                     }
                                     else {
