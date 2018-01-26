@@ -463,14 +463,15 @@ class AdminPlugin{
         let form = new formidable.IncomingForm();
         form.multiples = true;
         form.uploadDir = path.join(__dirname, "../../views/img/");
+        form.keepExtensions = true;
         //TODO: 判断添加是否成功，如果添加失败，则删除已经上传的图片
         form.parse(req, async function(err, fields, files){
-            console.log(fields);
             let projectName: string = fields.projectName;
             let projectDescription: string = fields.projectDescription;
             let publisher: string = fields.publisher;
             let imgPath: string = files.avatar.path;
-            let imgName: string = imgPath.split("/")[imgPath.length-1];
+            console.log(files);
+            let imgName: string = imgPath.split("/")[imgPath.split("/").length-1];
             let projectService: ProjectService = new ProjectService();
             let queryResult: GeneralResult = await projectService.query({"name": projectName, "publisher": publisher});
             if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
@@ -502,6 +503,7 @@ class AdminPlugin{
         let form = new formidable.IncomingForm();
         form.multiples = true;
         form.uploadDir = path.join(__dirname, "../../views/img/");
+        form.keepExtensions = true;
         form.parse(req, async function(err, fields, files){
             let oldProjectName: string = fields.oldProjectName;
             let newProjectName: string = fields.newProjectName || "";
@@ -567,7 +569,7 @@ class AdminPlugin{
         let projectService: ProjectService = new ProjectService();
         let queryResult: GeneralResult;
         if(projectName === ""){
-            queryResult = await projectService.query({"name": projectName});
+            queryResult = await projectService.query({});
         }else{
             queryResult = await projectService.query({"name": projectName});
         }
@@ -591,7 +593,7 @@ class AdminPlugin{
         let config: Config = new Config();
         let result: {[key: string]: string}[] = [];
         // 获取url表中的所有信息
-        let urlResult: GeneralResult = await urlService.query({"appId": projectName});
+        let urlResult: GeneralResult = await urlService.query({"APPId": projectName});
         if(urlResult.getResult() === true && urlResult.getDatum().length > 0){
             for(let i = 0; i < urlResult.getDatum().length; i++){
                 let temp: { [key: string]: string } = {};
