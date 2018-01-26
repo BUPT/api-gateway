@@ -138,11 +138,8 @@ class AdminPlugin{
                 console.log(err.message);
             }else{
                 // 获取文件名
-                console.log(files);
                 let fileName: string = files.avatar.name;
-                console.log(fileName);
                 let file: string = config.getPath().swaggerDir + fileName;
-                console.log(file);
                 fs.renameSync(files.avatar.path, file);
                 let yamlParse: YamlParse = new YamlParse();
                 let data: {[key: string]: any}[][] = yamlParse.parse(file);
