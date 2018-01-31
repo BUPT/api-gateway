@@ -132,16 +132,15 @@ class AdminPlugin{
         // 设置文件存储路径
         form.uploadDir = config.getPath().swaggerDir;
         // 保留后缀
-        form.keppExtendsions = true;
-        form.maxFieldsSize = 2 * 1024 * 1024;
+        form.keepExtendsions = true;
         form.parse(req, function(err, fields, files){
             if(err){
                 console.log(err.message);
             }else{
                 // 获取文件名
-                let fileName: string = fields.fileName;
+                let fileName: string = files.avatar.name;
                 let file: string = config.getPath().swaggerDir + fileName;
-                fs.renameSync(files.upload.path, file);
+                fs.renameSync(files.avatar.path, file);
                 let yamlParse: YamlParse = new YamlParse();
                 let data: {[key: string]: any}[][] = yamlParse.parse(file);
                 let url: {[key: string]: string}[] = data[0];
@@ -159,8 +158,9 @@ class AdminPlugin{
                         urlService.insert(url);
                         apiInfoService.insert(api_info);
                         // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
-                        res.cookie("fileName", fileName);
-                        res.redirect(config.getPath().swaggerUIURL);
+                        // res.cookie("fileName", fileName);
+                        // res.redirect(config.getPath().swaggerUIURL);
+                        res.json(new GeneralResult(true, null, "通过swagger文件注册API成功").getReturn());
                     }else{
                         res.json((removeUrl.getResult() == true ? removeUrl : removeApiInfo).getReturn());
                     }
@@ -253,6 +253,8 @@ class AdminPlugin{
                     temp.time = urlResult.getDatum()[i].register_time;
                     temp.publisher = urlResult.getDatum()[i].publisher;
                     temp.appId = urlResult.getDatum()[i].APPId
+                    temp.status = urlResult.getDatum()[i].status;
+                    temp.isAtom = urlResult.getDatum()[i].is_atom;
                     result[i] = temp;
                 }
             }
@@ -463,14 +465,15 @@ class AdminPlugin{
         let form = new formidable.IncomingForm();
         form.multiples = true;
         form.uploadDir = path.join(__dirname, "../../views/img/");
+        form.keepExtensions = true;
         //TODO: 判断添加是否成功，如果添加失败，则删除已经上传的图片
         form.parse(req, async function(err, fields, files){
-            console.log(fields);
             let projectName: string = fields.projectName;
             let projectDescription: string = fields.projectDescription;
             let publisher: string = fields.publisher;
             let imgPath: string = files.avatar.path;
-            let imgName: string = imgPath.split("/")[imgPath.length-1];
+            console.log(files);
+            let imgName: string = imgPath.split("/")[imgPath.split("/").length-1];
             let projectService: ProjectService = new ProjectService();
             let queryResult: GeneralResult = await projectService.query({"name": projectName, "publisher": publisher});
             if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
@@ -502,13 +505,14 @@ class AdminPlugin{
         let form = new formidable.IncomingForm();
         form.multiples = true;
         form.uploadDir = path.join(__dirname, "../../views/img/");
+        form.keepExtensions = true;
         form.parse(req, async function(err, fields, files){
             let oldProjectName: string = fields.oldProjectName;
             let newProjectName: string = fields.newProjectName || "";
             let projectDescription: string = fields.projectDescription || "";
             let publisher: string = fields.publisher;
-            let imgPath: string = files.avatar.path || "";
-            let imgName: string = (imgPath === "") ? "" : imgPath.split("/")[imgPath.length-1];
+            let imgPath: string = files.avatar.path;
+            let imgName: string = (imgPath === "") ? "" : imgPath.split("/")[imgPath.split("/").length-1];
             let projectService: ProjectService = new ProjectService();
             // 重新命名的项目名称已经存在
             let newResult: GeneralResult = await projectService.query({ "name": newProjectName, "publisher": publisher });
@@ -533,7 +537,7 @@ class AdminPlugin{
                 res.json(new GeneralResult(true, null, `${oldProjectName}编辑成功`).getReturn());
                 return;
             }
-            res.json(new GeneralResult(false, `${oldProjectName}对应的项目不存在，无法进行更改`,null));
+            res.json(new GeneralResult(false, `${oldProjectName}对应的项目不存在，无法进行更改`,null).getReturn());
             
             });
     }
@@ -567,7 +571,7 @@ class AdminPlugin{
         let projectService: ProjectService = new ProjectService();
         let queryResult: GeneralResult;
         if(projectName === ""){
-            queryResult = await projectService.query({"name": projectName});
+            queryResult = await projectService.query({});
         }else{
             queryResult = await projectService.query({"name": projectName});
         }
@@ -591,7 +595,7 @@ class AdminPlugin{
         let config: Config = new Config();
         let result: {[key: string]: string}[] = [];
         // 获取url表中的所有信息
-        let urlResult: GeneralResult = await urlService.query({"appId": projectName});
+        let urlResult: GeneralResult = await urlService.query({"APPId": projectName});
         if(urlResult.getResult() === true && urlResult.getDatum().length > 0){
             for(let i = 0; i < urlResult.getDatum().length; i++){
                 let temp: { [key: string]: string } = {};
@@ -606,6 +610,8 @@ class AdminPlugin{
                     temp.time = urlResult.getDatum()[i].register_time;
                     temp.publisher = urlResult.getDatum()[i].publisher;
                     temp.appId = urlResult.getDatum()[i].APPId
+                    temp.status = urlResult.getDatum()[i].status;
+                    temp.isAtom = urlResult.getDatum()[i].is_atom;
                     result[i] = temp;
                 }
             }
