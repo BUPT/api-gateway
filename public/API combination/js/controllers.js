@@ -53,7 +53,8 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
         // };
 
         $scope.goback = function () { //撤销
-            SDT.removeELe(); //删除元素，接受一个参数，参数类型为数组，数组元素应为要删除的元素的 id 注: 若不传入参数则删除最近放置的元素            
+            SDT.removeELe(); //删除元素，接受一个参数，参数类型为数组，数组元素应为要删除的元素的 id 注: 若不传入参数则删除最近放置的元素   
+            isroot();         
         };
 
         $scope.save = function () { //存储设置

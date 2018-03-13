@@ -299,3 +299,27 @@ function shownodeattr1(node, oob, url) {
         }
     });
 }
+
+
+function isroot(){//判断是否为根节点并隐藏线
+    var Json = SDT.returnTree()[0];
+    function json(jsontree) { //根据id找到相应树节点
+        if ((typeof jsontree == 'object') && (jsontree.constructor == Object.prototype.constructor)) {
+            var arrey = [];
+            arrey.push(jsontree);
+        } else arrey = jsontree;
+        for (var i = 0; i < arrey.length; i++) {
+            var node = arrey[i];
+            if (node.id == "SDTTreeRight") {
+                if (node.childEles.length == 1) {
+                    $("#sdtDropCanvasAll").find("path:last").attr("display","none");
+                }
+                return;
+            }
+            if (node.childEles && node.childEles.length > 0) {
+                json(node.childEles);
+            }
+        }
+    }
+    json(Json);
+}
