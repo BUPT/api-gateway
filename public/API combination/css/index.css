@@ -134,12 +134,6 @@ body{
 .navbar{
     border: none;
 }
-.form-group{
-    width: 300px;
-    float: right;
-    /* margin-top: 100px; */
-    margin-right: -340px;
-}
 .row{
     margin-top: 25px;
 }
@@ -147,7 +141,7 @@ label{
     margin-top: 1px;
 }
 .form-horizontal .form-group {
-    margin-top: -5px;
+    /* margin-top: -5px; */
 }
 .col-md-3{
     margin-top: -10px;
