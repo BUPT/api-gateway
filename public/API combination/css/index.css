@@ -80,6 +80,7 @@ main {
 
 .left {
     margin-left: -80px;
+    margin-top: 20px;
 }
 
 .back {
@@ -103,11 +104,11 @@ main {
 }
 
 #jsontext {
-    height: 500px;
+    height: 400px;
     overflow-x: auto;
     overflow: auto;
     max-height: 500px;
-    width: 300px;
+    width: 260px;
 }
 
 #consoletext {
@@ -116,4 +117,91 @@ main {
     overflow: auto;
     max-height: 100px;
     width: 700px;
+}
+#navnav{
+    background: url("../img/BG-grain.png");
+    background-color: #fbf8ee;
+}
+body{
+    background: url("../img/BG-grain.png");
+    background-color: #fbf8ee;
+}
+.navbar-header{
+    margin-top: 60px;
+    margin-left: 120px!important;
+    font-size: 15px;
+}
+.navbar{
+    border: none;
+}
+.form-group{
+    width: 300px;
+    float: right;
+    /* margin-top: 100px; */
+    margin-right: -340px;
+}
+.row{
+    margin-top: 25px;
+}
+label{
+    margin-top: 1px;
+}
+.form-horizontal .form-group {
+    margin-top: -5px;
+}
+.col-md-3{
+    margin-top: -10px;
+}
+.dropdown-menu{
+    min-width: 0px;
+    border-radius: 5px;
+}
+#nav { font-family: helvetica; position:relative;  color:#999; margin: 0 auto; }
+ #nav ul { list-style-type:none; background-image: url("")}
+ #nav ul li:hover{margin-top: -5px}
+ #nav ul li { float:left; position: relative;}
+ #nav ul li a { padding:20px; display:block; text-decoration:none; text-align:center; color:#999;}
+ #nav ul li a:hover {color: #bed19f; } 
+ #nav ul li ul {display: none;}
+ #nav ul li:hover ul {display: block; position: absolute; top:56px;  left:0;} 
+ #nav ul li:hover ul li a {display:block; width: 130px; text-align: center;}
+ #nav ul li:hover ul li a:hover { background:#dee9b8; color:rgb(147, 213, 224);}
+ .file{
+     border-right: 3px dotted #e9e9e9;
+     /* border-radius: 20px; */
+     /* height: 10px; */
+     font-size: 17px;
+ }
+ .window{
+    border-right: 3px dotted #e9e9e9;
+    /* border-radius: 20px; */
+    margin-left: 15px;
+    font-size: 17px;
+    /* height: 10px; */
+
+ }
+ .operate{
+    border-right: 3px dotted #e9e9e9;
+    /* border-radius: 20px; */
+    margin-left: 15px;
+    font-size: 17px;
+    /* height: 10px; */
+
+ }
+ .help{
+    /* border-right: 3px solid #e9e9e9; */
+    /* border-radius: 20px; */
+    margin-left: 15px;
+    font-size: 17px;
+    /* height: 10px; */
+ }
+ .nav{
+     margin-top: 10px;
+     margin-left: 20px;
+ }
+ .container{
+     margin-top: -30px;
+ }
+.col-md-9{
+    margin-top: 20px;
 }
