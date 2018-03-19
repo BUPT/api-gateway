@@ -1,7 +1,6 @@
 import {DBConnect} from "../util/DBConnect";
 import {ApiInfoModel} from "../model/ApiInfoModel";
 import {GeneralResult} from "../general/GeneralResult";
-import {CombinationUrlService} from "./CombinationUrlService";
 import { appendFile } from "fs";
 
 class ApiInfoService{

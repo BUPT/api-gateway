@@ -4,7 +4,6 @@ let router = express.Router();
 import {AdminPlugin} from "../plugin/AdminPlugin";
 import {UserPlugin} from "../plugin/UserPlugin";
 import {RegisterPlugin} from "../plugin/RegisterPlugin";
-import { CombinationUrlPlugin } from "../plugin/CombinationUrlPlugin";
 import { Config } from "../config/config";
 
 import {CombinationPlugin} from "../plugin/CombinationPlugin";
@@ -22,7 +21,6 @@ class AdminRouter{
         let adminPlugin: AdminPlugin = new AdminPlugin();
         let userPlugin: UserPlugin = new UserPlugin();
         let registerPlugin: RegisterPlugin = new RegisterPlugin();
-        let combinationUrlPlugin: CombinationUrlPlugin = new CombinationUrlPlugin();
 
         let combinationPlugin: CombinationPlugin = new CombinationPlugin();
 
@@ -500,8 +498,6 @@ class AdminRouter{
         // 静态页面
         this._router.use("/static", express.static(config.getPath().static));
 
-        // 组合API
-        this._router.post("/combination/getFlowXML", combinationUrlPlugin.getFloWXMLFile);
         /**
          * @swagger
          * /apis/getAllAPI:
@@ -635,29 +631,6 @@ class AdminRouter{
          *           description:OK
          */
         this._router.get("/apis/debugAPI", adminPlugin.debugAPI);
-
-        /**
-         * @swagger
-         * /apis/getCombinationApiFlowXml:
-         *   get:
-         *       description: 获取组合API的流程xml文件
-         *       deprecated: false
-         *       tags:
-         *           - "组合API管理"
-         *       parameters:
-         *         - name: url
-         *           in: query
-         *           description: 组合API对应的url
-         *           required: true
-         *           type: string
-         *       produces:
-         *         - application/json
-         *       responses:
-         *         200:
-         *           description:OK
-         */
-        this._router.get("/apis/getCombinationApiFlowXml", combinationUrlPlugin.getFlowData);
-
 
 
         /**
