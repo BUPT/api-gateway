@@ -100,11 +100,11 @@ class UrlService{
      * 选择性更新指定记录
      * @param url 
      */
-    public async updateSelectiveByAPPIdAndFrom(url: {[key: string]: any}): Promise<void>{
-        let queryResult: GeneralResult = await this.query({"APPId": url.APPId, "from": url.from});
+    public async updateSelectiveByAppIdAndFrom(url: {[key: string]: any}): Promise<void>{
+        let queryResult: GeneralResult = await this.query({"appId": url.appId, "from": url.from});
         // 记录存在，先删除在插入
         if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
-            await this.remove({"APPId": url.APPId, "from": url.from});
+            await this.remove({"appId": url.appId, "from": url.from});
             if(url.to === ""){
                 url.to = queryResult.getDatum()[0].to;
             }
