@@ -2,7 +2,7 @@ var apiGatewayCtrls = angular.module('apiGatewayCtrls', []);
 
 apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window',
     function ($scope, $http, ngDialog, $window) {
-        $scope.title = "可视化API组合系统";
+        $scope.title = "API动态组合编排系统";
 
         $scope.file = "文件";
         $scope.file1 = "新建";
@@ -38,6 +38,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
             console.log(JSON.stringify(SDT.returnTree()[1]));
             console.log(JSON.stringify(SDT.returnTree()[2]));
             document.getElementById("jsontext").innerHTML = JSON.stringify(SDT.returnTree()[0], null, 2);
+            $('#myTab li:eq(1) a').tab('show');
         };
 
         $scope.outjson = function () { //json格式树导出
@@ -54,7 +55,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
 
         $scope.goback = function () { //撤销
             SDT.removeELe(); //删除元素，接受一个参数，参数类型为数组，数组元素应为要删除的元素的 id 注: 若不传入参数则删除最近放置的元素   
-            isroot();         
+            isroot();
         };
 
         $scope.save = function () { //存储设置
@@ -172,9 +173,10 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                                 "url": $scope.d_url
                             }, // 传递数据作为字符串，从前台传到后台  
                         }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
-                             if (data.result == true) {
+                            if (data.result == true) {
                                 alert("成功");
                                 $scope.debuginformation = data.result;
+                                $('#myTab li:eq(2) a').tab('show');
                             }
                             else {
                                 alert("失败");
@@ -316,7 +318,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                                 }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
                                     if (data.result == true) {
                                         var intTree = data.datum;//返回字符串
-                                        var json_intTree =  JSON.parse(intTree);//转为json格式
+                                        var json_intTree = JSON.parse(intTree);//转为json格式
                                         var str_intTree = '[' + intTree + ']';
                                         SDT.drawInputTree(JSON.parse(str_intTree)); //重绘树，接受一个参数，参数类型为完整树 ，调用后会清空目标画布，并立即重绘
                                         $scope.closeThisDialog();
@@ -341,6 +343,8 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                                             }
                                         }
                                         json(json_intTree); //json格式
+
+                                        isroot();
 
                                         function shownodeattr(oob) {//显示打开的组合api中某个原子api的属性 
                                             function json(jsontree) { //根据id找到相应树节点
@@ -404,7 +408,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
 
         $scope.fullScreen = function () {//全屏显示
             var obj = document.getElementById("navnav");
-            obj.style.cssText = "margin-bottom:70px;";
+            obj.style.cssText = "margin-bottom:30px;background-color: #f7f3d8;";
             var docElm = document.documentElement;
             if (docElm.requestFullscreen) {
                 docElm.requestFullscreen();
@@ -423,7 +427,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
 
         $scope.exitScreen = function () {//退出全屏
             var obj = document.getElementById("navnav");
-            obj.style.cssText = "";
+            obj.style.cssText = "background-color: #f7f3d8;";
             if (document.exitFullscreen) {
                 document.exitFullscreen();
             }
@@ -436,7 +440,22 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
             else if (document.webkitCancelFullScreen) {
                 document.webkitCancelFullScreen();
             }
-        }
+        };
+
+        $scope.howtouse = function () {//使用说明
+            ngDialog.open({
+                template: 'howtouse.html',
+                className: 'ngdialog-theme-default',
+                width: 1100,
+                appendClassName: 'upup' ,
+                controller: function ($scope) {
+                    $scope.show = function () {
+                        $scope.closeThisDialog(); //关闭弹窗
+                    };
+                }
+            });
+
+        };
 
 
     }

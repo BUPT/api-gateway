@@ -104,7 +104,7 @@ main {
 }
 
 #jsontext {
-    height: 400px;
+    height: 600px;
     overflow-x: auto;
     overflow: auto;
     max-height: 500px;
@@ -194,8 +194,9 @@ label{
      margin-left: 20px;
  }
  .container{
-     margin-top: -30px;
- }
+     margin-top: -65px;
+     margin-left: 160px;
+}
 .col-md-9{
     margin-top: 20px;
 }
