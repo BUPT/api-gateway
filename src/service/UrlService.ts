@@ -1,6 +1,10 @@
 import {DBConnect} from "../util/DBConnect";
 import {UrlModel}  from "../model/UrlModel";
 import {GeneralResult} from "../general/GeneralResult";
+import {getLogger} from "../util/logger"
+import { Logger } from "_log4js@2.5.3@log4js";
+
+const logger: Logger = getLogger("urlTable");
 class UrlService{
 
     // 连接数据库
@@ -18,14 +22,17 @@ class UrlService{
                 urlModel.insert(data, function (err) {
                     if (err) {
                         console.log("INSERT DATA INTO url FAIL!");
+                        logger.error("INSERT DATA INTO url FAIL!", err);
                         resolve(new GeneralResult(false, err.message, null));
                     } else {
                         console.log("INSERT DATA INTO url SUCCESS!")
+                        logger.info("INSERT DATA INTO url SUCCESS!", data);
                         resolve(new GeneralResult(true, null, data));
                     }
                 });
             }).catch(function(err){
                 console.log("INSERT DATA INTO url FAIL!");
+                logger.error("INSERT DATA INTO url FAIL!", err);
                 resolve(new GeneralResult(false, err.message, null));
             });
         });
@@ -44,14 +51,17 @@ class UrlService{
                 urlModel.remove(data, function (err) {
                     if (err) {
                         console.log("DELETE DATA FROM url FAIL!");
+                        logger.error("DELETE DATA FROM url FAIL!", err);
                         resolve(new GeneralResult(false, err.message, null));
                     } else {
                         console.log("DELETE DATA FROM url SUCCESS!");
+                        logger.info("DELETE DATA FROM url SUCCESS!", data);
                         resolve(new GeneralResult(true, null, null));
                     }
                 });
             }).catch(function(err){
                 console.log("DELETE DATA FROM url FALI!");
+                logger.error("DELETE DATA FROM url FAIL!", err);                
                 resolve(new GeneralResult(false, err.message, null));
             });
         });
@@ -67,7 +77,9 @@ class UrlService{
         // 如果删除成功，则插入新的数据
         if(result.getResult() == true){
             this.insert(data);
+            logger.info("EMPTY AND RELOAD DATA INTO url SUCCESS!\n");
         }else{
+            logger.info("EMPTY AND RELOAD DATA INTO url FAIL!\n", result.getReason());            
             console.log(result.getReason());
         }
     }
@@ -86,8 +98,10 @@ class UrlService{
                 let urlModel: UrlModel = new UrlModel(db);
                 urlModel.query(data, function (err, results) {
                     if (err) {
+                        logger.info("QUERY DATA FROM url FAIL!", err);
                         resolve(new GeneralResult(false, err.message, null));
                     } else {
+                        logger.info("QUERY DATA FROM url SUCCESS!\n", results);
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
@@ -129,6 +143,7 @@ class UrlService{
         }
         // 记录不存在，直接插入
         this.insert([url]);
+        logger.info("UPDATE DATA Selective By AppId And From SUCCESS!\n", url);
     }
 }
 export{UrlService};
