@@ -6,7 +6,7 @@ class UrlModel{
     constructor(db: any){
         this._URL = db.define("url", {
             id: { type: 'serial', key: true },
-            APPId: String,
+            appId: String,
             from: String,
             to: String,
             status: String,
