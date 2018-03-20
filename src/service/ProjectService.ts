@@ -86,6 +86,9 @@ class ProjectService {
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
+            }).catch((err) => {
+                console.log(err);
+                logger.error("QUERY DATA FROM project FAIL!\n", err);
             });
         })
     }

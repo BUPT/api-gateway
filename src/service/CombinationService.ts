@@ -85,6 +85,9 @@ class CombinationService {
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
+            }).catch((err) => {
+                console.log("QUERY DATA FROM combination FAIL!\n");
+                logger.error("QUERY DATA FROM combination FAIL!\n", err);
             });
         });
     }

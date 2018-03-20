@@ -86,7 +86,10 @@ class CombinationFlowService {
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
-            });
+            }).catch((err) => {
+							console.log("QUERY DATA FROM combination_flow FAIL!\n", err);
+							logger.error("QUERY DATA FROM combination_flow FAIL!\n", err);
+						});
         });
     }
 

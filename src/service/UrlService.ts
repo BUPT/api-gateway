@@ -105,6 +105,9 @@ class UrlService{
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
+            }).catch((err) => {
+                console.log("QUERY DATA  FROM url FAIL!\n", err);
+                console.log(err);
             });
         })
     }

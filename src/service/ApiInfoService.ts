@@ -85,10 +85,13 @@ class ApiInfoService{
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
+            }).catch((err) => {
+                console.log("QUERY DATA FROM api_info FAIL!\n", err);
+                logger.error("QUERY DATA FROM api_info FAIL!\n", err);
             });
         });
     }
-
+h
     // 根据appId查找API相关数据
     public async queryByAppId(data: string): Promise<GeneralResult>{
         let _this = this;
