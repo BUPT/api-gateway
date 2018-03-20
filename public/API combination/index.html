@@ -2,7 +2,7 @@
 <html lang="en" ng-app="APIGateway">
 
 <head>
-    <title>可视化API组合系统</title>
+    <title>中移动网络能力开放平台---API动态组合编排系统</title>
     <link rel='icon' href='img/title.ico ' type='image/x-ico' />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,69 +33,82 @@
         .disappear {
             display: none;
         }
+
+        .upup {
+            margin-top: -130px;
+        }
     </style>
 </head>
 
-<body ng-controller="StartCtrl">
- 
-    <nav class="navbar navbar-default" role="navigation" id="navnav">
+<body ng-controller="StartCtrl" style="width:100%;height:100%">
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-default" role="navigation" id="navnav" style="background-color: #f7f3d8;">
+        <div class="navbar-left" style="margin-left:10px;width:200px;">
+            <table>
+                <tr>
+                    <td>
+                        <img src="img/chinamobile.png" alt="logo" height="80px;">
+                        
+                    </td>
+                    <td align="center">中国移动<br/>网络能力开放平台</td>
+                </tr>
+            </table>
+        </div>
         <div class="container-fluid">
-                <!-- <script type="text/javascript" src="framework/canvas-nest.min.js"></script> -->
-            
-            <div id="navcont"> 
+            <div id="navcont">
                 <div id="nav">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#" class="dropdown-toggle file" data-toggle="dropdown" ng-bind="file"></a>
-                     
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="javascript:location.reload();" ng-bind="file1"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="file2" ng-click="openapi()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="file3" ng-click="lookall()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="file4" ng-click="rename()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="file5"></a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="dropdown-toggle operate" data-toggle="dropdown" ng-bind="operate"></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#" ng-bind="operate1" ng-click="show()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="operate5" ng-click="outjson()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="operate2" ng-click="register()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="operate4" ng-click="debug()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="operate3" ng-click="goback()"></a>
-                            </li>
-                        </ul>
-                    </li>
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="#" class="dropdown-toggle file" data-toggle="dropdown" ng-bind="file" style="font-size:15px;"></a>
 
-                    <!-- <li class="dropdown">
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="javascript:location.reload();" ng-bind="file1"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="file2" ng-click="openapi()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="file3" ng-click="lookall()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="file4" ng-click="rename()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="file5"></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle operate" data-toggle="dropdown" ng-bind="operate" style="font-size:15px;"></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" ng-bind="operate1" ng-click="show()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="operate5" ng-click="outjson()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="operate2" ng-click="register()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="operate4" ng-click="debug()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="operate3" ng-click="goback()"></a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-bind="tool"></a>
                         <ul class="dropdown-menu">
                             <li>
@@ -111,48 +124,41 @@
                             </li>
                         </ul>
                     </li> -->
-                    <li>
-                        <a href="#" class="dropdown-toggle window" data-toggle="dropdown" ng-bind="window"></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#" ng-bind="window1" ng-click="newwindow()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="window2" ng-click="systemClose()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="window3" ng-click="fullScreen()"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="window4" ng-click="exitScreen()"></a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="dropdown-toggle help" data-toggle="dropdown" ng-bind="help"></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="http://www.linyimin.club:8001/static/viewAPIs.html#/" ng-bind="help1" target="_blank"></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" ng-bind="help2"></a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="navbar-header">
-                <div class="navbar-left" style="margin:10px;">
-                    <img src="img/logo.png" alt="logo">
+                        <li>
+                            <a href="#" class="dropdown-toggle window" data-toggle="dropdown" ng-bind="window" style="font-size:15px;"></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" ng-bind="window1" ng-click="newwindow()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="window2" ng-click="systemClose()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="window3" ng-click="fullScreen()"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="window4" ng-click="exitScreen()"></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle help" data-toggle="dropdown" ng-bind="help" style="font-size:15px;"></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="http://www.linyimin.club:8001/static/viewAPIs.html#/" ng-bind="help1" target="_blank"></a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#" ng-bind="help2" ng-click="howtouse()"></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
-                <a class="navbar-brand" href="#" style="font-size:25px;font-family:Comic Sans MS;" ng-bind="title"></a>
             </div>
-        </div>
     </nav>
 
     <!-- 注册弹窗 -->
@@ -313,6 +319,32 @@
         </div>
     </script>
 
+    <!-- 使用说明弹窗 -->
+    <script type="text/ng-template" id="howtouse.html">
+        <div class="ui-dialog-title">
+            使用说明
+        </div>
+        <div class="ui-dialog-content" style="margin-top:40px;">
+            <b>拖拽设置方法：</b><br/>
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;屏幕左侧列出的是7大类原子API，选择其中一类拖拽到中间画布上，单击，右侧属性设置的“名称”栏中会出现该类中所有原子API，选择所需的API，其所有相关信息都会出现在属性栏中，然后根据需求选择是否异步并填入执行条件，设置完毕后点击“保存”，即可进行下一节点API的拖拽和配置。“操作--撤销”功能可以撤销最近一次的错误拖拽。当想让新的API是原有API的孩子节点时，需将该API拖拽至父节点上至父节点变浅，松开鼠标即可。<br/>
+            <br/>
+            <b>生成json格式树：</b><br/>
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;组合API设置完成后，选择“操作--生成json格式树”，即可在右侧JSON栏中看到表示当前画布上组合API的json文件，点击“json格式树导出”即可导出json文件进行查看。<br/>
+            <br/>
+            <b>注册：</b><br/>
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;确认无误后点击“操作--注册”功能，填写相关信息后点击“确定”，成功与否会出现弹窗提示。<br/>
+            <br/>
+            <b>调试：</b><br/>
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;注册成功后点击“操作--调试”功能，输入URL进行调试，相关信息会显示在控制台中。<br/>
+            <br/>
+            <b>Swagger帮助页面：</b><br/>
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;点击“帮助--Swagger帮助”会跳转到Swagger相关界面，可以对系统内部所调用的一些接口进行查看与测试。<br/>
+            <br/><br/>
+            <b>举例说明：</b><br/>
+
+        </div>
+    </script>
+
     <!-- 可拖动的所有 SVG 图标 -->
     <div style="display: none;">
         <svg>
@@ -353,6 +385,11 @@
             </symbol>
         </svg>
     </div>
+
+
+    <!-- 正文 -->
+    <h1 align="center" style="font-size:25px;font-family:Comic Sans MS;margin-bottom:-5px; color: #818a17;" ng-bind="title"></h1>
+    <br/><br/>
     <div class="container">
         <div class="row">
             <div class="col-md-9" style="position: relative; ">
@@ -467,22 +504,25 @@
                     </div>
                 </div>
                 <div class="right"></div>
-                <div class="row" style="margin-left:-70px;position:absolute;bottom:-180px;">
+                <!-- <div class="row" style="margin-left:-70px;position:absolute;bottom:-180px;">
                     <form role="form" style="width:900px;margin-top:-280px">
                         <div class="form-group" style="width:300px;float:right;margin-right:-340px">
                             <label style="font-size:15px;">控制台</label>
                             <textarea class="form-control" rows="5" disabled="disabled" ng-model="debuginformation"></textarea>
                         </div>
                     </form>
-                </div>
+                </div> -->
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" style="margin-top:10px;">
                 <ul id="myTab" class="nav nav-tabs">
                     <li class="active">
                         <a href="#home" data-toggle="tab">属性设置</a>
                     </li>
                     <li>
                         <a href="#json" data-toggle="tab">JSON</a>
+                    </li>
+                    <li>
+                        <a href="#debug" data-toggle="tab">控制台</a>
                     </li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
@@ -515,13 +555,13 @@
                             <div class="form-group" style="margin-top:-5px;">
                                 <label class="col-sm-4 control-label" style="text-align:left">参数</label>
                                 <div class="col-sm-8">
-                                    <textarea class="form-control" rows="3" ng-model="input" disabled="disabled" id="inputt" style="width:170px;height:50px"></textarea>
+                                    <textarea class="form-control" rows="4" ng-model="input" disabled="disabled" id="inputt" style="width:170px;"></textarea>
                                 </div>
                             </div>
                             <div class="form-group" style="margin-top:-5px;">
                                 <label class="col-sm-4 control-label" style="text-align:left">输出</label>
                                 <div class="col-sm-8">
-                                    <textarea class="form-control" rows="2" ng-model="output" disabled="disabled" id="output" style="width:170px;height:40px"></textarea>
+                                    <textarea class="form-control" rows="3" ng-model="output" disabled="disabled" id="output" style="width:170px;"></textarea>
                                 </div>
                             </div>
                             <div class="form-group" style="margin-top:-5px;">
@@ -555,11 +595,31 @@
                     <div class="tab-pane fade" id="json">
                         <pre id="jsontext"></pre>
                     </div>
+                    <div class="tab-pane fade" id="debug">
+                        <textarea class="form-control" rows="25" disabled="disabled" ng-model="debuginformation"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
 
     </div>
+
+    <br/>
+    <div style="text-align:center;background-color: #f7f3d8; bottom:0;" >
+            <table style="width:100%;table-layout: fixed;">
+                    <tr>
+                        <td align="center">&nbsp;</td>
+                        <td align="center">
+                            <span style="font-family:arial;">Copyright &copy; 2018 PCN&amp;CAD, BUPT. All rights reserved.</span>               
+                        </td>
+                        <td align="right" >
+                            <img src="img/bupt.png" alt="bupt" height="85px;" style="margin-right:20px;">
+                        </td>
+                    </tr>
+                </table>
+        
+    </div>
+    
 
 </body>
 
