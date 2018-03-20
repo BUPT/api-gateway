@@ -1,14 +1,19 @@
 import * as log4js from "log4js";
 import * as path from "path";
 
-let filename = path.join(__dirname, "../../log/")
-log4js.configure({
-  appenders: { info: { type: 'file', filename: path.join(filename, "operation.log") } },
-  categories: { default: { appenders: ['info'], level: 'info' } },
-});
+let dir = path.join(__dirname, "../../log/")
+console.log(dir);
 
-
-export const getLogger = function(){
-    return log4js.getLogger();
+export const getLogger = function(category?: string){
+  log4js.configure({
+    appenders: { 
+      info: { type: 'file', filename: dir + 'apigateway.log' },
+      apiInfo: { type: 'file', filename: dir + 'apigateway.log' },
+      urlTable: { type: 'file', filename: dir + 'apigateway.log' }, 
+       
+    },
+    categories: { default: { appenders: ['info', 'apiInfo', 'urlTable'], level: 'info' } },
+  });
+  return log4js.getLogger(category === undefined ? null : category);    
 }
 
