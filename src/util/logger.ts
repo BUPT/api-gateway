@@ -10,9 +10,11 @@ export const getLogger = function(category?: string){
       info: { type: 'file', filename: dir + 'apigateway.log' },
       apiInfo: { type: 'file', filename: dir + 'apigateway.log' },
       urlTable: { type: 'file', filename: dir + 'apigateway.log' }, 
+      combination: { type: 'file', filename: dir + 'apigateway.log' },
+      combinationFlow: { type: 'file', filename: dir + 'apigateway.log' },
        
     },
-    categories: { default: { appenders: ['info', 'apiInfo', 'urlTable'], level: 'info' } },
+    categories: { default: { appenders: ['info', 'apiInfo', 'urlTable', 'combination', 'combinationFlow'], level: 'info' } },
   });
   return log4js.getLogger(category === undefined ? null : category);    
 }

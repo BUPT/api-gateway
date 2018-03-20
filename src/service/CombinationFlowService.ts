@@ -1,6 +1,9 @@
 import { DBConnect } from "../util/DBConnect";
 import { CombinationFlowModel } from "../model/CombinationFlowModel";
 import { GeneralResult } from "../general/GeneralResult";
+import {getLogger} from "../util/logger";
+import { Logger } from "_log4js@2.5.3@log4js";
+const logger: Logger = getLogger("combinationFlow");
 class CombinationFlowService {
     // 连接数据库
     private _db: any = new DBConnect().getDB();
@@ -15,15 +18,18 @@ class CombinationFlowService {
                 combinationFlowModel.insert(data, function (err) {
                     if (err) {
                         console.log("INSERT DATA INTO combination_flow FAIL");
+                        logger.error("INSERT DATA INTO combination_flow FAIL!\n", err);
                         console.log(err);
                         resolve(new GeneralResult(false, err.message, data));
                     } else {
                         console.log("INSERT DATA INTO combination_flow SUCCESS");
+                        logger.info("INSERT DATA INTO combination_flow SUCCESS!\n", data);
                         resolve(new GeneralResult(true, null, data));
                     }
                 });
             }).catch(function (err) {
                 console.log(err);
+                logger.error("INSERT DATA INTO combination_flow FAIL!\n", err);                
                 resolve(new GeneralResult(false, err.message, data));
             });
         });
@@ -44,14 +50,17 @@ class CombinationFlowService {
                     if (err) {
                         console.log("DELETE DATA FROM combination_flow FAIL!");
                         console.log(err);
+                        logger.error("DELETE DATA FROM combination_flow FAIL!\n", err);
                         reslove(new GeneralResult(false, err.message, null));
                     } else {
                         console.log("DELETE DATA FROM combination_flow SUCCESS!");
+                        logger.error("DELETE DATA FROM combination_flow SUCCESS!\n", data);                        
                         reslove(new GeneralResult(true, null, null));
                     }
                 });
             }).catch(function (err) {
                 console.log(err);
+                logger.error("DELETE DATA FROM combination_flow FAIL!\n", err);                
                 reslove(new GeneralResult(false, err.message, null));
             });
         });
@@ -70,8 +79,10 @@ class CombinationFlowService {
                 let combinationFlowModel: CombinationFlowModel = new CombinationFlowModel(db);
                 combinationFlowModel.query(data, function (err, results) {
                     if (err) {
+                        logger.error("QUERY DATA FROM combination_flow FAIL!\n", err);                        
                         resolve(new GeneralResult(false, err.message, null));
                     } else {
+                        logger.info("QUERY DATA FROM combination_flow SUCCESS!\n", data);
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
@@ -85,6 +96,7 @@ class CombinationFlowService {
         // 在插入相关信息
         let insertResult: GeneralResult = await this.insert(data);
         console.log(insertResult.getDatum());
+        logger.error("UPDATE DATA FROM combination_flow SUCCESS!\n", data);        
         return insertResult;
     }
 }

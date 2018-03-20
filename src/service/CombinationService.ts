@@ -1,8 +1,11 @@
-import {DBConnect} from "../util/DBConnect";
+import { DBConnect } from "../util/DBConnect";
 import { CombinationModel } from "../model/CombinationModel";
-import {GeneralResult} from "../general/GeneralResult";
-import { resolve } from "bluebird";
-class CombinationService{
+import { GeneralResult } from "../general/GeneralResult";
+import { getLogger } from "../util/logger";
+import { Logger } from "_log4js@2.5.3@log4js";
+
+const logger: Logger = getLogger("combination");
+class CombinationService {
     // 连接数据库
     private _db: any = new DBConnect().getDB();
 
@@ -16,14 +19,17 @@ class CombinationService{
                 combinationModel.insert(data, function (err) {
                     if (err) {
                         console.log("INSERT DATA INTO combination FAIL");
+                        logger.error("INSERT DATA INTO combination FAIL!\n ");
                         resolve(new GeneralResult(false, err.message, data));
                     } else {
                         console.log("INSERT DATA INTO combination SUCCESS");
+                        logger.info("INSERT DATA INTO combination SUCCESS!\n", data);
                         resolve(new GeneralResult(true, null, data));
                     }
                 });
             }).catch(function (err) {
                 console.log(err);
+                logger.error("INSERT DATA INTO combination FAIL!\n", data)
                 resolve(new GeneralResult(false, err.message, data));
             });
         });
@@ -43,15 +49,17 @@ class CombinationService{
                 combinationModel.remove(data, function (err) {
                     if (err) {
                         console.log("DELETE DATA FROM combination FAIL!");
-                        console.log(err);
+                        logger.error("DELETE DATA FROM combination FAIL!\n");
                         reslove(new GeneralResult(false, err.message, null));
                     } else {
                         console.log("DELETE DATA FROM combination SUCCESS!");
+                        logger.info("DELETE DATA FROM combination SUCCESS!\n", data);
                         reslove(new GeneralResult(true, null, null));
                     }
                 });
             }).catch(function (err) {
                 console.log(err);
+                logger.error("DELETE DATA FROM combination FAIL\n", data);
                 reslove(new GeneralResult(false, err.message, null));
             });
         });
@@ -70,8 +78,10 @@ class CombinationService{
                 let combinationModel: CombinationModel = new CombinationModel(db);
                 combinationModel.query(data, function (err, results) {
                     if (err) {
+                        logger.error("QUERY DATA FROM combination FAIL\n");
                         resolve(new GeneralResult(false, err.message, null));
                     } else {
+                        logger.info("QUERY DATA FROM combination SUCCESS!\n", data);
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
@@ -84,13 +94,19 @@ class CombinationService{
      * @param condition 
      * @param data 
      */
-    public async update(condition: {[key: string]: string}, data: {[key: string]: string}[]): Promise<GeneralResult>{
+    public async update(condition: { [key: string]: string }, data: { [key: string]: string }[]): Promise<GeneralResult> {
         //先删除相关信息
         let removeResult: GeneralResult = await this.remove(condition);
         // 在插入相关信息
-        let insertResult: GeneralResult = await this.insert(data);
-        console.log(insertResult.getDatum());
-        return insertResult;
+        if (removeResult.getResult() === true) {
+            let insertResult: GeneralResult = await this.insert(data);
+            console.log(insertResult.getDatum());
+            logger.info("UPDATE DATA FROM combination SUCCESS!\n", data);
+            return insertResult;
+        }
+        logger.error("UPDATE DATA FROM combination FAIL!\n", data);
+        return removeResult;
+
     }
 
     /**
@@ -98,18 +114,19 @@ class CombinationService{
      * @param condition 
      * @param data 
      */
-    public async updateSelective(condition:{[key: string]: string}, data: {[key: string]: string}): Promise<GeneralResult>{
+    public async updateSelective(condition: { [key: string]: string }, data: { [key: string]: string }): Promise<GeneralResult> {
         let queryResult: GeneralResult = await this.query(condition);
-        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
-            if(data.combination_url === "" || !data.combination_url){
+        if (queryResult.getResult() === true && queryResult.getDatum().length > 0) {
+            if (data.combination_url === "" || !data.combination_url) {
                 data.combination_url = queryResult.getDatum()[0].combination_url;
             }
-            if(data.flow === "" || !data.flow){
+            if (data.flow === "" || !data.flow) {
                 data.flow = queryResult.getDatum()[0].flow;
             }
         }
         this.remove(condition);
+        logger.info("UPDATE DATA SELECTIVE FROM combination SUCCESS!\n", data);
         return this.insert([data]);
     }
 }
-export{CombinationService};
+export { CombinationService };
