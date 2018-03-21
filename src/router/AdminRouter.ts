@@ -4,7 +4,6 @@ let router = express.Router();
 import {AdminPlugin} from "../plugin/AdminPlugin";
 import {UserPlugin} from "../plugin/UserPlugin";
 import {RegisterPlugin} from "../plugin/RegisterPlugin";
-import { CombinationUrlPlugin } from "../plugin/CombinationUrlPlugin";
 import { Config } from "../config/config";
 
 import {CombinationPlugin} from "../plugin/CombinationPlugin";
@@ -22,7 +21,6 @@ class AdminRouter{
         let adminPlugin: AdminPlugin = new AdminPlugin();
         let userPlugin: UserPlugin = new UserPlugin();
         let registerPlugin: RegisterPlugin = new RegisterPlugin();
-        let combinationUrlPlugin: CombinationUrlPlugin = new CombinationUrlPlugin();
 
         let combinationPlugin: CombinationPlugin = new CombinationPlugin();
 
@@ -44,6 +42,8 @@ class AdminRouter{
         this._router.all('/viewUserPerformance',performanceMonitor.viewUserPerformance);
         // 对管理员操作进行basic-auth身份认证
         //this._router.all("/apis/*", adminPlugin.basicAuth);
+
+
         /**
          * @swagger
          * /apis/register:
@@ -54,6 +54,196 @@ class AdminRouter{
          *           - "API管理"
          */
         this._router.get("/apis/register", adminPlugin.APIRegister);
+
+
+        /**
+         * @swagger
+         * /apis/updateSingleAPI:
+         *   post:
+         *       description: 更新单个已注册API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: oldURL
+         *           in: query
+         *           description: 需要修改的API对应的URL
+         *           required: true
+         *           type: string
+         *         - name: userName
+         *           in: query
+         *           description: 发布者姓名
+         *           required: true
+         *           type: string
+         *         - name: newURL
+         *           in: query
+         *           description: 新API对应的URL
+         *           required: false
+         *           type: string
+         *         - name: APPId
+         *           in: query
+         *           description: 将API服务注册在API网关的公司对应的ID标识
+         *           required: true
+         *           type: string
+         *         - name: status
+         *           in: query
+         *           description: 标识API是否有效，0为有效，1为无效
+         *           required: false
+         *           type: string
+         *         - name: method
+         *           in: query
+         *           description: API对应的访问方法
+         *           required: false
+         *           type: string
+         *         - name: name
+         *           in: query
+         *           description: API对应的名称
+         *           required: false
+         *           type: string
+         *         - name: type
+         *           in: query
+         *           description: API对应的类型
+         *           required: false
+         *           type: string
+         *         - name: argument
+         *           in: query
+         *           description: API对应的参数
+         *           required: false
+         *           type: string
+         *         - name: event
+         *           in: query
+         *           description: API对应的响应
+         *           required: false
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/apis/updateSingleAPI", registerPlugin.updateSingleAPI);
+
+        /**
+         * @swagger
+         * /apis/removeSingleAPI:
+         *   post:
+         *       description: 注销单个已注册API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: APPId
+         *           in: query
+         *           description: 注册API公司对应的APPId
+         *           required: true
+         *           type: string
+         *         - name: from
+         *           in: query
+         *           description: 需要注销API对应的URL
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/apis/removeSingleAPI", registerPlugin.removeSingleAPI);
+
+
+        /**
+         * @swagger
+         * /apis/addSingleAPI:
+         *   post:
+         *       description: 注册单个API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+          *         - name: userName
+         *           in: query
+         *           description: 登录用户名(对应API发布者)
+         *           required: true
+         *           type: string
+         *         - name: URL
+         *           in: query
+         *           description: 需要增加API对应的URL
+         *           required: true
+         *           type: string
+         *         - name: APPId
+         *           in: query
+         *           description: 将API服务注册在API网关的公司对应的ID标识
+         *           required: true
+         *           type: string
+         *         - name: to
+         *           in: query
+         *           description: API服务实际所在服务器域名
+         *           required: true
+         *           type: string
+         *         - name: status
+         *           in: query
+         *           description: 标识API是否有效，0为有效，1为无效
+         *           required: true
+         *           type: string
+         *         - name: method
+         *           in: query
+         *           description: API对应的访问方法
+         *           required: true
+         *           type: string
+         *         - name: name
+         *           in: query
+         *           description: API对应的名称
+         *           required: false
+         *           type: string
+         *         - name: type
+         *           in: query
+         *           description: API对应的类型
+         *         - name: argument
+         *           in: query
+         *           description: API对应的参数
+         *           required: false
+         *           type: string
+         *         - name: event
+         *           in: query
+         *           description: API对应的响应
+         *           required: false
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/apis/addSingleAPI", registerPlugin.addSingleAPI);
+
+
+
+        /**
+         * @swagger
+         * /apis/recoverySingleAPI:
+         *   post:
+         *       description: 恢复单个已注销API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: APPId
+         *           in: query
+         *           description: 注册API公司对应的APPId
+         *           required: true
+         *           type: string
+         *         - name: from
+         *           in: query
+         *           description: 需要注销API对应的URL
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/apis/recoverySingleAPI", registerPlugin.recoverySingleAPI);
 
         /**
          * @swagger
@@ -308,8 +498,6 @@ class AdminRouter{
         // 静态页面
         this._router.use("/static", express.static(config.getPath().static));
 
-        // 组合API
-        this._router.post("/combination/getFlowXML", combinationUrlPlugin.getFloWXMLFile);
         /**
          * @swagger
          * /apis/getAllAPI:
@@ -342,6 +530,34 @@ class AdminRouter{
          *           description:OK
          */
         this._router.get("/apis/getAllAPIInfoWithKong", adminPlugin.getAllAPIInfoWithKong);
+
+
+        /**
+         * @swagger
+         * /apis/getAPIInfoByAPPIdAndURL:
+         *   get:
+         *       description: 根据API的appId和url获取API信息
+         *       deprecated: false
+         *       tags:
+         *           - "API管理"
+         *       parameters:
+         *         - name: appId
+         *           in: query
+         *           description: 注册API的公司的appId
+         *           required: true
+         *           type: string
+         *         - name: url
+         *           in: query
+         *           description: API服务对应的url
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getAPIInfoByAPPIdAndURL", adminPlugin.getAPIInfoByAPPIdAndURL);
 
 
         /**
@@ -415,29 +631,6 @@ class AdminRouter{
          *           description:OK
          */
         this._router.get("/apis/debugAPI", adminPlugin.debugAPI);
-
-        /**
-         * @swagger
-         * /apis/getCombinationApiFlowXml:
-         *   get:
-         *       description: 获取组合API的流程xml文件
-         *       deprecated: false
-         *       tags:
-         *           - "组合API管理"
-         *       parameters:
-         *         - name: url
-         *           in: query
-         *           description: 组合API对应的url
-         *           required: true
-         *           type: string
-         *       produces:
-         *         - application/json
-         *       responses:
-         *         200:
-         *           description:OK
-         */
-        this._router.get("/apis/getCombinationApiFlowXml", combinationUrlPlugin.getFlowData);
-
 
 
         /**
@@ -577,7 +770,181 @@ class AdminRouter{
          *           description:OK
          */
         this._router.post("/apis/registerCombinationAPI", combinationPlugin.registerCombinationAPI);
+
+
+
         this._router.get("/call", combinationPlugin.publish);
+
+
+        /**
+         * @swagger
+         * /apis/getCombinationAPIFlow:
+         *   get:
+         *       description: 获取组合API的流程树信息
+         *       deprecated: false
+         *       tags:
+         *           - "组合API管理"
+         *       parameters:
+         *         - name: combinationUrl
+         *           in: query
+         *           description: 组合API对应的url
+         *           required: true
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 组合API的发布者
+         *           required: false
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getCombinationAPIFlow", combinationPlugin.getCombinationAPIFlow);
+
+
+
+        /**
+         * @swagger
+         * /project/addProject:
+         *   post:
+         *       description: 添加一个项目
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 新增项目名称
+         *           required: true
+         *           type: string
+         *         - name: projectDescription
+         *           in: query
+         *           description: 项目信息简介
+         *           required: false
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 项目创建和API注册发布者
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/project/addProject", adminPlugin.addProject);
+
+        /**
+         * @swagger
+         * /project/editProject:
+         *   post:
+         *       description: 添加一个项目
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: oldProjectName
+         *           in: query
+         *           description: 原项目名称
+         *           required: true
+         *           type: string
+         *         - name: newProjectName
+         *           in: query
+         *           description: 新项目名称
+         *           required: false
+         *           type: string
+         *         - name: projectDescription
+         *           in: query
+         *           description: 项目信息简介
+         *           required: false
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 项目创建和API注册发布者
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/project/editProject", adminPlugin.editProject);
+
+
+        /**
+         * @swagger
+         * /project/deleteProject:
+         *   get:
+         *       description: 删除一个项目
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 需要删除的项目名称
+         *           required: true
+         *           type: string
+         *         - name: publisher
+         *           in: query
+         *           description: 项目创建和API注册发布者
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/deleteProject", adminPlugin.deleteProject);
+
+        /**
+         * @swagger
+         * /project/queryProject:
+         *   get:
+         *       description: 根据项目名称查找项目信息，项目名称不存在，则查询全部项目信息，否则查询指定项目信息
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 需要查找的项目名称
+         *           required: false
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/queryProject", adminPlugin.queryProject);
+
+        /**
+         * @swagger
+         * /project/queryAPIByProjectName:
+         *   get:
+         *       description: 根据项目名称查找其项下的API信息
+         *       deprecated: false
+         *       tags:
+         *           - "项目管理"
+         *       parameters:
+         *         - name: projectName
+         *           in: query
+         *           description: 需要查找的项目名称
+         *           required: true
+         *           type: string
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/project/queryAPIByProjectName", adminPlugin.queryAPIByProjectName);
     }
 }
 export{AdminRouter};

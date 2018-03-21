@@ -32,6 +32,8 @@ class YamlParse{
         let appId: string = data.info["x-appId"];
         // 真实服务器地址
         let realHost = data.info["x-realhost"];
+        // 发布者姓名
+        let publisher = data.info["x-publisher"];
         // API的ID
         let ID: string = "";
         // API名称
@@ -77,10 +79,30 @@ class YamlParse{
                 }
             }
             API = ("/" != basePath) ? (basePath + paths[i]) : paths[i];
-            API_info[i] = { "ID": ID, "name": name, "type": type, "argument": argument, "event": event, "URL": API, "appId": appId };
+            API_info[i] = { 
+                "ID": ID, 
+                "name": name, 
+                "type": type, 
+                "argument": argument, 
+                "event": event, 
+                "URL": API, 
+                "appId": appId,
+                "status": status,
+                "publisher": publisher
+             };
             // 注册时间
             let timeString: string = new Date().toLocaleString();
-            url[i] = { "from": API, "to": realHost, "status": status, "is_new": is_new, "APPId": appId, "is_atom": "1", "register_time": timeString, "method": method};
+            url[i] = {
+                "from": API, 
+                "to": realHost, 
+                "status": status, 
+                "is_new": is_new, 
+                "appId": appId, 
+                "is_atom": "1", 
+                "register_time": timeString, 
+                "method": method,
+                "publisher": publisher
+            };
         }
         return [url, API_info];
     }

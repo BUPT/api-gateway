@@ -1,10 +1,11 @@
+import * as path from "path";
 class Config{
-    private _baseDir = "F:/项目/API-Gateway-v3";
+    private _baseDir = path.join(__dirname, "../../");
     private _storage = {
-        "host": '111.207.243.66',
-        "user": 'root',
-        "password": 'A123456',
-        "database": 'api_gateway',
+        "host": '******',
+        "user": '******',
+        "password": '******',
+        "database": '******',
         "protocol": "mysql",
         "port": "3306"
     };
@@ -33,7 +34,7 @@ class Config{
         // 文件上传页面的HTML页面路径
         "uploadFileURL": this._baseDir + "/views/fileUpload.html",
         // 定义swagger注释的文件路径
-        "defineSwaggerFile": this._baseDir + "/build/router/*.js",
+        "defineSwaggerFile": this._baseDir + "/src/router/*.ts",
         // 静态文件目录
         "static": this._baseDir + "/views/",
         // 组合API流程文件目录

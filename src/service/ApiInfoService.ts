@@ -1,8 +1,12 @@
 import {DBConnect} from "../util/DBConnect";
 import {ApiInfoModel} from "../model/ApiInfoModel";
 import {GeneralResult} from "../general/GeneralResult";
-import {CombinationUrlService} from "./CombinationUrlService";
+import { appendFile } from "fs";
+import {CombinationService} from "../service/CombinationService"
+import { getLogger } from "../util/logger"
+import { Logger } from "_log4js@2.5.3@log4js";
 
+const logger: Logger = getLogger("apiInfo");
 class ApiInfoService{
     // 连接数据库
     private _db: any = new DBConnect().getDB();
@@ -19,14 +23,17 @@ class ApiInfoService{
                 apiInfoModel.insert(data, function (err) {
                     if (err) {
                         console.log("INSERT DATA INTO API_info FAIL");
+                        logger.error("INSERT DATA INTO API_info FAIL\n", err);
                         resolve(new GeneralResult(false, err.message, data));
                     } else {
                         console.log("INSERT DATA INTO API_info SUCCESS");
+                        logger.info("INSERT DATA INTO API_info SUCCESS\n", data);
                         resolve(new GeneralResult(true, null, data));
                     }
                 });
             }).catch(function (err) {
                 console.log(err);
+                logger.error("INSERT DATA INTO API_info FAIL\n", err);
                 resolve(new GeneralResult(false, err.message, data));
             });
         });
@@ -42,15 +49,17 @@ class ApiInfoService{
                 apiInfoModel.remove(data, function (err) {
                     if (err) {
                         console.log("DELETE DATA FROM API_info FAIL!");
-                        console.log(err);
+                        logger.error("DELETE DATA FROM API_info FAIL!\n", err);
                         reslove(new GeneralResult(false, err.message, null));
                     } else {
                         console.log("DELETE DATA FROM API_info SUCCESS!");
+                        logger.info("DELETE DATA FROM API_info SUCCESS!\n", data);
                         reslove(new GeneralResult(true, null, null));
                     }
                 });
             }).catch(function (err) {
                 console.log(err);
+                logger.error("DELETE DATA FROM API_info FAIL!\n", err);                
                 reslove(new GeneralResult(false, err.message, null));
             });
         });
@@ -69,15 +78,20 @@ class ApiInfoService{
                 let apiInfoModel: ApiInfoModel = new ApiInfoModel(db);
                 apiInfoModel.query(data, function (err, results) {
                     if (err) {
+                        logger.error("QUERY DATA FROM api_info FAIL!\n", err);
                         resolve(new GeneralResult(false, err.message, null));
                     } else {
+                        logger.info("QUERY DATA FROM api_info SUCCESS!\n", data);
                         resolve(new GeneralResult(true, null, results));
                     }
                 });
+            }).catch((err) => {
+                console.log("QUERY DATA FROM api_info FAIL!\n", err);
+                logger.error("QUERY DATA FROM api_info FAIL!\n", err);
             });
         });
     }
-
+h
     // 根据appId查找API相关数据
     public async queryByAppId(data: string): Promise<GeneralResult>{
         let _this = this;
@@ -87,17 +101,20 @@ class ApiInfoService{
                 let apiInfoModel: ApiInfoModel = new ApiInfoModel(db);
                 apiInfoModel.query({ appId: data }, function (err, results) {
                     if (err) {
+                        logger.error("QUERY DATA FROM api_info ERROR!\n", data);
                         resolve(new GeneralResult(false, err.message, null));
                     }else{
                         let apiInfo: Map<string, string> = new Map();
                         for(let i = 0; i < results.length; i++){
                             apiInfo.set(results[i].ID, results[i].URL);
                         }
+                        logger.info("QUERY DATA FROM api_info BY AppId SUCCESS!\n", data);
                         resolve(new GeneralResult(true, null, apiInfo));
                     }
                 });
             }).catch(function(err){
                 console.log(err);
+                logger.error("QUERY DATA FROM api_info FAIL!\n", err);
                 resolve(new GeneralResult(false, err.message, null));
             });
         });
@@ -111,15 +128,19 @@ class ApiInfoService{
                 let apiInfoModel: ApiInfoModel = new ApiInfoModel(db);
                 apiInfoModel.query({ ID: data }, function (err, results) {
                     if (err) {
+                        logger.error("QUERY DATA FROM api_info BY ID FAIL\n", data);
                         resolve(new GeneralResult(false, err.message, null));
                     } else {
+                        logger.info("QUERY DATA FROM api_info BY ID SUCCESS!\n", data);
                         resolve(new GeneralResult(true, null, results));
                     }
                 }).catch(function(err){
                     console.log(err);
+                    logger.error("QUERY DATA FROM api_info BY ID FAIL\n", data);
                     resolve(new GeneralResult(false, err.message, null));
                 });
             }).catch(function (err) {
+                logger.error("QUERY DATA FROM api_info BY ID FAIL\n", data);
                 resolve(new GeneralResult(false, err.message, null));
             });
         });
@@ -131,8 +152,10 @@ class ApiInfoService{
         let result: GeneralResult = await this.remove({});
         // 刪除成功则插入新的数据集
         if(result.getResult() === true){
+            logger.info("EMPTY api_info TABLE SUCCESS!\n");
             this.insert(data);
         }else{
+            logger.error("EMPTY api_info TABLE FAIL!\n");
             console.log(result.getReason());
         }
     }
@@ -152,15 +175,15 @@ class ApiInfoService{
         let apiInfoService: ApiInfoService = new ApiInfoService();
         let queryResult: GeneralResult = await apiInfoService.query(condition);
         let removeResult: GeneralResult = null;
-        if(queryResult.getResult() == true){
+        if(queryResult.getResult() === true){
             removeResult = await apiInfoService.remove(condition);;
         }else{
             return new GeneralResult(false, "该服务不存在", null);
         }
         
-        if(removeResult.getResult() == true){
+        if(removeResult.getResult() === true){
             let dataum: {[key: string]: string}[] = queryResult.getDatum();
-            if(dataum == null || dataum.length == 0){
+            if(dataum === null || dataum.length === 0){
                 return new GeneralResult(false,"该服务不存在", null);
             }
             dataum[0]["name"] = name;
@@ -173,7 +196,10 @@ class ApiInfoService{
             data.argument = dataum[0].argument;
             data.event = dataum[0].event;
             data.URL = dataum[0].URL;
+            data.status = dataum[0].status;
+            data.publisher = dataum[0].publisher;
             let insertResult: GeneralResult = await apiInfoService.insert([data]);
+            logger.info("UPDATE api_info DATA SUCCESS!\n", data);
             return insertResult;
         }else{
             return removeResult;
@@ -192,11 +218,11 @@ class ApiInfoService{
         if(queryResult.getDatum().length > 0){
             let data: {[key: string]: string} = queryResult.getDatum()[0];
             // 原子API
-            if(data.type != "组合"){
+            if(data.type !== "组合"){
                 return new GeneralResult(true, "该url已被原子API占用", data);
             }else{
-                let combinationUrlService: CombinationUrlService = new CombinationUrlService();
-                let combinationResult: GeneralResult = await combinationUrlService.query({"url": url});
+                let combinationService: CombinationService = new CombinationService();
+                let combinationResult: GeneralResult = await combinationService.query({"url": url});
                 if(combinationResult.getDatum().length > 0){
                     // 获取对应原子API的ID
                     let apiInfoIds: string [] = combinationResult.getDatum()[0].atom_url.split(",");
@@ -213,6 +239,56 @@ class ApiInfoService{
         }else {
             return new GeneralResult(false, null, null);
         }
+    }
+
+    /**
+     * 根据appId和URL选择性更新指定记录
+     * @param apiInfo 
+     */
+    public async updateSelectiveByAppIdAndURL(apiInfo: {[key: string]: any}): Promise<void> {
+        let queryResult: GeneralResult = await this.query({"appId": apiInfo.appId, "URL": apiInfo.URL});
+        // 若记录存在，先删除，在插入
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            await this.remove({"appId": apiInfo.appId, "URL": apiInfo.URL});
+            if(apiInfo.ID === ""){
+                apiInfo.ID = queryResult.getDatum()[0].ID;
+                console.log(apiInfo.ID);
+            }
+            if (apiInfo.name === "") {
+                apiInfo.name = queryResult.getDatum()[0].name;
+            }
+            if (apiInfo.type === "") {
+                apiInfo.type = queryResult.getDatum()[0].type;
+            }
+            if (apiInfo.argument === "") {
+                apiInfo.argument = queryResult.getDatum()[0].argument;
+            }
+            if (apiInfo.event === "") {
+                apiInfo.event = queryResult.getDatum()[0].event;
+            }
+            if (apiInfo.status === "") {
+                apiInfo.status = queryResult.getDatum()[0].status;
+            }
+            if(apiInfo.publisher === ""){
+                apiInfo.publisher = queryResult.getDatum()[0].publisher;
+            }
+            let apiInfoTemp: {[key: string]: any} = {
+                "appId": apiInfo.appId,
+                "URL": apiInfo.URL,
+                "ID": apiInfo.ID,
+                "name": apiInfo.name,
+                "type": apiInfo.type,
+                "argument": apiInfo.argument,
+                "event": apiInfo.event,
+                "status": apiInfo.status,
+                "publisher": apiInfo.publisher
+            }
+            this.insert([apiInfoTemp]);
+            logger.info("UPDATE api_info DATA Selective By AppId And URL SUCCESS!\n", apiInfoTemp);
+        }else{
+            logger.error("UPDATE api_info DATA Selective By AppId And URL FAIL!\n")
+        }
+        
     }
 }  
 export{ApiInfoService};

@@ -1,21 +1,21 @@
 var set_o = {
     "SDTTreeElements": [{ //元素配置
-        "type": "HJKZ", //值为字符串 表示元素类型
+        "type": "CallControl", //值为字符串 表示元素类型
         "dropSwitch": true, //值为 true 或 false 当值为 true 时元素可直接放置于画布
         "foresideType": ["all"], //值为一个字符串 type 间由 "," 隔开 当值为空时，则任何元素都将不接受其的放置；当值为 all 时所有元素都接受其放置；当值为合法 type 串时，type 串中所代表的类型元素将接受其放置
         "leanRight": true //值为 true 或 false 当值为 true 时元素默认放置于右侧树
     }, {
-        "type": "HMGB",
+        "type": "NumberChange",
         "dropSwitch": true,
         "foresideType": ["all"],
         "leanRight": true
     }, {
-        "type": "WH",
+        "type": "OutBound",
         "dropSwitch": true,
         "foresideType": ["all"],
         "leanRight": true
     }, {
-        "type": "DFTH",
+        "type": "MultiCall",
         "dropSwitch": true,
         "foresideType": ["all"],
         "leanRight": true
@@ -30,7 +30,7 @@ var set_o = {
         "foresideType": ["all"],
         "leanRight": true
     }, {
-        "type": "XX",
+        "type": "Message",
         "dropSwitch": true,
         "foresideType": ["all"],
         "leanRight": true
@@ -40,7 +40,7 @@ var set_o = {
         "lineColor": "#547D87", // 值为颜色色值字符串 连线颜色为此色值
         "treeCenterX": "0", //值为数字（不带单位，非字符串） 树的中心 X 坐标
         "treeCenterY": "150", //值为数字（不带单位，非字符串） 树的中心 Y 坐标
-        "treeEleMargin": "16" //值为数字（不带单位，非字符串） 元素的上下边距
+        "treeEleMargin": "15" //值为数字（不带单位，非字符串） 元素的上下边距
     }
 };
 SDT.SVGDragComponent(set_o); //对组件进行配置，参数为上方定义好的参数
@@ -76,64 +76,135 @@ function findnode(oob) { //找到被点击的节点对象
 }
 
 function showattr(node, oob) { //显示被点击节点对象属性
-    var tp = node.type;
-    if (node.type == 'HJKZ') {
-        tp = "呼叫控制类";
-    }
-    if (node.type == 'HMGB') {
-        tp = "号码改变类";
-    }
-    if (node.type == 'WH') {
-        tp = "外呼类";
-    }
-    if (node.type == 'DFTH') {
-        tp = "多方通话类";
-    }
-    if (node.type == 'IVR') {
-        tp = "IVR类";
-    }
-    if (node.type == 'QOS') {
-        tp = "QOS类";
-    }
-    if (node.type == 'XX') {
-        tp = "消息类";
-    }
-    $("#tp").val(tp);
-    $("#nodeid").val(node.id);
-
-    $.ajax({
-        type: "get",
-        url: 'http://www.linyimin.club:8001/apis/getApiInfoByType',
-        async: true,
-        dataType: "json",
-        data: { "APIType": tp },
-        crossDomain: true,
-        success: function(data) {
-            if (data.result == true) {
-                var $select = $('#name');
-                $("#name").empty();
-                for (var i = 0, len = data.datum.length; i < len; i++) {
-                    $select.append('<option value="' + data.datum[i].ID + '">' + data.datum[i].name + '</option>');
-                }
-
-                next(data.datum, oob);
-            } else {
-                alert(data.reason);
-            }
-        },
-        error: function(data) {
-            console.log(JSON.stringify(data));
-            alert(JSON.stringify(data));
+    if (node.isfirst == 1) {
+        var tp = node.type;
+        if (node.type == 'CallControl') {
+            tp = "呼叫控制类";
         }
-    });
+        if (node.type == 'NumberChange') {
+            tp = "号码改变类";
+        }
+        if (node.type == 'OutBound') {
+            tp = "外呼类";
+        }
+        if (node.type == 'MultiCall') {
+            tp = "多方通话类";
+        }
+        if (node.type == 'IVR') {
+            tp = "IVR类";
+        }
+        if (node.type == 'QOS') {
+            tp = "QOS类";
+        }
+        if (node.type == 'Message') {
+            tp = "消息类";
+        }
+        $("#tp").val(tp);
+        $("#nodeid").val(node.id);
+
+        $.ajax({
+            type: "get",
+            url: 'http://www.linyimin.club:8001/apis/getApiInfoByType',
+            async: true,
+            dataType: "json",
+            data: { "APIType": tp },
+            crossDomain: true,
+            success: function (data) {
+                if (data.result == true) {
+                    var $select = $('#name');
+                    $("#name").empty();
+                    for (var i = 0, len = data.datum.length; i < len; i++) {
+                        $select.append('<option value="' + data.datum[i].ID + '">' + data.datum[i].name + '</option>');
+                    }
+                    $("#condi").val("");
+                    next(data.datum, oob);
+                } else {
+                    alert(data.reason);
+                }
+            },
+            error: function (data) {
+                console.log(JSON.stringify(data));
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+    else {
+        var blockid = oob.attr('id');
+        $.ajax({
+            type: "get",
+            url: 'http://www.linyimin.club:8001/apis/getAtomApiInfo',
+            async: true,
+            dataType: "json",
+            data: {
+                "moduleId": blockid,
+                "combinationUrl": ""
+            },
+            crossDomain: true,
+            success: function (data) {
+                if (data.result == true) {
+                    $("#nodeid").val(data.datum.module_id);
+                    $("#tp").val(data.datum.type);
+
+                    $.ajax({
+                        type: "get",
+                        url: 'http://www.linyimin.club:8001/apis/getApiInfoByType',
+                        async: true,
+                        dataType: "json",
+                        data: { "APIType": data.datum.type },
+                        crossDomain: true,
+                        success: function (data1) {
+                            if (data1.result == true) {
+                                var $select = $('#name');
+                                $("#name").empty();
+                                for (var i = 0, len = data1.datum.length; i < len; i++) {
+                                    $select.append('<option value="' + data1.datum[i].ID + '">' + data1.datum[i].name + '</option>');
+                                }
+                                for (var j = 0, len1 = data1.datum.length; j < len1; j++) {
+                                    if (data.datum.api_id == data1.datum[j].ID) {
+                                        $("#name").val(data.datum.api_id);
+                                    }
+                                }
+                                next(data1.datum, oob);
+                            } else {
+                                alert(data.reason);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(JSON.stringify(data));
+                            alert(JSON.stringify(data));
+                        }
+                    });
+
+                    $("#idid").val(data.datum.api_id);
+                    $("#inputt").val(data.datum.argument);
+                    $("#output").val(data.datum.response);
+                    $("#url").val(data.datum.URL);
+                    if (data.datum.is_async == "0") {
+                        $("#asn").val("0");
+                    }
+                    if (data.datum.is_async == "1") {
+                        $("#asn").val("1");
+                    }
+                    $("#condi").val(data.datum.condition);
+                } else {
+                    alert(data.reason);
+                }
+            },
+            error: function (data) {
+                console.log(JSON.stringify(data));
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+
 }
 
 function next(data, oob) {
     //alert(111);
-    $(document).ready(function() {
+    $(document).ready(function () {
         var select = document.getElementById('name');
 
-        select.onclick = function() {
+        select.onclick = function () {
             var s_id = $("#name").val();
             var namee = $("#name").find("option:selected").text();
             //alert(s_id);
@@ -147,6 +218,108 @@ function next(data, oob) {
                     oob.children('text').html(namee);
                 }
             }
+            $("#condi").val("");
         }
     });
+}
+
+
+function shownodeattr1(node, oob, url) {
+    var blockid = oob.attr('id');
+    $.ajax({
+        type: "get",
+        url: 'http://www.linyimin.club:8001/apis/getAtomApiInfo',
+        async: true,
+        dataType: "json",
+        data: {
+            "moduleId": blockid,
+            "combinationUrl": url
+        },
+        crossDomain: true,
+        success: function (data) {
+            if (data.result == true) {
+                $("#nodeid").val(data.datum[0].module_id);
+                $("#tp").val(data.datum[0].type);
+
+                $.ajax({
+                    type: "get",
+                    url: 'http://www.linyimin.club:8001/apis/getApiInfoByType',
+                    async: true,
+                    dataType: "json",
+                    data: { "APIType": data.datum[0].type },
+                    crossDomain: true,
+                    success: function (data1) {
+                        if (data1.result == true) {
+                            var $select = $('#name');
+                            $("#name").empty();
+                            for (var i = 0, len = data1.datum.length; i < len; i++) {
+                                $select.append('<option value="' + data1.datum[i].ID + '">' + data1.datum[i].name + '</option>');
+                            }
+                            for (var j = 0, len1 = data1.datum.length; j < len1; j++) {
+                                if (data.datum[0].api_id == data1.datum[j].ID) {
+                                    $("#name").val(data.datum[0].api_id);
+                                }
+                            }
+                            //next(data1.datum, oob);
+                        } else {
+                            alert(data1.reason);
+                        }
+                    },
+                    error: function (data1) {
+                        console.log(JSON.stringify(data1));
+                        alert(JSON.stringify(data1));
+                    }
+                });
+
+                $("#idid").val(data.datum[0].api_id);
+                $("#inputt").val(data.datum[0].argument);
+                $("#output").val(data.datum[0].response);
+                $("#url").val(data.datum[0].URL);
+                if (data.datum[0].is_async == "0") {
+                    $("#asn").val("0");
+                }
+                if (data.datum[0].is_async == "1") {
+                    $("#asn").val("1");
+                }
+                $("#condi").val(data.datum[0].condition);
+
+                // 名称、是否异步、执行条件、保存键改为不可点击
+                $("#name").attr("disabled", true);
+                $("#asn").attr("disabled", true);
+                $("#condi").attr("disabled", true);
+                $("#savebutton").css({ "display": "none" });
+
+            } else {
+                alert(data.reason);
+            }
+        },
+        error: function (data) {
+            console.log(JSON.stringify(data));
+            alert(JSON.stringify(data));
+        }
+    });
+}
+
+
+function isroot(){//判断是否为根节点并隐藏线
+    var Json = SDT.returnTree()[0];
+    function json(jsontree) { //根据id找到相应树节点
+        if ((typeof jsontree == 'object') && (jsontree.constructor == Object.prototype.constructor)) {
+            var arrey = [];
+            arrey.push(jsontree);
+        } else arrey = jsontree;
+        for (var i = 0; i < arrey.length; i++) {
+            var node = arrey[i];
+            if (node.id == "SDTTreeRight") {
+                if (node.childEles.length == 1) {
+                    $("#sdtDropCanvasAll").find("path:last").attr("display","none");
+                }
+                return;
+            }
+            if (node.childEles && node.childEles.length > 0) {
+                json(node.childEles);
+            }
+        }
+    }
+    json(Json);
 }

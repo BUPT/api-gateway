@@ -6,14 +6,15 @@ class UrlModel{
     constructor(db: any){
         this._URL = db.define("url", {
             id: { type: 'serial', key: true },
-            APPId: String,
+            appId: String,
             from: String,
             to: String,
             status: String,
             is_new: String,
             method: String,
             is_atom: String,
-            register_time: String
+            register_time: String,
+            publisher: String
         });
     }
 

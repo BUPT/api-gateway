@@ -13,12 +13,16 @@ import fs = require("fs");
 import {SwaggerFile} from "../util/SwaggerFile";
 import { GeneralResult } from "../general/GeneralResult";
 import rq = require("request-promise");
-import {CombinationUrlService} from "../service/CombinationUrlService";
 import events = require("events");
-import { CombinationUrlPlugin } from "./CombinationUrlPlugin";
+import { CombinationPlugin } from "./CombinationPlugin";
 import { config } from "bluebird";
+import * as path from "path";
+
+import {Request, Response} from "express";
 
 import {CombinationService} from "../service/CombinationService";
+import { ProjectService } from "../service/ProjectService";
+
 class AdminPlugin{
 
     /**
@@ -128,16 +132,15 @@ class AdminPlugin{
         // 设置文件存储路径
         form.uploadDir = config.getPath().swaggerDir;
         // 保留后缀
-        form.keppExtendsions = true;
-        form.maxFieldsSize = 2 * 1024 * 1024;
+        form.keepExtendsions = true;
         form.parse(req, function(err, fields, files){
             if(err){
                 console.log(err.message);
             }else{
                 // 获取文件名
-                let fileName: string = fields.fileName;
+                let fileName: string = files.avatar.name;
                 let file: string = config.getPath().swaggerDir + fileName;
-                fs.renameSync(files.upload.path, file);
+                fs.renameSync(files.avatar.path, file);
                 let yamlParse: YamlParse = new YamlParse();
                 let data: {[key: string]: any}[][] = yamlParse.parse(file);
                 let url: {[key: string]: string}[] = data[0];
@@ -155,8 +158,9 @@ class AdminPlugin{
                         urlService.insert(url);
                         apiInfoService.insert(api_info);
                         // 设置cookie，将fileName的值传给swagger UI的index.html文件使用
-                        res.cookie("fileName", fileName);
-                        res.redirect(config.getPath().swaggerUIURL);
+                        // res.cookie("fileName", fileName);
+                        // res.redirect(config.getPath().swaggerUIURL);
+                        res.json(new GeneralResult(true, null, "通过swagger文件注册API成功").getReturn());
                     }else{
                         res.json((removeUrl.getResult() == true ? removeUrl : removeApiInfo).getReturn());
                     }
@@ -247,6 +251,10 @@ class AdminPlugin{
                     temp.uris = urlResult.getDatum()[i].to;
                     temp.upstreamUrl = urlResult.getDatum()[i].to + temp.interface;
                     temp.time = urlResult.getDatum()[i].register_time;
+                    temp.publisher = urlResult.getDatum()[i].publisher;
+                    temp.appId = urlResult.getDatum()[i].APPId
+                    temp.status = urlResult.getDatum()[i].status;
+                    temp.isAtom = urlResult.getDatum()[i].is_atom;
                     result[i] = temp;
                 }
             }
@@ -254,6 +262,26 @@ class AdminPlugin{
         }else{
             res.json(new GeneralResult(false, "您还没有注册相关API", null).getReturn());
         }
+    }
+
+
+
+    /**
+     * 根据APPId和URL获取API信息
+     * @param req 
+     * @param res 
+     */
+    public async getAPIInfoByAPPIdAndURL(req: Request, res: Response): Promise<void>{
+
+        let appId: string = req.query.appId;
+        let url: string = req.query.url;
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let queryResult: GeneralResult = await apiInfoService.query({"appId": appId, "URL": url});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            res.json(new GeneralResult(true, null, queryResult.getDatum()[0]).getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, "对应的url不存在", null).getReturn());
     }
 
     /**
@@ -280,7 +308,7 @@ class AdminPlugin{
      */
     public async renameServiceName(req, res): Promise<void>{
         let apiInfoService: ApiInfoService = new ApiInfoService();
-        let combinationUrlService: CombinationUrlService = new CombinationUrlService();
+        let combinationService: CombinationService = new CombinationService();
         let url: string = req.query.url;
         let serviceName: string = req.query.serviceName;
 
@@ -289,7 +317,7 @@ class AdminPlugin{
         let registerApp = registerPlugin.getRegisterApp();
         if(registerApp._router && registerApp._router.stack){
             for(let i = 2; i < registerApp._router.stack.length; i++){
-                if(registerApp._router.stack[i].url == url){
+                if(registerApp._router.stack[i].url === url){
                     // 删除原url对应的中间件
                     registerApp._router.stack.splice(i, 1);
                     break;
@@ -297,22 +325,21 @@ class AdminPlugin{
             }
         }
         // 向内存中注册新的url
-        let combinationUrlPlugin: CombinationUrlPlugin = new CombinationUrlPlugin();
-        registerApp.use(serviceName, combinationUrlPlugin.combinationService);
+        let combinationPlugin: CombinationPlugin = new CombinationPlugin();
+        registerApp.use(serviceName, combinationPlugin.combinationService);
 
         // 更新数据库
-        //将URL转换成小驼峰类型的文件名
+        //将URL转换成小驼峰类型
         let adminPlugin: AdminPlugin = new AdminPlugin();
-        let config: Config = new Config();
-        let originName = adminPlugin.urlToUppercase(url);
         let fileName = adminPlugin.urlToUppercase(serviceName);
-        // 更改流程文件的名称
-        let dir: string = config.getPath().combinationFileDir;
-        fs.renameSync(dir + originName + ".json", dir + fileName + ".json");
         // 更新数据库
         let updateResult: GeneralResult = await apiInfoService.update({URL: url}, fileName, serviceName);
-        let updataCombinnationResult: GeneralResult = await combinationUrlService.update({url: url}, serviceName);
-        res.json(updateResult.getReturn());
+        let data:{[key: string]: string} = {
+            combination_url: serviceName,
+            flow: ""
+        };
+        let updataCombinnationResult: GeneralResult = await combinationService.updateSelective({combination_url: url}, data);
+        res.json(updataCombinnationResult.getReturn());
     }
 
     /**
@@ -351,14 +378,17 @@ class AdminPlugin{
      * @param res 
      */
     public async debugAPI(req, res){
-        let eventEmitter = new events.EventEmitter();
         let url: string = req.query.url;
         let config: Config = new Config();
         // 获取组合API的原子API ID
         let combinationService: CombinationService = new CombinationService();
         let result: GeneralResult = await combinationService.query({combination_url: url});
-        if(result.getResult() == false || result.getDatum().length == 0){
+        if(result.getResult() == false){
             res.json(result.getReturn());
+            return;
+        }
+        if(! result.getDatum() || result.getDatum().length === 0){
+            res.json(new GeneralResult(false, `测试的组合API${url}不存在`, null));
             return;
         }
         // 保存所有的原子API
@@ -366,7 +396,6 @@ class AdminPlugin{
         for(let i =0; i < result.getDatum().lenth; i++){
             urls[i] = result.getDatum()[i].URL;
         }
-        
         // 保存测试结果
         let data: Map<string, any> = new Map();
         let adminPlugin: AdminPlugin = new AdminPlugin();
@@ -424,6 +453,172 @@ class AdminPlugin{
         }
         data.set("flag", flag);
         return data;
+    }
+
+
+    /**
+     * 添加一个项目
+     * @param req 
+     * @param res 
+     */
+    public async addProject(req: Request, res: Response): Promise<void>{
+        let form = new formidable.IncomingForm();
+        form.multiples = true;
+        form.uploadDir = path.join(__dirname, "../../views/img/");
+        form.keepExtensions = true;
+        //TODO: 判断添加是否成功，如果添加失败，则删除已经上传的图片
+        form.parse(req, async function(err, fields, files){
+            let projectName: string = fields.projectName;
+            let projectDescription: string = fields.projectDescription;
+            let publisher: string = fields.publisher;
+            let imgPath: string = files.avatar.path;
+            console.log(files);
+            let imgName: string = imgPath.split("/")[imgPath.split("/").length-1];
+            let projectService: ProjectService = new ProjectService();
+            let queryResult: GeneralResult = await projectService.query({"name": projectName, "publisher": publisher});
+            if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+                res.json(new GeneralResult(false, "项目名称已经存在", null).getReturn());
+                return;
+            }
+            let projectInfo: {[key: string]: any} = {
+                "name": projectName,
+                "description": projectDescription,
+                "publisher": publisher,
+                "create_time": new Date().toLocaleString(),
+                "img": imgName
+            }
+            projectService.insert([projectInfo]);
+            res.json(new GeneralResult(true, null, `${projectName}添加成功`).getReturn());
+        });
+        
+    }
+
+
+    /**
+     * 编辑项目信息
+     * @param req 
+     * @param res 
+     */
+
+    public async editProject(req: Request, res: Response): Promise<void>{
+
+        let form = new formidable.IncomingForm();
+        form.multiples = true;
+        form.uploadDir = path.join(__dirname, "../../views/img/");
+        form.keepExtensions = true;
+        form.parse(req, async function(err, fields, files){
+            let oldProjectName: string = fields.oldProjectName;
+            let newProjectName: string = fields.newProjectName || "";
+            let projectDescription: string = fields.projectDescription || "";
+            let publisher: string = fields.publisher;
+            let imgPath: string = files.avatar.path;
+            let imgName: string = (imgPath === "") ? "" : imgPath.split("/")[imgPath.split("/").length-1];
+            let projectService: ProjectService = new ProjectService();
+            // 重新命名的项目名称已经存在
+            let newResult: GeneralResult = await projectService.query({ "name": newProjectName, "publisher": publisher });
+            if (newResult.getResult() === true && newResult.getDatum().length > 0){
+                res.json(new GeneralResult(false, `${newProjectName}对应的项目已经存在，请重新输入`, null).getReturn());
+                return;
+            }
+            let queryResult: GeneralResult = await projectService.query({"name": oldProjectName, "publisher": publisher});
+            if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+                let data: {[key: string]: any} = {
+                    "name": newProjectName,
+                    "description": projectDescription,
+                    "publisher": "",
+                    "create_time": "",
+                    "img": imgName
+                }
+                let condition: {[key: string]:any} = {
+                    "name": oldProjectName,
+                    "publisher": publisher
+                }
+                projectService.updateSelective(data, condition);
+                res.json(new GeneralResult(true, null, `${oldProjectName}编辑成功`).getReturn());
+                return;
+            }
+            res.json(new GeneralResult(false, `${oldProjectName}对应的项目不存在，无法进行更改`,null).getReturn());
+            
+            });
+    }
+
+    /**
+     * 删除一个项目
+     * @param req 
+     * @param res 
+     */
+    public async deleteProject(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName;
+        let publisher: string = req.query.publisher;
+        let projectService: ProjectService = new ProjectService();
+        let queryResult: GeneralResult =await projectService.query({"name": projectName, "publisher": publisher});
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            projectService.remove({ "name": projectName, "publisher": publisher });
+            res.json(new GeneralResult(true, null, `${projectName}项目删除成功`).getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, `项目${projectName}不存在`, null).getReturn());
+    }
+
+
+    /**
+     * 查询项目信息
+     * @param req 
+     * @param res 
+     */
+    public async queryProject(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName || "";
+        let projectService: ProjectService = new ProjectService();
+        let queryResult: GeneralResult;
+        if(projectName === ""){
+            queryResult = await projectService.query({});
+        }else{
+            queryResult = await projectService.query({"name": projectName});
+        }
+        if(queryResult.getResult() === true && queryResult.getDatum().length > 0){
+            res.json(queryResult.getReturn());
+            return;
+        }
+        res.json(new GeneralResult(false, `项目${projectName}不存在`, null).getReturn());
+    }
+
+
+    /**
+     * 根据项目名称查找API信息
+     * @param req 
+     * @param res 
+     */
+    public async queryAPIByProjectName(req: Request, res: Response): Promise<void>{
+        let projectName: string = req.query.projectName;
+        let urlService: UrlService = new UrlService();
+        let apiInfoService: ApiInfoService = new ApiInfoService();
+        let config: Config = new Config();
+        let result: {[key: string]: string}[] = [];
+        // 获取url表中的所有信息
+        let urlResult: GeneralResult = await urlService.query({"APPId": projectName});
+        if(urlResult.getResult() === true && urlResult.getDatum().length > 0){
+            for(let i = 0; i < urlResult.getDatum().length; i++){
+                let temp: { [key: string]: string } = {};
+                let apiInfoResult: GeneralResult = await apiInfoService.query({URL: urlResult.getDatum()[i].from});
+                if(apiInfoResult.getResult() === true && apiInfoResult.getDatum().length > 0){
+                    temp.method = urlResult.getDatum()[i].method;
+                    temp.name = apiInfoResult.getDatum()[0].name;
+                    temp.host = config .getApiServer().host;
+                    temp.interface = urlResult.getDatum()[i].from;
+                    temp.uris = urlResult.getDatum()[i].to;
+                    temp.upstreamUrl = urlResult.getDatum()[i].to + temp.interface;
+                    temp.time = urlResult.getDatum()[i].register_time;
+                    temp.publisher = urlResult.getDatum()[i].publisher;
+                    temp.appId = urlResult.getDatum()[i].APPId
+                    temp.status = urlResult.getDatum()[i].status;
+                    temp.isAtom = urlResult.getDatum()[i].is_atom;
+                    result[i] = temp;
+                }
+            }
+            res.json(new GeneralResult(true, "", result).getReturn());
+        }else{
+            res.json(new GeneralResult(false, "您还没有注册相关项目", null).getReturn());
+        }
     }
 }
 export{AdminPlugin};

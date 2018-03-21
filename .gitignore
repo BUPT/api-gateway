@@ -64,3 +64,9 @@ typings/
 .idea
 
 req
+
+sftp.json
+
+views
+test
+.vscode
