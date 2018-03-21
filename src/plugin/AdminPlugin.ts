@@ -403,14 +403,8 @@ class AdminPlugin{
         let host: string = config.getApiServer().host + ":" + config.getApiServer().port;
         // 测试复合API的URL
         if(data.get("flag") == true){
-            let result: boolean = await adminPlugin._request(host + url);
-            if(result == true){
-                data.set(url, "suceess");
-                res.json(new GeneralResult(true, null, adminPlugin._mapToObject(data)).getReturn());
-            }else{
-                data.set(url, "fail");
-                res.json(new GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
-            }
+            data.set(url, "suceess");
+            res.json(new GeneralResult(true, null, adminPlugin._mapToObject(data)).getReturn());
         }else{
             data.set(url, "fail");
             res.json(new GeneralResult(false, null, adminPlugin._mapToObject(data)).getReturn());
@@ -452,7 +446,15 @@ class AdminPlugin{
         //     }
         // }
         let urlService: UrlService = new UrlService();
-        let queryResult: GeneralResult = await urlService.query({from: urls})
+        let queryResult: GeneralResult = await urlService.query({from: urls});
+        for(let i = 0; i < queryResult.getDatum().length; i++){
+            if(queryResult.getDatum()[i].status === '0'){
+                data.set(queryResult.getDatum()[i].from, true);
+            }else{
+                flag = false;
+                data.set(queryResult.getDatum()[i].from, false);                
+            }
+        }
         data.set("flag", flag);
         return data;
     }
