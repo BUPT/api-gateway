@@ -25,7 +25,7 @@ class ApiInfoModel {
         this._apiInfo = value;
     }
     // 查找数据
-    public async query(data: { [key: string]: string }, callback: (err: Error, results: { [key: string]: string }[]) => void): Promise<void>{
+    public async query(data: { [key: string]: string | string[] }, callback: (err: Error, results: { [key: string]: string }[]) => void): Promise<void>{
         this._apiInfo.find(data, callback);
     }
     // 插入多条数据
