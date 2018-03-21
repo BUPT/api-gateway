@@ -409,6 +409,8 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
         $scope.fullScreen = function () {//全屏显示
             var obj = document.getElementById("navnav");
             obj.style.cssText = "margin-bottom:30px;background-color: #f7f3d8;";
+            var foot = document.getElementById('foot');
+            foot.style.cssText = "text-align:center;background-color: #f7f3d8;position: absolute; bottom:0;";
             var docElm = document.documentElement;
             if (docElm.requestFullscreen) {
                 docElm.requestFullscreen();
@@ -428,6 +430,8 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
         $scope.exitScreen = function () {//退出全屏
             var obj = document.getElementById("navnav");
             obj.style.cssText = "background-color: #f7f3d8;";
+            var foot = document.getElementById('foot');
+            foot.style.cssText = "text-align:center;background-color: #f7f3d8;bottom:0;";
             if (document.exitFullscreen) {
                 document.exitFullscreen();
             }
