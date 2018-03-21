@@ -383,7 +383,7 @@ class AdminPlugin{
         // 获取组合API的原子API ID
         let combinationService: CombinationService = new CombinationService();
         let result: GeneralResult = await combinationService.query({combination_url: url});
-        if(result.getResult() == false){
+        if(result.getResult() === false){
             res.json(result.getReturn());
             return;
         }
@@ -393,7 +393,7 @@ class AdminPlugin{
         }
         // 保存所有的原子API
         let urls: string[] = [];
-        for(let i =0; i < result.getDatum().lenth; i++){
+        for(let i =0; i < result.getDatum().length; i++){
             urls[i] = result.getDatum()[i].URL;
         }
         // 保存测试结果
