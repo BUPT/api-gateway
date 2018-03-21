@@ -42,7 +42,7 @@ class UserListService{
      * 查询数据
      * @param data 查询条件
      */
-    public query(data: {[key: string]: string}): Promise<GeneralResult>{
+    public query(data: {[key: string]: string | string[]}): Promise<GeneralResult>{
         let _this = this;
         return new Promise<GeneralResult>(function(resolve){
             _this._db.then(function(db){

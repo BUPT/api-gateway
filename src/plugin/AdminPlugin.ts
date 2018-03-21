@@ -440,17 +440,19 @@ class AdminPlugin{
         // flag为true表示所有原子API都可用
         let flag: boolean = true;
         let data: Map<string, any> = new Map();
-        let config: Config = new Config();
-        let host: string = config.getApiServer().host + ":" + config.getApiServer().port;
-        for (let i = 0; i < urls.length; i++) {
-            let result: boolean = await this._request(host + urls[i]);
-            if (result !== true) {
-                flag = false;
-                data.set(urls[i], "fail");
-            } else {
-                data.set(urls[i], "suceess");
-            }
-        }
+        // let config: Config = new Config();
+        // let host: string = config.getApiServer().host + ":" + config.getApiServer().port;
+        // for (let i = 0; i < urls.length; i++) {
+        //     let result: boolean = await this._request(host + urls[i]);
+        //     if (result !== true) {
+        //         flag = false;
+        //         data.set(urls[i], "fail");
+        //     } else {
+        //         data.set(urls[i], "suceess");
+        //     }
+        // }
+        let urlService: UrlService = new UrlService();
+        let queryResult: GeneralResult = await urlService.query({from: urls})
         data.set("flag", flag);
         return data;
     }

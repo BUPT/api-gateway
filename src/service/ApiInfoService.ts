@@ -70,7 +70,7 @@ class ApiInfoService{
      * 查询数据
      * @param data 
      */
-    public async query(data: {[key: string]: string}): Promise<GeneralResult>{
+    public async query(data: {[key: string]: string | string[]}): Promise<GeneralResult>{
         // 上下文传递
         let _this = this;
         return new Promise<GeneralResult>(function(resolve){
