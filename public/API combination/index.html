@@ -40,7 +40,7 @@
     </style>
 </head>
 
-<body ng-controller="StartCtrl" style="width:100%;height:100%">
+<body ng-controller="StartCtrl" style="width:100%;min-height:100vh">
     <!-- 导航栏 -->
     <nav class="navbar navbar-default" role="navigation" id="navnav" style="background-color: #f7f3d8;">
         <div class="navbar-left" style="margin-left:10px;width:200px;">
@@ -48,9 +48,10 @@
                 <tr>
                     <td>
                         <img src="img/chinamobile.png" alt="logo" height="80px;">
-                        
+
                     </td>
-                    <td align="center">中国移动<br/>网络能力开放平台</td>
+                    <td align="center">中国移动
+                        <br/>网络能力开放平台</td>
                 </tr>
             </table>
         </div>
@@ -389,7 +390,8 @@
 
     <!-- 正文 -->
     <h1 align="center" style="font-size:25px;font-family:Comic Sans MS;margin-bottom:-5px; color: #818a17;" ng-bind="title"></h1>
-    <br/><br/>
+    <br/>
+    <br/>
     <div class="container">
         <div class="row">
             <div class="col-md-9" style="position: relative; ">
@@ -605,21 +607,21 @@
     </div>
 
     <br/>
-    <div style="text-align:center;background-color: #f7f3d8; bottom:0;" >
-            <table style="width:100%;table-layout: fixed;">
-                    <tr>
-                        <td align="center">&nbsp;</td>
-                        <td align="center">
-                            <span style="font-family:arial;">Copyright &copy; 2018 PCN&amp;CAD, BUPT. All rights reserved.</span>               
-                        </td>
-                        <td align="right" >
-                            <img src="img/bupt.png" alt="bupt" height="85px;" style="margin-right:20px;">
-                        </td>
-                    </tr>
-                </table>
-        
+    <div style="text-align:center;background-color: #f7f3d8;bottom:0;" id="foot">
+        <table style="width:100%;table-layout: fixed;">
+            <tr>
+                <td align="center">&nbsp;</td>
+                <td align="center">
+                    <span style="font-family:arial;">Copyright &copy; 2018 PCN&amp;CAD, BUPT. All rights reserved.</span>
+                </td>
+                <td align="right">
+                    <img src="img/bupt.png" alt="bupt" height="85px;" style="margin-right:20px;">
+                </td>
+            </tr>
+        </table>
+
     </div>
-    
+
 
 </body>
 
