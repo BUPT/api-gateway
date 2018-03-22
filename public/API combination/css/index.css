@@ -103,7 +103,7 @@ main {
     margin-top: 10px;
 }
 
-#jsontext {
+#jsontext,#debuginformation {
     height: 600px;
     overflow-x: auto;
     overflow: auto;
