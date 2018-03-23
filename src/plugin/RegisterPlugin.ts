@@ -3,7 +3,6 @@ import proxy = require("express-http-proxy");
 import {PerformanceMonitorPlugin} from "./PerformanceMonitorPlugin"
 import { request } from "https";
 import { print } from "util";
-import {CombinationUrlService} from "../service/CombinationUrlService";
 import { ApiInfoService } from "../service/ApiInfoService";
 import { GeneralResult } from "../general/GeneralResult";
 import {AdminPlugin} from "../plugin/AdminPlugin";
@@ -149,7 +148,7 @@ class RegisterPlugin{
             RegisterPlugin.addSingleAPIToMemory(url);
 
             // 数据持久化存储
-            urlService.updateSelectiveByAPPIdAndFrom(url);
+            urlService.updateSelectiveByAppIdAndFrom(url);
             apiInfoService.updateSelectiveByAppIdAndURL(apiInfo);
             res.json(new GeneralResult(true, null, "更新成功").getReturn());
             return;
@@ -197,7 +196,7 @@ class RegisterPlugin{
             "URL": from,
             "status": "1"
         } 
-        urlService.updateSelectiveByAPPIdAndFrom(url);
+        urlService.updateSelectiveByAppIdAndFrom(url);
         apiInfoService.updateSelectiveByAppIdAndURL(apiInfo);
         res.json(new GeneralResult(true, null, "注销成功").getReturn());
     }
@@ -264,7 +263,7 @@ class RegisterPlugin{
             urlResult.getDatum()[0].status = "0";
             RegisterPlugin.addSingleAPIToMemory(urlResult.getDatum()[0]);
             // 持久化存储
-            urlService.updateSelectiveByAPPIdAndFrom(urlResult.getDatum()[0]);
+            urlService.updateSelectiveByAppIdAndFrom(urlResult.getDatum()[0]);
             let apiInfoResult: GeneralResult = await apiInfoService.query({"appId": APPId, "URL": from});
             apiInfoResult.getDatum()[0].status = "0";
             apiInfoService.updateSelectiveByAppIdAndURL(apiInfoResult.getDatum()[0]);
