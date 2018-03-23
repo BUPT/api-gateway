@@ -174,8 +174,10 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                             }, // 传递数据作为字符串，从前台传到后台  
                         }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
                             if (data.result == true) {
-                                alert("成功");
-                                $scope.debuginformation = data.result;
+                               // alert("成功");
+                                $scope.closeThisDialog(); //关闭弹窗
+                                document.getElementById("debuginformation").innerHTML= JSON.stringify(data.datum,null, 2);
+                                //$scope.debuginformation = data.result;
                                 $('#myTab li:eq(2) a').tab('show');
                             }
                             else {
