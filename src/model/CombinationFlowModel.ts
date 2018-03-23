@@ -33,8 +33,8 @@ class CombinationFlowModel {
     }
 
     // 更改数据
-    public async update(condition: { [key: string]: string }, data: string, eachCallback: (combination: { [key: string]: string }) => void, saveCallback: (err: Error) => void): Promise<void> {
-        this._combinationFlow.find(condition).each(eachCallback).save(saveCallback);
+    public async update(condition: { [key: string]: string }, data: { [key: string]: string }, callback: (err:Error, data: any) => void): Promise<void>{
+        this._combinationFlow.find(condition, callback);
     }
 }
 
