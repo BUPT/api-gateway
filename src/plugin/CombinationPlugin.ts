@@ -163,9 +163,7 @@ class CombinationPlugin{
         // 找到原子API所属的项目或第三方
         let temp: GeneralResult = await apiInfoService.query({URL: atomApiInfo[0].URL});
         let appId: string = temp.getDatum()[0].appId;
-        // 持久化存储后清空临时存储
-        atomApiInfo = [];
-
+        
 
         let apiInfo: {[key: string]: string} = {};
         let url: {[key: string]: string} = {};
@@ -174,31 +172,44 @@ class CombinationPlugin{
         apiInfo.appId = appId;
         apiInfo.name = req.query.name;
         apiInfo.argument = req.query.argument;
-        apiInfo.response = req.query.response;
+        apiInfo.event = req.query.response;
         apiInfo.URL = combinationUrl;
         apiInfo.type = "组合";
-
-        apiInfoService.insert([apiInfo]);
-
         let config: Config = new Config();
-        url.APPId = appId;
+        url.appId = appId;
         url.from = combinationUrl;
         url.to = config.getApiServer().host + ":" + config.getApiServer().port;
         // TODO: 先检测之后在再确定status的值
-        // TODO: 添加访问方法类型
-        url.status = "0";
+				// TODO: 添加访问方法类型
+				url.status = "0";
+				let urlResult: GeneralResult = await urlService.query({from: atomApiInfo.map((value, index) => value.URL)});
+				if(urlResult.getResult() === true && urlResult.getDatum().length > 0){
+					for(let i = 0; i < urlResult.getDatum().length; i++){
+						if(urlResult.getDatum()[i].status === "1"){
+							url.status = "1";
+							break;
+						}
+					}
+				}
         url.is_new = "1";
-        url.method = "get";
+        url.method = req.query.method || "get";
         url.is_atom = "0";
         url.register_time = new Date().toLocaleString();
+				apiInfo.status = url.status;
+				urlService.insert([url]);
+				apiInfoService.insert([apiInfo]);
+				
+				// 持久化存储后清空临时存储
+        atomApiInfo = [];
 
-        urlService.insert([url]);
 
         combinationFlow.combination_url = combinationUrl;
         combinationFlow.flow = flow;
 
 
-        combinationFlowService.insert([combinationFlow]);
+				combinationFlowService.insert([combinationFlow]);
+				
+
 
         // 注册
         let registerPlugin: RegisterPlugin = new RegisterPlugin();

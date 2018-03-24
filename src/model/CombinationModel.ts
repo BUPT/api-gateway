@@ -27,7 +27,7 @@ class CombinationModel {
         this._combination = value;
     }
     // 查找数据
-    public async query(data: { [key: string]: string }, callback: (err: Error, results: { [key: string]: string }[]) => void): Promise<void>{
+    public async query(data: { [key: string]: string | string[]}, callback: (err: Error, results: { [key: string]: string }[]) => void): Promise<void>{
         this._combination.find(data, callback);
     }
     // 插入多条数据
@@ -41,8 +41,8 @@ class CombinationModel {
     }
 
     // 更改数据
-    public async update(condition: { [key: string]: string }, data: string, eachCallback: (combination: {[key: string]: string}) => void, saveCallback: (err: Error) => void): Promise<void> {
-        this._combination.find(condition).each(eachCallback).save(saveCallback);
+    public async update(condition: { [key: string]: string }, data: { [key: string]: string }, callback: (err:Error, data: any) => void): Promise<void>{
+        this._combination.find(condition, callback);
     }
 }
 

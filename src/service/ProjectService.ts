@@ -71,7 +71,7 @@ class ProjectService {
      * 查询url表中的信息
      * @param data 
      */
-    public async query(data: { [key: string]: string }): Promise<GeneralResult> {
+    public async query(data: { [key: string]: string | string[]}): Promise<GeneralResult> {
         // 传递上下文
         let _this = this;
         return new Promise<GeneralResult>(function (resolve) {

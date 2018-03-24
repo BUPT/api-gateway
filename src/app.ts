@@ -1,9 +1,9 @@
 import express = require("express");
-import {Timing} from "./util/Timing"
-import {AdminRouter} from "./router/AdminRouter";
-import {RegisterPlugin} from "./plugin/RegisterPlugin";
-import {Router} from "./router/Router"
-import { SwaggerFile} from "./util/SwaggerFile";
+import { Timing } from "./util/Timing"
+import { AdminRouter } from "./router/AdminRouter";
+import { RegisterPlugin } from "./plugin/RegisterPlugin";
+import { Router } from "./router/Router"
+import { SwaggerFile } from "./util/SwaggerFile";
 import * as http from 'http';
 let router = new AdminRouter().getRouter();
 let registerPlugin: RegisterPlugin = new RegisterPlugin();
@@ -21,24 +21,23 @@ new Timing().initTiming();
 
 
 let adminApp = express();
-adminApp.use("/",router);
+adminApp.use("/", router);
 adminApp.listen(8001);
-let wcy_router:Router = new Router();
+let wcy_router: Router = new Router();
 http.createServer(
-    function (request, response)
-       {
-            response.writeHead(200, {
-         "Content-Type": "text/html;charset=utf-8"
-         });
-         
-         wcy_router.handleRequest(request,response,http);
-  
-     }   
- 
+    function (request, response) {
+        response.writeHead(200, {
+            "Content-Type": "text/html;charset=utf-8"
+        });
+
+        wcy_router.handleRequest(request, response, http);
+
+    }
+
 ).listen(8002);
 
-process.on("uncaughtException", function(err){
+process.on("uncaughtException", function (err) {
     console.log(err);
-})
+});
 
 
