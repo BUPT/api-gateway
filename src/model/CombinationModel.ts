@@ -1,3 +1,16 @@
+export interface AtomApiInfo {
+	module_id: string,
+	type: string,
+	name: string,
+	api_id: string,
+	argument: string,
+	response: string,
+	URL: string,
+	is_async: string,
+	condition: string,
+	combination_url: string
+
+}
 /**
  * 定义combiantion表的模型
  */
@@ -31,7 +44,7 @@ class CombinationModel {
         this._combination.find(data, callback);
     }
     // 插入多条数据
-    public async insert(data: { [key: string]: string }[], callback: (err: Error) => void): Promise<void> {
+    public async insert(data: AtomApiInfo[], callback: (err: Error) => void): Promise<void> {
         this._combination.create(data, callback);
     }
 

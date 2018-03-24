@@ -1,5 +1,5 @@
 import { DBConnect } from "../util/DBConnect";
-import { CombinationModel } from "../model/CombinationModel";
+import { CombinationModel, AtomApiInfo } from "../model/CombinationModel";
 import { GeneralResult } from "../general/GeneralResult";
 import { getLogger } from "../util/logger";
 import { Logger } from "_log4js@2.5.3@log4js";
@@ -10,7 +10,7 @@ class CombinationService {
 	private _db: any = new DBConnect().getDB();
 
 	// 插入数据
-	public async insert(data: { [key: string]: string }[]): Promise<GeneralResult> {
+	public async insert(data: AtomApiInfo[]): Promise<GeneralResult> {
 		// 传递上下文
 		let _this = this;
 		return new Promise<GeneralResult>(function (resolve) {
@@ -97,7 +97,7 @@ class CombinationService {
 	 * @param condition 
 	 * @param data 
 	 */
-	public async update(condition: { [key: string]: string }, data: { [key: string]: string }[]): Promise<GeneralResult> {
+	public async update(condition: { [key: string]: string }, data: AtomApiInfo[]): Promise<GeneralResult> {
 		//先删除相关信息
 		let removeResult: GeneralResult = await this.remove(condition);
 		// 在插入相关信息
