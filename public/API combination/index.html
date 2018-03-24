@@ -37,6 +37,34 @@
         .upup {
             margin-top: -130px;
         }
+        @media screen and (min-width:1024px) and (max-width:1440px) {
+        #container{
+            margin-left: 160px;
+        }
+       }
+       @media screen and (min-width:2000px) and (max-width:2560px) {
+        #container{
+            margin-left: 25%;
+            margin-top: -10px;
+        }
+        h1{
+            margin-top: 3%;
+        }
+        #foot{
+            position: absolute;
+        }
+       }
+       @media screen and (min-width:2570px) and (max-width:3400px) {
+        #container{
+            margin-top: -10px;
+        }
+        h1{
+            margin-top: 3%;
+        }
+        #foot{
+            position: absolute;
+        }
+       }
     </style>
 </head>
 
@@ -392,7 +420,7 @@
     <h1 align="center" style="font-size:25px;font-family:Comic Sans MS;margin-bottom:-5px; color: #818a17;" ng-bind="title"></h1>
     <br/>
     <br/>
-    <div class="container">
+    <div class="container" id="container">
         <div class="row">
             <div class="col-md-9" style="position: relative; ">
                 <div class="left">
