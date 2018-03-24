@@ -8,21 +8,9 @@ import { RegisterPlugin } from "./RegisterPlugin";
 import rq = require("request-promise");
 
 import events = require("events");
+import { AtomApiInfo } from "../model/CombinationModel";
 let eventEmitter = new events.EventEmitter();
 
-interface AtomApiInfo {
-	module_id: string,
-	type: string,
-	name: string,
-	api_id: string,
-	argument: string,
-	response: string,
-	URL: string,
-	is_async: string,
-	condition: string,
-	combination_url: string
-
-}
 
 let atomApiInfo: AtomApiInfo[] = [];
 let count: number = 0;
@@ -110,7 +98,7 @@ class CombinationPlugin {
 				return;
 			}
 		}
-		let temp: { [key: string]: string } = {};
+		let temp: AtomApiInfo;
 		temp.module_id = req.query.moduleId || "";
 		temp.type = req.query.type || "";
 		temp.name = req.query.name || "";
@@ -270,6 +258,11 @@ class CombinationPlugin {
 			return;
 		}
 		res.json(new GeneralResult(false, `组合API${combinationUrl}不存在`, null).getReturn());
+	}
+
+
+	public notify(req, res){
+		
 	}
 	/**
 	 * 事件发布

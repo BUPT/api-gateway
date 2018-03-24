@@ -809,6 +809,10 @@ class AdminRouter{
         this._router.get("/apis/getCombinationAPIFlow", combinationPlugin.getCombinationAPIFlow);
 
 
+        // 语音平台回调通知地址
+        this._router.post("/voicePlatform/notify", combinationPlugin.notify)
+
+
 
         /**
          * @swagger
