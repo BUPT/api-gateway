@@ -738,6 +738,11 @@ class AdminRouter{
          *           description: 组合API对应的url
          *           required: true
          *           type: string
+         *         - name: method
+         *           in: query
+         *           description: 组合API的请求方法
+         *           required: false
+         *           type: string
          *         - name: name
          *           in: query
          *           description: 组合API对应的名称
