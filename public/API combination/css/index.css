@@ -123,7 +123,8 @@ main {
     background-color: #fbf8ee;
 }
 body{
-    background: url("../img/BG-grain.png");
+    background: url("../img/beijing.jpeg");
+    background-repeat: no-repeat;
     min-height: 100vh;
     background-color: #fbf8ee;
 }
@@ -184,7 +185,7 @@ label{
  }
  .container{
      margin-top: -65px;
-     margin-left: 160px;
+     /* margin-left: 160px; */
 }
 .col-md-9{
     margin-top: 20px;

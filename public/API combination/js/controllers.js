@@ -140,7 +140,8 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                                 "argument": $scope.r_input,
                                 "response": $scope.r_output,
                                 "combinationUrl": $scope.r_url,
-                                "flowJson": JSON.stringify(SDT.returnTree()[0], null, 2)
+                                "flowJson": JSON.stringify(SDT.returnTree()[0], null, 2),
+                                "method":$("#methods option:selected").val()
                             }, // 传递数据作为字符串，从前台传到后台  
                         }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
                             if (data.result == true) {
@@ -272,7 +273,7 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
                                 }).success(function (data, status, headers, config) { //这里的data，就是后台传递过来的数据jsonArray  
                                     if (data.result == true) {
                                         alert("修改成功！");
-                                        $($event.target).parent().parent().children('td').eq(1).children('input').val(data.datum[0].combination_url);
+                                        $($event.target).parent().parent().children('td').eq(1).children('input').val(newname);
                                         $($event.target).parent().parent().children('td').eq(1).children('input').attr("disabled", "disabled");
                                     }
                                     else {
