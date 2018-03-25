@@ -778,8 +778,6 @@ class AdminRouter{
 
 
 
-        this._router.get("/call", combinationPlugin.publish);
-
 
         /**
          * @swagger
