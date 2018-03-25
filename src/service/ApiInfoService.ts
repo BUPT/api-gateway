@@ -252,7 +252,6 @@ class ApiInfoService {
 			await this.remove({ "appId": apiInfo.appId, "URL": apiInfo.URL });
 			if (apiInfo.ID === "") {
 				apiInfo.ID = queryResult.getDatum()[0].ID;
-				console.log(apiInfo.ID);
 			}
 			if (apiInfo.name === "") {
 				apiInfo.name = queryResult.getDatum()[0].name;
