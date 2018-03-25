@@ -738,6 +738,11 @@ class AdminRouter{
          *           description: 组合API对应的url
          *           required: true
          *           type: string
+         *         - name: method
+         *           in: query
+         *           description: 组合API的请求方法
+         *           required: false
+         *           type: string
          *         - name: name
          *           in: query
          *           description: 组合API对应的名称
@@ -773,8 +778,6 @@ class AdminRouter{
 
 
 
-        this._router.get("/call", combinationPlugin.publish);
-
 
         /**
          * @swagger
@@ -802,6 +805,39 @@ class AdminRouter{
          *           description:OK
          */
         this._router.get("/apis/getCombinationAPIFlow", combinationPlugin.getCombinationAPIFlow);
+
+        /**
+         * @swagger
+         * /voicePlatform/notify:
+         *   post:
+         *       description: 语音平台通知API网关相关事件发生的地址
+         *       deprecated: false
+         *       tags:
+         *           - "事件通知"
+         *       consumes:
+         *           - application/json
+         *       parameters:
+         *         - in: body
+         *           name: NotifyEvent
+         *           description: 通知网关发生事件的相关参数
+         *           schema:
+         *             type: object
+         *             properties:
+         *               callEvent:
+         *                 type: object
+         *                 required:
+         *                   - notifyEvent
+         *                 properties:
+         *                   event: 
+         *                     type: string
+         * 
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.post("/voicePlatform/notify", combinationPlugin.notify)
 
 
 

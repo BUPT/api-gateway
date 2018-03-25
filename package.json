@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/lym152898/API-Gateway-v3#readme",
   "devDependencies": {
+    "@types/body-parser": "^1.16.8",
     "@types/log4js": "^2.3.5",
     "@types/node": "^8.0.51",
     "basic-auth": "^2.0.0",
@@ -39,6 +40,7 @@
     "@types/request-promise": "^4.1.39",
     "async": "^2.6.0",
     "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
     "debug": "^3.1.0",
     "enforce": "^0.1.7",
     "express": "^4.16.2",
