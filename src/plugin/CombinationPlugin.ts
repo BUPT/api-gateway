@@ -6,11 +6,14 @@ import { UrlService } from "../service/UrlService";
 import { Config } from "../config/config";
 import { RegisterPlugin } from "./RegisterPlugin";
 import rq = require("request-promise");
-
 import events = require("events");
 import { AtomApiInfo } from "../model/CombinationModel";
-let eventEmitter = new events.EventEmitter();
+import {Event} from "../event/Event";
 
+
+
+let eventEmitter = new events.EventEmitter();
+const event: Event = Event.getEvent();
 
 let atomApiInfo: AtomApiInfo[] = [];
 let count: number = 0;
@@ -51,7 +54,7 @@ function run(node: { [key: string]: any }) {
 							value = condition[j].split("=")[1];
 							if (key === "statusCode")
 								continue;
-							if (response[key] && response[key] != value) {
+							if (response[key] && response[key] !== value) {
 								flag = false;
 								break;
 							}
@@ -62,7 +65,7 @@ function run(node: { [key: string]: any }) {
 					}
 					// 异步的情况
 					if (children[i].asntype == "1") {
-						eventEmitter.on(children[i].condition, function () {
+						event.on(children[i].condition, function () {
 							run(children[i]);
 						});
 					}
@@ -262,17 +265,12 @@ class CombinationPlugin {
 
 
 	public notify(req, res){
-		
+		let notifyEvent = req.body.callEvent;
+		event.emit(notifyEvent.event);
+		res.statusCode = 200;
+		res.end();
 	}
-	/**
-	 * 事件发布
-	 * @param req 
-	 * @param res 
-	 */
-	public publish(req, res) {
-		eventEmitter.emit(req.query.event);
-		res.json({ data: "发布事件" });
-	}
+	
 }
 
 export { CombinationPlugin };
