@@ -111,7 +111,8 @@ class CombinationPlugin {
 			URL: "",
 			is_async: "",
 			condition: "",
-			combination_url: ""
+			combination_url: "",
+			method: ""
 		};
 		temp.module_id = req.query.moduleId || "";
 		temp.type = req.query.type || "";
@@ -122,6 +123,7 @@ class CombinationPlugin {
 		temp.URL = req.query.URL || "";
 		temp.is_async = req.query.isAsync || "";
 		temp.condition = req.query.condition || "";
+		temp.method= req.query.method || "get";
 		atomApiInfo[count++] = temp;
 		res.json(new GeneralResult(true, null, atomApiInfo).getReturn());
 	}

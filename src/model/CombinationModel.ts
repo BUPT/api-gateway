@@ -8,7 +8,8 @@ export interface AtomApiInfo {
 	URL: string,
 	is_async: string,
 	condition: string,
-	combination_url: string
+    combination_url: string,
+    method: string
 
 }
 /**
@@ -28,7 +29,8 @@ class CombinationModel {
             URL: String,
             is_async: String, 
             condition: String,
-            combination_url: String
+            combination_url: String,
+            method: String
         });
     }
 
