@@ -86,7 +86,7 @@ class CombinationPlugin {
 	 * @param res 
 	 */
 	public storeAtomApiInfo(req, res) {
-		for (let i = 0; i < atomApiInfo.length; i++) {
+		for (let i = 0; i < atomApiInfo.length && atomApiInfo.length !== 0; i++) {
 			if (atomApiInfo[i].module_id === req.query.moduleId) {
 				atomApiInfo[i].module_id = req.query.moduleId || "";
 				atomApiInfo[i].type = req.query.type || "";
@@ -101,7 +101,19 @@ class CombinationPlugin {
 				return;
 			}
 		}
-		let temp: AtomApiInfo;
+		let temp: AtomApiInfo = {
+			module_id: "",
+			type: "",
+			name: "",
+			api_id: "",
+			argument: "",
+			response: "",
+			URL: "",
+			is_async: "",
+			condition: "",
+			combination_url: "",
+			method: ""
+		};
 		temp.module_id = req.query.moduleId || "";
 		temp.type = req.query.type || "";
 		temp.name = req.query.name || "";
@@ -111,8 +123,23 @@ class CombinationPlugin {
 		temp.URL = req.query.URL || "";
 		temp.is_async = req.query.isAsync || "";
 		temp.condition = req.query.condition || "";
+		temp.method= req.query.method || "get";
 		atomApiInfo[count++] = temp;
 		res.json(new GeneralResult(true, null, atomApiInfo).getReturn());
+	}
+
+
+	/**
+	 * 获取所有原子的传参
+	 * @param req 
+	 * @param resd 
+	 */
+	public async getAllAtomApiArgument(req, res){
+		let apiInfoService: ApiInfoService = new ApiInfoService();
+		let urls: string[]= atomApiInfo.map((value) => value.URL);
+		let result: GeneralResult = await apiInfoService.query({URL: urls});
+		let data = result.getDatum().map(value => JSON.parse(value.argument)[0]);
+		res.json(data);
 	}
 
 	/**

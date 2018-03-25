@@ -294,9 +294,16 @@ class AdminPlugin {
 		// 获取api类型
 		let type: string = req.query.APIType;
 		let apiInfoService: ApiInfoService = new ApiInfoService();
+		let urlService:UrlService = new UrlService();
 		let apiInfos: GeneralResult = await apiInfoService.query({ type: type });
+		let urls: string[] = apiInfos.getDatum().map(value => value.URL);
+		let urlResult: GeneralResult = await urlService.query({from: urls});
+		let result = apiInfos.getDatum();
+		for(let i = 0; i < urlResult.getDatum().length && i < apiInfos.getDatum().length; i++){
+			result[i]['method'] = urlResult.getDatum()[i].method;
+		}
 		if (apiInfos.getResult() === true && apiInfos.getDatum().length > 0) {
-			res.json(apiInfos.getReturn());
+			res.json(new GeneralResult(true, null, result).getReturn());
 		} else {
 			res.json(new GeneralResult(false, "输入的类型对应的API不存在", null).getReturn());
 		}
