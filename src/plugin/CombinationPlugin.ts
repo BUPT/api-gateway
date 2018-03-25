@@ -101,7 +101,18 @@ class CombinationPlugin {
 				return;
 			}
 		}
-		let temp: AtomApiInfo;
+		let temp: AtomApiInfo = {
+			module_id: "",
+			type: "",
+			name: "",
+			api_id: "",
+			argument: "",
+			response: "",
+			URL: "",
+			is_async: "",
+			condition: "",
+			combination_url: ""
+		};
 		temp.module_id = req.query.moduleId || "";
 		temp.type = req.query.type || "";
 		temp.name = req.query.name || "";
