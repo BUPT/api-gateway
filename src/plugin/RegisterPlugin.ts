@@ -11,7 +11,10 @@ import { UrlService } from "../service/UrlService";
 import { config } from "bluebird";
 import { Config } from "../config/config";
 import { Request, Response } from "express";
+import * as bodyParser from "body-parser";
 let registerApp = express();
+registerApp.use(bodyParser.json());
+registerApp.use(bodyParser.urlencoded({extended: true}));
 /**
  * 注册API数据
  */
@@ -53,9 +56,11 @@ class RegisterPlugin {
 				RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].url = url[i].from;
 			}
 			// 注册分子API
-			if (url[i].status == 0 && url[i].is_atom === "0") {
+			if (url[i].status === '0' && url[i].is_atom === "0") {
 				let value = { "to": url[i].to, "status": url[i].status };
 				data.set(url[i].from, value);
+				RegisterPlugin._registerApp.use(bodyParser.json());
+				RegisterPlugin._registerApp.use(bodyParser.urlencoded({extended: false}));
 				RegisterPlugin._registerApp.use(url[i].from, combinationPlugin.combinationService);
 				// 为相关的API标注，以便后期注销
 				RegisterPlugin._registerApp._router.stack[RegisterPlugin._registerApp._router.stack.length - 1].appId = url[0].appId;
