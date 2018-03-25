@@ -8,73 +8,122 @@ import { RegisterPlugin } from "./RegisterPlugin";
 import rq = require("request-promise");
 import events = require("events");
 import { AtomApiInfo } from "../model/CombinationModel";
-import {Event} from "../event/Event";
+import { Event } from "../event/Event";
+import * as bodyParser from "body-parser";
 
 
 
 let eventEmitter = new events.EventEmitter();
 const event: Event = Event.getEvent();
 
-let atomApiInfo: AtomApiInfo[] = [];
+let atomApiInfo: Array<AtomApiInfo> = [];
 let count: number = 0;
-
 
 /**
  * 遍历树节点
  * @param node 
  */
-function run(node: { [key: string]: any }) {
+function run(node: { [key: string]: any }, argumentAll: any) {
 	if ((typeof node == 'object') && (node.constructor == Object.prototype.constructor)) {
 		// 执行节点上的API
 		// TODO 调用node节点上的api
 		let config: Config = new Config();
 		let url: string = "http://" + config.getApiServer().host + ":" + config.getApiServer().port + node.url;
-		rq(url).then((body) => {
-			let condition: string[] = [];
-			let children = node.childEles;
-			// 将响应值由字符串转成JSON
-			let response: { [key: string]: string } = {};
-			if (body.length > 0) {
-				response = JSON.parse(body);
+		let method: string = node.method;
+		let argument = Object.keys(JSON.parse(node.argument)[0].schema.properties);
+		let temp = {};
+		for (let i = 0; i < argument.length; i++) {
+			temp[argument[i]] = argumentAll[argument[i]];
+		}
+		if (method.toLocaleLowerCase() === 'post') {
+			let option = {
+				method: 'POST',
+				uri: url,
+				body: temp,
+				json: true
 			}
-			// 执行孩子节点
-			if (children) {
-				for (let i = 0; i < children.length; i++) {
-					// 同步的情况
-					if (children[i].asntype == "0") {
-						// 处理执行条件
-						let temp: string = children[i].condition
-						temp = (temp[temp.length - 1] === ";") ? temp.slice(0, temp.length - 1) : temp;
-						condition = temp.split(";");
-						let flag: boolean = true;
-						let key: string = "";
-						let value: string = "";
-						for (let j = 0; j < condition.length; j++) {
-							key = condition[j].split("=")[0];
-							value = condition[j].split("=")[1];
-							if (key === "statusCode")
-								continue;
-							if (response[key] && response[key] !== value) {
-								flag = false;
-								break;
-							}
-						}
-						if (flag === true) {
-							run(children[i]);
+			if (node.asntype === '1') {
+				let eventString: string = node.condition.split("=")[1];
+				eventString = eventString[eventString.length - 1] === ';' ? eventString.slice(0, eventString.length - 1) : eventString;
+				event.on(eventString, () => {
+					rq(option).then(callback).catch((err) => {
+						console.log(err);
+						return;
+					});
+				})
+			} else {
+				rq(option).then(callback).catch((err) => {
+					console.log(err);
+					return;
+				});
+			}
+		} else {
+			url += '?';
+			for (let i = 0; i < argument.length - 1; i++) {
+				url += argumentAll[argument[i]] + '&';
+			}
+			url += argumentAll[argument[argument.length - 1]] + '&';
+			if (node.asntype === '1') {
+				let eventString: string = node.condition.split("=")[1];
+				eventString = eventString[eventString.length - 1] === ';' ? eventString.slice(0, eventString.length - 1) : eventString;
+				event.on(eventString, () => {
+					rq(url).then(callback).catch((err) => {
+						console.log(err);
+						return;
+					});
+				})
+			} else {
+				rq(url).then(callback).catch((err) => {
+					console.log(err);
+					return;
+				});
+			}
+		}
+	}
+	function callback(body) {
+		let condition: string[] = [];
+		let children = node.childEles;
+		// 将响应值由字符串转成JSON
+		let response: { [key: string]: string } = {};
+		if (body !== undefined && body.length > 0) {
+			response = JSON.parse(body);
+		}
+		// 执行孩子节点
+		if (children) {
+			for (let i = 0; i < children.length; i++) {
+				// 同步的情况
+				if (children[i].asntype == "0") {
+					// 处理执行条件
+					let temp: string = children[i].condition
+					temp = (temp[temp.length - 1] === ";") ? temp.slice(0, temp.length - 1) : temp;
+					condition = temp.split(";");
+					let flag: boolean = true;
+					let key: string = "";
+					let value: string = "";
+					for (let j = 0; j < condition.length; j++) {
+						key = condition[j].split("=")[0];
+						value = condition[j].split("=")[1];
+						if (key === "statusCode")
+							continue;
+						if (response[key] && response[key] !== value) {
+							flag = false;
+							break;
 						}
 					}
-					// 异步的情况
-					if (children[i].asntype == "1") {
-						event.on(children[i].condition, function () {
-							run(children[i]);
-						});
+					if (flag === true) {
+						run(children[i], argumentAll);
 					}
 				}
+				// 异步的情况
+				if (children[i].asntype === "1") {
+					let eventString: string = node.condition.split("=")[1];
+					eventString = eventString[eventString.length - 1] === ';' ? eventString.slice(0, eventString.length - 1) : eventString;
+					event.on(eventString, function () {
+						run(children[i], argumentAll);
+					});
+				}
 			}
-		}).catch((err) => {
-			console.log(err);
-			return;
-		});
+		}
 	}
 }
 
@@ -86,44 +135,35 @@ class CombinationPlugin {
 	 * @param res 
 	 */
 	public storeAtomApiInfo(req, res) {
-		for (let i = 0; i < atomApiInfo.length && atomApiInfo.length !== 0; i++) {
-			if (atomApiInfo[i].module_id === req.query.moduleId) {
-				atomApiInfo[i].module_id = req.query.moduleId || "";
-				atomApiInfo[i].type = req.query.type || "";
-				atomApiInfo[i].name = req.query.name || "";
-				atomApiInfo[i].api_id = req.query.id || "";
-				atomApiInfo[i].argument = req.query.argument || "";
-				atomApiInfo[i].response = req.query.response || "";
-				atomApiInfo[i].URL = req.query.URL || "";
-				atomApiInfo[i].is_async = req.query.isAsync || "";
-				atomApiInfo[i].condition = req.query.condition || "";
+		for (let i = 0; i < atomApiInfo.length; i++) {
+			if (atomApiInfo[i]['module_id'] === req.query.moduleId) {
+				atomApiInfo[i]['module_id'] = req.query.moduleId || "";
+				atomApiInfo[i]['type'] = req.query.type || "";
+				atomApiInfo[i]['name'] = req.query.name || "";
+				atomApiInfo[i]['api_id'] = req.query.id || "";
+				atomApiInfo[i]['argument'] = req.query.argument || "";
+				atomApiInfo[i]['response'] = req.query.response || "";
+				atomApiInfo[i]['URL'] = req.query.URL || "";
+				atomApiInfo[i]['is_async'] = req.query.isAsync || "";
+				atomApiInfo[i]['condition'] = req.query.condition || "";
 				res.json(new GeneralResult(true, null, atomApiInfo).getReturn());
 				return;
 			}
 		}
 		let temp: AtomApiInfo = {
-			module_id: "",
-			type: "",
-			name: "",
-			api_id: "",
-			argument: "",
-			response: "",
-			URL: "",
-			is_async: "",
-			condition: "",
-			combination_url: "",
-			method: ""
+			module_id: req.query.moduleId || "",
+			type: req.query.type || "",
+			name: req.query.name || "",
+			api_id: req.query.id || "",
+			argument: req.query.argument || "",
+			response: req.query.response || "",
+			URL: req.query.URL || "",
+			is_async: req.query.isAsync || "",
+			condition: req.query.condition || "",
+			method: req.query.method || "get",
+			combination_url: ""
 		};
-		temp.module_id = req.query.moduleId || "";
-		temp.type = req.query.type || "";
-		temp.name = req.query.name || "";
-		temp.api_id = req.query.id || "";
-		temp.argument = req.query.argument || "";
-		temp.response = req.query.response || "";
-		temp.URL = req.query.URL || "";
-		temp.is_async = req.query.isAsync || "";
-		temp.condition = req.query.condition || "";
-		temp.method= req.query.method || "get";
+
 		atomApiInfo[count++] = temp;
 		res.json(new GeneralResult(true, null, atomApiInfo).getReturn());
 	}
@@ -134,11 +174,11 @@ class CombinationPlugin {
 	 * @param req 
 	 * @param resd 
 	 */
-	public async getAllAtomApiArgument(req, res){
+	public async getAllAtomApiArgument(req, res) {
 		let apiInfoService: ApiInfoService = new ApiInfoService();
-		let urls: string[]= atomApiInfo.map((value) => value.URL);
-		let result: GeneralResult = await apiInfoService.query({URL: urls});
-		let data = result.getDatum().map(value => JSON.parse(value.argument)[0]);
+		let urls: string[] = atomApiInfo.map((value) => value.URL);
+		let result: GeneralResult = await apiInfoService.query({ URL: urls });
+		let data = result.getDatum().map(value => value.argument);
 		res.json(data);
 	}
 
@@ -203,7 +243,7 @@ class CombinationPlugin {
 		apiInfo.ID = req.query.ID;
 		apiInfo.appId = appId;
 		apiInfo.name = req.query.name;
-		apiInfo.argument = req.query.argument;
+		apiInfo.argument = req.query.argument.toString();
 		apiInfo.event = req.query.response;
 		apiInfo.URL = combinationUrl;
 		apiInfo.type = "组合";
@@ -233,6 +273,7 @@ class CombinationPlugin {
 
 		// 持久化存储后清空临时存储
 		atomApiInfo = [];
+		count = 0;
 
 
 		combinationFlow.combination_url = combinationUrl;
@@ -241,12 +282,13 @@ class CombinationPlugin {
 
 		combinationFlowService.insert([combinationFlow]);
 
-
-
 		// 注册
 		let registerPlugin: RegisterPlugin = new RegisterPlugin();
 		let registerApp = registerPlugin.getRegisterApp();
+		registerApp.use(bodyParser.json());
+		registerApp.use(bodyParser.urlencoded({ extended: false }));
 		let combinationPlugin: CombinationPlugin = new CombinationPlugin();
+
 		registerApp.use(combinationUrl, combinationPlugin.combinationService);
 		// 为相关的API标注，以便后期注销
 		registerApp._router.stack[registerApp._router.stack.length - 1].appId = appId;
@@ -262,13 +304,21 @@ class CombinationPlugin {
 	 * @param res 
 	 */
 	public async combinationService(req, res): Promise<void> {
+		let argumentAll = req.body;
+		if (!argumentAll) {
+			console.log(argumentAll);
+			console.log(req);
+			console.log("end");
+			res.end();
+		}
+		console.log(argumentAll);
 		// 获取流程文件
 		let combinationFlowService: CombinationFlowService = new CombinationFlowService();
 		let temp: GeneralResult = await combinationFlowService.query({ combination_url: req.baseUrl });
 		let flowJson: { [key: string]: string } = JSON.parse(temp.getDatum()[0].flow).childEles[0].childEles[0];
 		//let flowJson: { [key: string]: string } = JSON.parse(temp.getDatum()[0].flow)
 		//await combinationFlowService.query({ combination_url: combinationUrl})
-		run(flowJson);
+		run(flowJson, argumentAll);
 		res.json(new GeneralResult(true, null, { "data": flowJson }).getReturn());
 	}
 
@@ -291,13 +341,13 @@ class CombinationPlugin {
 	}
 
 
-	public notify(req, res){
+	public notify(req, res) {
 		let notifyEvent = req.body.callEvent;
 		event.emit(notifyEvent.event);
 		res.statusCode = 200;
 		res.end();
 	}
-	
+
 }
 
 export { CombinationPlugin };
