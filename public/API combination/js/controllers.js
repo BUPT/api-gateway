@@ -420,9 +420,9 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
 
         $scope.fullScreen = function () {//全屏显示
             var obj = document.getElementById("navnav");
-            obj.style.cssText = "margin-bottom:30px;background-color: #f7f3d8;";
+            obj.style.cssText = "background-color: #1e79a9;height:60px;    margin-bottom: 60px;";
             var foot = document.getElementById('foot');
-            foot.style.cssText = "text-align:center;background-color: #f7f3d8;position: absolute; bottom:0;";
+            foot.style.cssText = "text-align:center;background-color:#cfd5d6;position: absolute; bottom:0;";
             var docElm = document.documentElement;
             if (docElm.requestFullscreen) {
                 docElm.requestFullscreen();
@@ -441,9 +441,9 @@ apiGatewayCtrls.controller('StartCtrl', ['$scope', '$http', 'ngDialog', '$window
 
         $scope.exitScreen = function () {//退出全屏
             var obj = document.getElementById("navnav");
-            obj.style.cssText = "background-color: #f7f3d8;";
+            obj.style.cssText = "background-color: #1e79a9;height:60px;    margin-bottom: 40px;";
             var foot = document.getElementById('foot');
-            foot.style.cssText = "text-align:center;background-color: #f7f3d8;bottom:0;";
+            foot.style.cssText = "text-align:center;position: absolute;bottom:0;background-color:#cfd5d6;";
             if (document.exitFullscreen) {
                 document.exitFullscreen();
             }

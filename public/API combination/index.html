@@ -68,20 +68,23 @@
                 position: absolute;
             }
         }
+        .nav-tabs>li>a{
+            background-color: #d9dfe8;
+        }
     </style>
 </head>
 
 <body ng-controller="StartCtrl" style="width:100%;min-height:100vh">
     <!-- 导航栏 -->
-    <nav class="navbar navbar-default" role="navigation" id="navnav" style="background-color: #f7f3d8;">
+    <nav class="navbar navbar-default" role="navigation" id="navnav" style="background-color: #1e79a9;height:60px;    margin-bottom: 40px;">
         <div class="navbar-left" style="margin-left:10px;width:200px;">
             <table>
                 <tr>
                     <td>
-                        <img src="img/chinamobile.png" alt="logo" height="80px;">
+                        <img src="img/chinamobile.png" alt="logo" height="60px;">
 
                     </td>
-                    <td align="center">中国移动
+                    <td align="center" style="color:#cfd9f3">中国移动
                         <br/>网络能力开放平台</td>
                 </tr>
             </table>
@@ -89,7 +92,7 @@
         <div class="container-fluid">
             <div id="navcont">
                 <div id="nav">
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav" style="margin-top:-1px">
                         <li>
                             <a href="#" class="dropdown-toggle file" data-toggle="dropdown" ng-bind="file" style="font-size:15px;"></a>
 
@@ -111,7 +114,7 @@
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="#" ng-bind="file5"></a>
+                                    <a href="APIindex.html" ng-bind="file5"></a>
                                 </li>
                             </ul>
                         </li>
@@ -429,7 +432,7 @@
 
 
     <!-- 正文 -->
-    <h1 align="center" style="font-size:25px;font-family:Comic Sans MS;margin-bottom:-5px; color: #818a17;" ng-bind="title"></h1>
+    <h1 align="center" style="font-size:25px;font-family:Comic Sans MS;color: #637196;" ng-bind="title"></h1>
     <br/>
     <br/>
     <div class="container" id="container">
@@ -647,7 +650,7 @@
     </div>
 
     <br/>
-    <div style="text-align:center;background-color: #f7f3d8;bottom:0;" id="foot">
+    <div style="text-align:center;position: absolute;bottom:0;background-color:#cfd5d6" id="foot">
         <table style="width:100%;table-layout: fixed;">
             <tr>
                 <td align="center">&nbsp;</td>
@@ -655,7 +658,7 @@
                     <span style="font-family:arial;">Copyright &copy; 2018 PCN&amp;CAD, BUPT. All rights reserved.</span>
                 </td>
                 <td align="right">
-                    <img src="img/bupt.png" alt="bupt" height="85px;" style="margin-right:20px;">
+                    <img src="img/bupt.png" alt="bupt" height="60px;" style="margin-right:20px;">
                 </td>
             </tr>
         </table>
