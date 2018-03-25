@@ -723,6 +723,22 @@ class AdminRouter{
          */
         this._router.get("/apis/getAtomApiInfo", combinationPlugin.getAtomApiInfo);
 
+        /**
+         * @swagger
+         * /apis/getAllAtomApiArgument:
+         *   get:
+         *       description: 获取组合API的原子API的参数信息
+         *       deprecated: false
+         *       tags:
+         *           - "组合API管理"
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
+        this._router.get("/apis/getAllAtomApiArgument", combinationPlugin.getAllAtomApiArgument)
+
 
         /**
          * @swagger

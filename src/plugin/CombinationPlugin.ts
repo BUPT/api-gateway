@@ -126,6 +126,20 @@ class CombinationPlugin {
 		res.json(new GeneralResult(true, null, atomApiInfo).getReturn());
 	}
 
+
+	/**
+	 * 获取所有原子的传参
+	 * @param req 
+	 * @param resd 
+	 */
+	public async getAllAtomApiArgument(req, res){
+		let apiInfoService: ApiInfoService = new ApiInfoService();
+		let urls: string[]= atomApiInfo.map((value) => value.URL);
+		let result: GeneralResult = await apiInfoService.query({URL: urls});
+		let data = result.getDatum().map(value => JSON.parse(value.argument)[0]);
+		res.json(data);
+	}
+
 	/**
 	 * 根据模块ID或组合API的url获取原子API的信息
 	 * 只有模块ID时，获取临时存储的原子API信息
