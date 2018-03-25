@@ -11,8 +11,11 @@ let router = new AdminRouter().getRouter();
 let registerPlugin: RegisterPlugin = new RegisterPlugin();
 let registerApp = registerPlugin.getRegisterApp();
 // 初始化注册
-registerPlugin.init();
-registerApp.listen(8000);
+(async () => {
+    await registerPlugin.init();
+    registerApp.listen(8000);
+})();
+
 
 // 生成swagger文件
 let swaggerFile: SwaggerFile = new SwaggerFile();
