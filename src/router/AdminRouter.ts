@@ -806,8 +806,37 @@ class AdminRouter{
          */
         this._router.get("/apis/getCombinationAPIFlow", combinationPlugin.getCombinationAPIFlow);
 
-
-        // 语音平台回调通知地址
+        /**
+         * @swagger
+         * /voicePlatform/notify:
+         *   post:
+         *       description: 语音平台通知API网关相关事件发生的地址
+         *       deprecated: false
+         *       tags:
+         *           - "事件通知"
+         *       consumes:
+         *           - application/json
+         *       parameters:
+         *         - in: body
+         *           name: NotifyEvent
+         *           description: 通知网关发生事件的相关参数
+         *           schema:
+         *             type: object
+         *             properties:
+         *               callEvent:
+         *                 type: object
+         *                 required:
+         *                   - notifyEvent
+         *                 properties:
+         *                   event: 
+         *                     type: string
+         * 
+         *       produces:
+         *         - application/json
+         *       responses:
+         *         200:
+         *           description:OK
+         */
         this._router.post("/voicePlatform/notify", combinationPlugin.notify)
 
 
