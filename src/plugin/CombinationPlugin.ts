@@ -86,7 +86,7 @@ class CombinationPlugin {
 	 * @param res 
 	 */
 	public storeAtomApiInfo(req, res) {
-		for (let i = 0; i < atomApiInfo.length; i++) {
+		for (let i = 0; i < atomApiInfo.length && atomApiInfo.length !== 0; i++) {
 			if (atomApiInfo[i].module_id === req.query.moduleId) {
 				atomApiInfo[i].module_id = req.query.moduleId || "";
 				atomApiInfo[i].type = req.query.type || "";
