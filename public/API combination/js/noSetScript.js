@@ -128,7 +128,7 @@ function showattr(node, oob) { //显示被点击节点对象属性
             }
         });
     }
-    else {
+    else if(node.isfirst == 0){
         var blockid = oob.attr('id');
         $.ajax({
             type: "get",
@@ -179,6 +179,7 @@ function showattr(node, oob) { //显示被点击节点对象属性
                     $("#inputt").val(data.datum.argument);
                     $("#output").val(data.datum.response);
                     $("#url").val(data.datum.URL);
+                    $("#method").val(data.datum.method);
                     if (data.datum.is_async == "0") {
                         $("#asn").val("0");
                     }
@@ -187,7 +188,7 @@ function showattr(node, oob) { //显示被点击节点对象属性
                     }
                     $("#condi").val(data.datum.condition);
                 } else {
-                    alert(data.reason);
+                    //alert(data.reason);
                 }
             },
             error: function (data) {
@@ -214,6 +215,7 @@ function next(data, oob) {
                     $("#inputt").val(data[j].argument);
                     $("#output").val(data[j].event);
                     $("#url").val(data[j].URL);
+                    $("#method").val(data[j].method);
                     // $("#nodeid").children('text').html(namee);
                     oob.children('text').html(namee);
                 }
@@ -275,6 +277,7 @@ function shownodeattr1(node, oob, url) {
                 $("#inputt").val(data.datum[0].argument);
                 $("#output").val(data.datum[0].response);
                 $("#url").val(data.datum[0].URL);
+                $("#method").val(data.datum[0].method);
                 if (data.datum[0].is_async == "0") {
                     $("#asn").val("0");
                 }

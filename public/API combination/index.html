@@ -218,7 +218,8 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label" style=" text-align: center;">参数</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" placeholder="请输入参数" ng-model="r_input">
+                        <textarea class="form-control" rows="3" disabled="disabled" ng-model="r_input"></textarea>
+                        <!-- <input type="text" class="form-control" placeholder="请输入参数" > -->
                     </div>
                 </div>
                 <div class="form-group">
@@ -558,7 +559,7 @@
                     </form>
                 </div> -->
             </div>
-            <div class="col-md-3" style="margin-top:10px;">
+            <div class="col-md-3" style="margin-top:5px;">
                 <ul id="myTab" class="nav nav-tabs">
                     <li class="active">
                         <a href="#home" data-toggle="tab">属性设置</a>
@@ -600,7 +601,7 @@
                             <div class="form-group" style="margin-top:-5px;">
                                 <label class="col-sm-4 control-label" style="text-align:left">参数</label>
                                 <div class="col-sm-8">
-                                    <textarea class="form-control" rows="4" ng-model="input" disabled="disabled" id="inputt" style="width:170px;"></textarea>
+                                    <textarea class="form-control" rows="3" ng-model="input" disabled="disabled" id="inputt" style="width:170px;"></textarea>
                                 </div>
                             </div>
                             <div class="form-group" style="margin-top:-5px;">
@@ -613,6 +614,12 @@
                                 <label class="col-sm-4 control-label" style="text-align:left">URL</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" ng-model="url" disabled="disabled" id="url" style="width:170px;"></input>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:-5px;">
+                                <label class="col-sm-4 control-label" style="text-align:left">方法</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" ng-model="method" disabled="disabled" id="method" style="width:170px;"></input>
                                 </div>
                             </div>
                             <div class="form-group" style="margin-top:-5px;">

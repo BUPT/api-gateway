@@ -75,6 +75,8 @@ var SDT = (function () {
         this.objcolumn = 0; //元素列数
         this.leanRight = true; //元素是否默认放置与右边
         this.url = ""; //API的URL
+        this.method = "";//API的方法
+        this.argument = "";//API的参数
         this.asntype = 0; //是否异步
         this.condition = ""; //条件
         this.isfirst = 1;//是否是第一次点击
@@ -191,6 +193,8 @@ var SDT = (function () {
                 provisionalSDTTreeEle.url = "urlurlurlurlurlurlurl";
                 provisionalSDTTreeEle.asntype = 0;
                 provisionalSDTTreeEle.condition = "conditonconditoncondition";
+                provisionalSDTTreeEle.method = "method";
+                provisionalSDTTreeEle.argument = "argument";
                 provisionalSDTTreeEle.isfirst = 1;
                 typeEleCountList.forEach(function (element) {
                     if (element.countType === provisionalSDTTreeEle.type) {
@@ -281,6 +285,8 @@ var SDT = (function () {
                 typeObj.url = element.url;
                 typeObj.asntype = element.asntype;
                 typeObj.condition = element.condition;
+                typeObj.method = element.method;
+                typeObj.argument = element.argument;
                 typeObj.isfirst = element.isfirst;
             }
         });
