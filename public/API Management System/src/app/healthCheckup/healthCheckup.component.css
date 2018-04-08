@@ -1,0 +1,13 @@
+.transformchart{
+    margin-top:20px;
+    margin-left:15px;
+}
+.downloaddata,.logwatch,.transformchart{
+    margin-top:20px;
+}
+.showchart{
+    margin-top:30px;
+}
+.showtable{
+    margin-top: 50px;
+}

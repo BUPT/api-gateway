@@ -1,3 +1,252 @@
-<p>这里是总的性能监控的页面！</p>
-<a routerLink=logCheckup class="btn btn-primary">点击跳到查看日志页面</a>
-<p>下方有流控配置</p>
+<!-- 总的性能监控的页面 -->
+<!-- 流控配置放左边 -->
+
+<ul id="myTab" class="nav nav-pills nav-justified">
+	<li class="active">
+		<a href="#allvisitnum" data-toggle="tab">总访问次数</a>
+	</li>
+	<li>
+        <a href="#unitvisitnum" data-toggle="tab">单位时间访问次数</a>
+    </li>
+	<li>
+		<a href="#concurrentnum" data-toggle="tab">并发量</a>
+    </li>
+    <li>
+        <a href="#averagetime" data-toggle="tab">平均响应时间</a>
+    </li>
+    
+</ul>
+<!-- 总访问次数 -->
+<div id="myTabContent" class="tab-content">
+
+	<div class="tab-pane fade in active" id="allvisitnum">
+          <div class="row">
+            <div class="btn-group buttongroup" role="group" aria-label="...">
+                <button type="button" class="btn btn-default active">实时</button>
+                <button type="button" class="btn btn-default">近24小时</button>
+                <button type="button" class="btn btn-default">近七天</button>
+              </div>
+              <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
+              <!-- 控制数据的显示 -->
+              <button type="button" class="btn btn-default transformchart">柱折转换</button>
+              <!-- 控制数据柱状图与折线图的转换 --> 
+            <a class="btn btn-default downloaddata" role="button">
+              <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
+            </a>
+            <button type="button" class="btn btn-default logwatch" routerLink=logCheckup>日志查看</button>
+              <!-- 点击跳到查看日志页面 -->
+              <div class=" btn-group buttongroup" role="group">
+              <label>每</label>
+              <select>
+                  <option value="second">秒</option>
+                  <option value="minute">分</option>
+                  <option value="hour">时</option>
+                  <option value="day">天</option>
+                  <option value="week">周</option>
+                </select>
+               <label>可访问</label>
+              <input type="text"placeholder="请输入限制次数"> <label>次</label> 
+            </div> 
+            </div>
+            <div class="row">
+                    <div class="col-md-offset-2 col-md-8 showchart">
+                     <canvas baseChart class="chart"
+                                  [datasets]="lineChartData"
+                                  [labels]="lineChartLabels"
+                                  [options]="lineChartOptions"
+                                  [colors]="lineChartColours"
+                                  [legend]="lineChartLegend"
+                                  [chartType]="lineChartType"
+                                  (chartHover)="chartHovered($event)"
+                                  (chartClick)="chartClicked($event)">
+                      </canvas>
+                    </div>
+            </div>
+            <div class="row">      
+                    <div class="col-md-offset-2 col-md-8 showtable">
+                      <table class="table table-responsive table-condensed">
+                        <tr>
+                          <th *ngFor="let label of lineChartLabels">{{label}}</th>
+                        </tr>
+                        <tr *ngFor="let d of lineChartData">
+                          <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
+                        </tr>
+                      </table>
+                      <button (click)="randomize()">update</button>
+                    </div>
+            </div>
+  </div>
+  <!-- 单位时间访问次数 -->
+	<div class="tab-pane fade" id="unitvisitnum">
+      <div class="row">
+          <div class="btn-group buttongroup" role="group" aria-label="...">
+              <button type="button" class="btn btn-default active">实时</button>
+              <button type="button" class="btn btn-default">近24小时</button>
+              <!-- <button type="button" class="btn btn-default">近七天</button> -->
+            </div>
+            <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
+            <!-- 控制数据的显示 -->
+            <button type="button" class="btn btn-default transformchart">柱折转换</button>
+            <!-- 控制数据柱状图与折线图的转换 --> 
+          <a class="btn btn-default downloaddata" role="button">
+            <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
+          </a>
+          <button type="button" class="btn btn-default logwatch">日志查看</button>
+            <!-- 点击跳到查看日志页面 -->
+            <div class=" btn-group buttongroup" role="group">
+                <label>每</label>
+                <select>
+                    <option value="second">秒</option>
+                    <option value="minute">分</option>
+                    <option value="hour">时</option>
+                    <option value="day">天</option>
+                    <option value="week">周</option>
+                  </select>
+                 <label>可访问</label>
+                <input type="text"placeholder="请输入限制次数"> <label>次</label> 
+              </div> 
+          </div>
+            <div class="row">
+                    <div class="col-md-offset-2 col-md-8 showchart">
+                      <canvas baseChart
+                              [datasets]="barChartData"
+                              [labels]="barChartLabels"
+                              [options]="barChartOptions"
+                              [legend]="barChartLegend"
+                              [chartType]="barChartType"
+                              (chartHover)="chartHovered($event)"
+                              (chartClick)="chartClicked($event)">
+                      </canvas>
+                    </div>
+            </div>
+            <div class="row">      
+                      <div class="col-md-offset-2 col-md-8 showtable">
+                        <table class="table table-responsive table-condensed">
+                          <tr>
+                            <th *ngFor="let label of barChartLabels">{{label}}</th>
+                          </tr>
+                          <tr *ngFor="let d of barChartData">
+                            <td *ngFor="let label of barChartLabels; let j=index">{{d && d.data[j]}}</td>
+                          </tr>
+                        </table>
+                        <button (click)="randomise()">Update</button>
+                      </div>
+              </div>
+  </div>
+  
+  <!-- 并发量 -->
+	<div class="tab-pane fade" id="concurrentnum">
+      <div class="row">
+          <div class="btn-group buttongroup" role="group" aria-label="...">
+              <button type="button" class="btn btn-default active">实时</button>
+              <button type="button" class="btn btn-default">近24小时</button>
+              <button type="button" class="btn btn-default">近七天</button>
+            </div>
+            <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
+            <!-- 控制数据的显示 -->
+            <button type="button" class="btn btn-default transformchart">柱折转换</button>
+            <!-- 控制数据柱状图与折线图的转换 --> 
+          <a class="btn btn-default downloaddata" role="button">
+            <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
+          </a>
+          <button type="button" class="btn btn-default logwatch" routerLink=logCheckup>日志查看</button>
+            <!-- 点击跳到查看日志页面 -->
+            <div class=" btn-group buttongroup" role="group">
+                <label>每</label>
+                <select>
+                    <option value="second">秒</option>
+                    <option value="minute">分</option>
+                    <option value="hour">时</option>
+                    <option value="day">天</option>
+                    <option value="week">周</option>
+                  </select>
+                 <label>可访问</label>
+                <input type="text"placeholder="请输入限制次数"> <label>次</label> 
+              </div> 
+          </div>
+          <div class="row">
+                  <div class="col-md-offset-2 col-md-8 showchart">
+                   <canvas baseChart class="chart"
+                                [datasets]="lineChartData"
+                                [labels]="lineChartLabels"
+                                [options]="lineChartOptions"
+                                [colors]="lineChartColours"
+                                [legend]="lineChartLegend"
+                                [chartType]="lineChartType"
+                                (chartHover)="chartHovered($event)"
+                                (chartClick)="chartClicked($event)">
+                    </canvas>
+                  </div>
+          </div>
+          <div class="row">      
+                  <div class="col-md-offset-2 col-md-8 showtable">
+                    <table class="table table-responsive table-condensed">
+                      <tr>
+                        <th *ngFor="let label of lineChartLabels">{{label}}</th>
+                      </tr>
+                      <tr *ngFor="let d of lineChartData">
+                        <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
+                      </tr>
+                    </table>
+                    <button (click)="randomize()">update</button>
+                  </div>
+          </div>   
+  </div>
+  <!-- 平均响应时间 -->
+	<div class="tab-pane fade" id="averagetime">
+      <div class="row">
+          <div class="btn-group buttongroup" role="group" aria-label="...">
+              <button type="button" class="btn btn-default active">实时</button>
+              <button type="button" class="btn btn-default">近24小时</button>
+              <!-- <button type="button" class="btn btn-default">近七天</button> -->
+            </div>
+            <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
+            <!-- 控制数据的显示 -->
+            <button type="button" class="btn btn-default transformchart">柱折转换</button>
+            <!-- 控制数据柱状图与折线图的转换 --> 
+          <a class="btn btn-default downloaddata" role="button">
+            <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
+          </a>
+          <button type="button" class="btn btn-default logwatch">日志查看</button>
+            <!-- 点击跳到查看日志页面 -->
+            <div class=" btn-group buttongroup" role="group">
+                <label>每</label>
+                <select>
+                    <option value="second">秒</option>
+                    <option value="minute">分</option>
+                    <option value="hour">时</option>
+                    <option value="day">天</option>
+                    <option value="week">周</option>
+                  </select>
+                 <label>可访问</label>
+                <input type="text"placeholder="请输入限制次数"> <label>次</label> 
+              </div> 
+          </div>
+            <div class="row">
+                    <div class="col-md-offset-2 col-md-8 showchart">
+                      <canvas baseChart
+                              [datasets]="barChartData"
+                              [labels]="barChartLabels"
+                              [options]="barChartOptions"
+                              [legend]="barChartLegend"
+                              [chartType]="barChartType"
+                              (chartHover)="chartHovered($event)"
+                              (chartClick)="chartClicked($event)">
+                      </canvas>
+                    </div>
+            </div>
+            <div class="row">      
+                      <div class="col-md-offset-2 col-md-8 showtable">
+                        <table class="table table-responsive table-condensed">
+                          <tr>
+                            <th *ngFor="let label of barChartLabels">{{label}}</th>
+                          </tr>
+                          <tr *ngFor="let d of barChartData">
+                            <td *ngFor="let label of barChartLabels; let j=index">{{d && d.data[j]}}</td>
+                          </tr>
+                        </table>
+                        <button (click)="randomise()">Update</button>
+                      </div>
+              </div>
+    </div>
+</div>

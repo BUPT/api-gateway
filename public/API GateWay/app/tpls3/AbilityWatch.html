@@ -133,7 +133,8 @@
 			    myChart1.setOption(option1);
 			    setInterval(function(){
 			    	var currentday=(new Date().getMonth()+1)+"/"+new Date().getDate();
-			    
+				   
+					//重新渲染纵坐标
 			    	var data0 = option1.series[0].data;
 	                var data0=function(){
 			    		var totalcount=[];
@@ -159,7 +160,7 @@
 						 return totalcount;
                     }();
 	               
-
+                   //重新渲染横坐标
 			    	if(option1.xAxis[0].data[6]!=currentday){
 			    		//删掉数组中第一个数据，最新数据填充最后一个数据
 			    		option1.xAxis[0].data.shift();

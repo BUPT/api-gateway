@@ -1,5 +1,6 @@
 var set_o = {
-    "SDTTreeElements": [{ //元素配置
+    "SDTTreeElements": [
+        { //元素配置
         "type": "CallControl", //值为字符串 表示元素类型
         "dropSwitch": true, //值为 true 或 false 当值为 true 时元素可直接放置于画布
         "foresideType": ["all"], //值为一个字符串 type 间由 "," 隔开 当值为空时，则任何元素都将不接受其的放置；当值为 all 时所有元素都接受其放置；当值为合法 type 串时，type 串中所代表的类型元素将接受其放置

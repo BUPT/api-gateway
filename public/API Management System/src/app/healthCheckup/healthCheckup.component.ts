@@ -7,6 +7,7 @@ declare var $: any;
 @Component({
   selector: 'app-health',
   templateUrl: './healthCheckup.component.html',
+  styleUrls:['./healthCheckup.component.css']
 })
 export class healthCheckupComponent implements OnInit {
 
@@ -22,4 +23,19 @@ export class healthCheckupComponent implements OnInit {
         this.parent.setActiveByPath(this.parent.healthCheckup,"");
 
     };
+    public doughnutChartLabels:string[] = ['内存使用率', '内存未使用率'];
+  public doughnutChartData:number[] = [0.6,0.4];
+  public doughnutChartType:string = 'doughnut';
+
+  public pieChartLabels:string[] = ['CPU使用率', 'CPU未使用率'];
+  public pieChartData:number[] = [0.3,0.7 ];
+  public pieChartType:string = 'pie';
+
+  public chartClicked(e:any):void{
+    console.log(e);
+  }
+
+  public chartHovered(e:any):void{
+    console.log(e);
+  }
 }
