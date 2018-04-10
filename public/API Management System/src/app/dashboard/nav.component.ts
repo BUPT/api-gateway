@@ -32,7 +32,6 @@ export class NavComponent implements OnInit {
   routers = [];
 
 
-
   ngOnInit() {
     this.route.params.subscribe((params) => {
       console.log(params['id']);
@@ -54,37 +53,37 @@ export class NavComponent implements OnInit {
     this.performanceMonitoringAll ="/main/"+this.para+"/performanceMonitoringAll";
 
     this.routers = [
-      // {
-      //   href: this.dashboard,
-      //   name: "Dashboard",
-      //   type: false
-      // },
-      // {
-      //   href: 'charts',
-      //   name: "Charts",
-      //   type: true,
-      //   child: [
-      //     {href: this.lineCharts, name: "Line Charts"},
-      //     {href: this.pieCharts, name: "Pie Charts"}
-      //   ]
-      // },
-      // {
-      //   href: 'tables',
-      //   name: "Tables",
-      //   type: true,
-      //   child: [
-      //     {href: this.datatable, name: "Data Tables"}
-      //   ]
-      // },
-      // {
-      //   href: 'bootstrap',
-      //   name: "Bootstrap",
-      //   type: true,
-      //   child: [
-      //     {href: this.bootstrap, name: "Static Components"},
-      //     {href: this.plugin, name: "Plugin Components"}
-      //   ]
-      // },
+      {
+        href: this.dashboard,
+        name: "Dashboard",
+        type: false
+      },
+      {
+        href: 'charts',
+        name: "Charts",
+        type: true,
+        child: [
+          {href: this.lineCharts, name: "Line Charts"},
+          {href: this.pieCharts, name: "Pie Charts"}
+        ]
+      },
+      {
+        href: 'tables',
+        name: "Tables",
+        type: true,
+        child: [
+          {href: this.datatable, name: "Data Tables"}
+        ]
+      },
+      {
+        href: 'bootstrap',
+        name: "Bootstrap",
+        type: true,
+        child: [
+          {href: this.bootstrap, name: "Static Components"},
+          {href: this.plugin, name: "Plugin Components"}
+        ]
+      },
       {
         href: 'APIs',
         name: "API管理",
