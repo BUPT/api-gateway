@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavComponent } from '../dashboard/nav.component';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgClass } from '@angular/common';
+import { Location } from '@angular/common';
 declare var $: any;
 
 @Component({
@@ -15,7 +16,8 @@ export class logCheckupComponent implements OnInit {
   constructor(
     private parent: NavComponent,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) { }
 
 
@@ -23,6 +25,10 @@ export class logCheckupComponent implements OnInit {
   ngOnInit() {
     // this.parent.setActiveByPath("versionManagement",this.parent.versionManagement);
   };
+
+  goBack(): void {
+    this.location.back();
+  }
 
   public totalItems: number = 64;
   public currentPage: number = 4;
@@ -85,7 +91,7 @@ export class logCheckupComponent implements OnInit {
     actions: false,
     noDataMessage: "没有符合条件的数据",
     pager:{
-      perPage:20
+      perPage:15
     }
   };
 
