@@ -38,4 +38,8 @@ export class healthCheckupComponent implements OnInit {
   public chartHovered(e:any):void{
     console.log(e);
   }
+  public changeType():void{
+    this.pieChartType=this.pieChartType==='pie'?'doughnut':'pie';
+    this.doughnutChartType=this.doughnutChartType==='doughnut'?'pie':'doughnut';
+  }
 }

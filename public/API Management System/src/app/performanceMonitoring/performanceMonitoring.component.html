@@ -28,25 +28,13 @@
                   </div>
                   <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
                   <!-- 控制数据的显示 -->
-                  <button type="button" class="btn btn-default transformchart">柱折转换</button>
+                  <button type="button" class="btn btn-default transformchart" (click)="changeType()">柱折转换</button>
                   <!-- 控制数据柱状图与折线图的转换 --> 
                 <a class="btn btn-default downloaddata" role="button">
                   <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
                 </a>
                 <button type="button" class="btn btn-default logwatch" routerLink=logCheckup>日志查看</button>
                   <!-- 点击跳到查看日志页面 -->
-                  <div class=" btn-group buttongroup" role="group">
-                  <label>每</label>
-                  <select>
-                      <option value="second">秒</option>
-                      <option value="minute">分</option>
-                      <option value="hour">时</option>
-                      <option value="day">天</option>
-                      <option value="week">周</option>
-                    </select>
-                   <label>可访问</label>
-                  <input type="text"placeholder="请输入限制次数"> <label>次</label> 
-                </div> 
                 </div>
                 <div class="row">
                         <div class="col-md-offset-2 col-md-8 showchart">
@@ -72,7 +60,7 @@
                               <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
                             </tr>
                           </table>
-                          <button (click)="randomize()">update</button>
+                          <!-- <button (click)="randomize()">update</button> -->
                         </div>
                 </div>
       </div>
@@ -86,25 +74,13 @@
                 </div>
                 <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
                 <!-- 控制数据的显示 -->
-                <button type="button" class="btn btn-default transformchart">柱折转换</button>
+                <button type="button" class="btn btn-default transformchart" (click)="changeType()">柱折转换</button>
                 <!-- 控制数据柱状图与折线图的转换 --> 
               <a class="btn btn-default downloaddata" role="button">
                 <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
               </a>
               <button type="button" class="btn btn-default logwatch">日志查看</button>
                 <!-- 点击跳到查看日志页面 -->
-                <div class=" btn-group buttongroup" role="group">
-                    <label>每</label>
-                    <select>
-                        <option value="second">秒</option>
-                        <option value="minute">分</option>
-                        <option value="hour">时</option>
-                        <option value="day">天</option>
-                        <option value="week">周</option>
-                      </select>
-                     <label>可访问</label>
-                    <input type="text"placeholder="请输入限制次数"> <label>次</label> 
-                  </div> 
               </div>
                 <div class="row">
                         <div class="col-md-offset-2 col-md-8 showchart">
@@ -129,7 +105,7 @@
                                 <td *ngFor="let label of barChartLabels; let j=index">{{d && d.data[j]}}</td>
                               </tr>
                             </table>
-                            <button (click)="randomise()">Update</button>
+                            <!-- <button (click)="randomise()">Update</button> -->
                           </div>
                   </div>
       </div>
@@ -144,25 +120,13 @@
                 </div>
                 <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
                 <!-- 控制数据的显示 -->
-                <button type="button" class="btn btn-default transformchart">柱折转换</button>
+                <button type="button" class="btn btn-default transformchart" (click)="changeType()">柱折转换</button>
                 <!-- 控制数据柱状图与折线图的转换 --> 
               <a class="btn btn-default downloaddata" role="button">
                 <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
               </a>
               <button type="button" class="btn btn-default logwatch" routerLink=logCheckup>日志查看</button>
                 <!-- 点击跳到查看日志页面 -->
-                <div class=" btn-group buttongroup" role="group">
-                    <label>每</label>
-                    <select>
-                        <option value="second">秒</option>
-                        <option value="minute">分</option>
-                        <option value="hour">时</option>
-                        <option value="day">天</option>
-                        <option value="week">周</option>
-                      </select>
-                     <label>可访问</label>
-                    <input type="text"placeholder="请输入限制次数"> <label>次</label> 
-                  </div> 
               </div>
               <div class="row">
                       <div class="col-md-offset-2 col-md-8 showchart">
@@ -188,9 +152,9 @@
                             <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
                           </tr>
                         </table>
-                        <button (click)="randomize()">update</button>
+                        <!-- <button (click)="randomize()">update</button> -->
                       </div>
-              </div>   
+              </div> 
       </div>
       <!-- 平均响应时间 -->
         <div class="tab-pane fade" id="averagetime">
@@ -202,14 +166,14 @@
                 </div>
                 <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
                 <!-- 控制数据的显示 -->
-                <button type="button" class="btn btn-default transformchart">柱折转换</button>
+                <button type="button" class="btn btn-default transformchart" (click)="changeType()">柱折转换</button>
                 <!-- 控制数据柱状图与折线图的转换 --> 
               <a class="btn btn-default downloaddata" role="button">
                 <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
               </a>
               <button type="button" class="btn btn-default logwatch">日志查看</button>
                 <!-- 点击跳到查看日志页面 -->
-                <div class=" btn-group buttongroup" role="group">
+                <!-- <div class=" btn-group buttongroup" role="group">
                     <label>每</label>
                     <select>
                         <option value="second">秒</option>
@@ -220,7 +184,7 @@
                       </select>
                      <label>可访问</label>
                     <input type="text"placeholder="请输入限制次数"> <label>次</label> 
-                  </div> 
+                  </div>  -->
               </div>
                 <div class="row">
                         <div class="col-md-offset-2 col-md-8 showchart">
@@ -245,8 +209,87 @@
                                 <td *ngFor="let label of barChartLabels; let j=index">{{d && d.data[j]}}</td>
                               </tr>
                             </table>
-                            <button (click)="randomise()">Update</button>
+                            <!-- <button (click)="randomise()">Update</button> -->
                           </div>
                   </div>
         </div>
+        <h3>流量控制</h3>
+                <hr />
+                <!-- <div class="btn-group flowcontrol0" role="group">
+                    <label>地域</label>
+                    <select>
+                        <option value="">请选择</option>
+                        <option value="beijing">北京</option>
+                        <option value="shanghai">上海</option>
+                        <option value="shandong">山东</option>
+                        <option value="jiangsu">江苏</option>
+                        <option value="anhui">安徽</option>
+                      </select>
+                </div>  -->
+                <div class=" btn-group flowcontrol0" role="group">
+                    <label>描述</label>
+                    <input type="text" placeholder="请输入描述">
+                </div>
+                <div class=" btn-group flowcontrol" role="group">
+                  <label>每</label>
+                  <select>
+                      <option value="second">秒</option>
+                      <option value="minute">分</option>
+                      <option value="hour">时</option>
+                      <option value="day">天</option>
+                      <option value="week">周</option>
+                    </select>
+                   <label>可访问</label>
+                  <input type="text"placeholder="请输入限制次数"> <label>次</label> 
+                </div> 
+                <div class=" btn-group flowconfirm" role="group">
+                  <a class="btn  btn-info" role="button">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true">确定</span>
+                  </a>
+                </div>
+              
+                <table class="table table-striped  table-responsive flowcontroltable">
+                  <thead>
+                  <tr>
+                      <th>名称</th>
+                      <th>单位</th>
+                      <th>API流量限制</th>
+                      <th>创建时间</th>
+                      <th>描述</th>
+                      <th>操作</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      <td>001</td>
+                      <td>秒</td>
+                      <td>500</td>
+                      <td>2018-4-15 14:35:23</td>
+                      <td></td>
+                      <td>
+                        <a class="btn btn-info" role="button">
+                          <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
+                        </a>
+                        <a class="btn  btn-info" role="button">
+                          <span class="glyphicon glyphicon-pencil" aria-hidden="true">修改</span>
+                        </a>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>002</td>
+                      <td>分</td>
+                      <td>5000000</td>
+                      <td>2018-4-15 14:35:23</td>
+                      <td></td>
+                      <td>
+                        <a class="btn btn-info" role="button">
+                          <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
+                        </a>
+                        <a class="btn  btn-info" role="button">
+                          <span class="glyphicon glyphicon-pencil" aria-hidden="true">修改</span>
+                        </a>
+                      </td>
+                  </tr>
+                  </tbody>
+              </table>
     </div>

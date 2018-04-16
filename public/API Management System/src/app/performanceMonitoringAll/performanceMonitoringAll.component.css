@@ -11,3 +11,29 @@
 .showtable{
     margin-top: 50px;
 }
+
+hr{
+    width: 100%;
+    height: 3px;
+    border-width:0;
+    color:darkgrey;
+    background-color:darkgray;
+}
+.flowcontrol{
+    margin-top:0px;
+    margin-left:20px;
+}
+.flowcontrol0{
+    margin-top:0px;
+    margin-left:0px;
+}
+.flowconfirm{
+    margin-left: 15px;
+}
+.flowconfirm a{
+    height: 30px;
+    padding: 5px 10px;
+}
+.flowcontroltable{
+    margin-top: 15px;
+}

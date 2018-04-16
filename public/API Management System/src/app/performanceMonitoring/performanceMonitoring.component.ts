@@ -45,32 +45,32 @@ export class performanceMonitoringComponent implements OnInit {
     animation: false,
     responsive: true
   };
-  public lineChartColours:Array<any> = [
-    { // green
-      backgroundColor: 'rgba(202,252,209,0.2)',
-      borderColor: 'rgba(90,202,106,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    },
-    { // dark grey
-      backgroundColor: 'rgba(77,83,96,0.2)',
-      borderColor: 'rgba(77,83,96,1)',
-      pointBackgroundColor: 'rgba(77,83,96,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(77,83,96,1)'
-    },
-    { // gre
-      backgroundColor: 'rgba(168,226,178,0.2)',
-      borderColor: 'rgba(5,124,22,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }
-  ];
+  // public lineChartColours:Array<any> = [
+  //   { // green
+  //     backgroundColor: 'rgba(202,252,209,0.2)',
+  //     borderColor: 'rgba(90,202,106,1)',
+  //     pointBackgroundColor: 'rgba(148,159,177,1)',
+  //     pointBorderColor: '#fff',
+  //     pointHoverBackgroundColor: '#fff',
+  //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+  //   },
+  //   { // dark grey
+  //     backgroundColor: 'rgba(77,83,96,0.2)',
+  //     borderColor: 'rgba(77,83,96,1)',
+  //     pointBackgroundColor: 'rgba(77,83,96,1)',
+  //     pointBorderColor: '#fff',
+  //     pointHoverBackgroundColor: '#fff',
+  //     pointHoverBorderColor: 'rgba(77,83,96,1)'
+  //   },
+  //   { // gre
+  //     backgroundColor: 'rgba(168,226,178,0.2)',
+  //     borderColor: 'rgba(5,124,22,1)',
+  //     pointBackgroundColor: 'rgba(148,159,177,1)',
+  //     pointBorderColor: '#fff',
+  //     pointHoverBackgroundColor: '#fff',
+  //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+  //   }
+  // ];
   public lineChartLegend:boolean = true;
   public lineChartType:string = 'line';
 
@@ -121,5 +121,10 @@ public randomise():void{
    let clone = JSON.parse(JSON.stringify(this.barChartData));
    clone[0].data = data;
    this.barChartData = clone;
+}
+//柱折可转换
+public changeType():void {
+  this.lineChartType = this.lineChartType === 'line' ? 'bar' : 'line';
+  this.barChartType = this.barChartType==='bar'?'line':'bar'
 }
 }

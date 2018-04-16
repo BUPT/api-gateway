@@ -18,7 +18,7 @@
               <div class="row">
                  <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
                     <!-- 控制数据的显示 -->
-                  <button type="button" class="btn btn-default transformchart">图表转换</button>
+                  <button type="button" class="btn btn-default transformchart" (click)="changeType()">图表转换</button>
                   <!-- 饼图与甜甜圈的转换 --> 
                 <a class="btn btn-default downloaddata" role="button">
                   <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
@@ -49,7 +49,7 @@
                               <td *ngFor="let data of pieChartData">{{data}}</td>
                             </tr>
                           </table>
-                          <button (click)="randomize()">update</button>
+                          <!-- <button (click)="randomize()">update</button> -->
                         </div>
                 </div>
       </div>
@@ -58,7 +58,7 @@
           <div class="row">
                 <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
                 <!-- 控制数据的显示 -->
-                <button type="button" class="btn btn-default transformchart">图表转换</button>
+                <button type="button" class="btn btn-default transformchart" (click)="changeType()">图表转换</button>
                 <!-- 控制饼图与甜甜圈的转换 --> 
               <a class="btn btn-default downloaddata" role="button">
                 <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
@@ -88,7 +88,7 @@
                               <td *ngFor="let data of doughnutChartData">{{data}}</td>
                             </tr>
                           </table>
-                          <button (click)="randomize()">update</button>
+                          <!-- <button (click)="randomize()">update</button> -->
                         </div>
                 </div>
       </div>
