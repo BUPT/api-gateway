@@ -1,1 +1,123 @@
-<p>这里是版本管理管理页面！</p>
+<button (click)="goBack()" class="btn btn-default btn-sm">返回</button>
+<div class="content">
+  <div class="row">
+    <strong>{{APIname}}-发布历史</strong>
+  </div>
+  <br/>
+  <div class="row">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>版本</th>
+          <th>发布备注</th>
+          <th>当前状态</th>
+          <th>发布时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let version of versions">
+          <td>{{version.id}}</td>
+          <td>{{version.notice}}</td>
+          <td>
+            <span *ngIf="version.state==true" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            <span *ngIf="version.state==false" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </td> 
+          <td>{{version.time}}</td>
+          <td>
+            <a data-toggle="modal" data-target="#lookModal" (click)="look(version)">查看</a>&nbsp;
+            <a *ngIf="version.state==false" data-toggle="modal" data-target="#changeModal" (click)="exchange($event,version)">切换至此版本</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+<!-- lookModal -->
+<div class="modal fade" id="lookModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">API定义详情（版本：{{id}}）</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <thead>
+            <tbody>
+              <tr>
+                <td>名称</td>
+                <td>CallControl </td>
+              </tr>
+              <tr>
+                <td>ID</td>
+                <td>001</td>
+              </tr>
+              <tr>
+                <td>地域</td>
+                <td>北京</td>
+              </tr>
+              <tr>
+                <td>URL</td>
+                <td>/callControl</td>
+              </tr>
+              <tr>
+                <td>实际访问URL</td>
+                <td>www.baidu.com</td>
+              </tr>
+              <tr>
+                <td>方法</td>
+                <td>POST</td>
+              </tr>
+              <tr>
+                <td>参数</td>
+                <td>adbfcjweovnpwrov</td>
+              </tr>
+              <tr>
+                <td>输入</td>
+                <td>cvbwhivcbwneouvwprivnouwebfwu</td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- changeModal -->
+<div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">API版本切换</h4>
+      </div>
+      <div class="modal-body">
+        您将切换API：{{APIname}} 的版本，版本切换后将直接生效，请您确认。
+        <br/> 当前版本：{{oldversion}}
+        <br/> 切换到版本：{{newversion}}
+        <br/>
+        <br/> 填写备注：
+        <br/>
+        <textarea class="form-control" rows="3" placeholder="必填" [(ngModel)]="notice"></textarea>
+        <br/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" (click)="yes()">切换</button>
+      </div>
+    </div>
+  </div>
+</div>

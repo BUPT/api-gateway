@@ -1,0 +1,9 @@
+strong{
+    font-size: 20px;
+}
+.modal-dialog{
+    width:700px;
+}
+a:hover{
+    color: blue
+}
