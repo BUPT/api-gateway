@@ -1,3 +1,54 @@
-<p>
-    这里是动态路由管理界面！   
-</p>
+<button (click)="goBack()" class="btn btn-default btn-sm">返回</button>
+<br/><br/>
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#mapping" aria-controls="mapping" role="tab" data-toggle="tab">动态路由映射表</a>
+    </li>
+    <li role="presentation">
+        <a href="#roles" aria-controls="roles" role="tab" data-toggle="tab">路由分发规则</a>
+    </li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="mapping">
+        <br/>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;用户请求URL</th>
+                    <th>
+                        <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>&nbsp;实际访问URL</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/callControl</td>
+                    <td>
+                        <textarea class="form-control" rows="1" disabled="disabled">www.baidu.com</textarea>
+                    </td>
+                    <td>
+                        <a class="blue" (click)="modify($event)">修改</a>&nbsp;
+                        <a class="blue" (click)="yes($event)">确认</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>/message</td>
+                    <td>
+                        <textarea class="form-control" rows="1" disabled="disabled">www.sina.com</textarea>
+                    </td>
+                    <td>
+                        <a class="blue" (click)="modify($event)">修改</a>&nbsp;
+                        <a class="blue" (click)="yes($event)">确认</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="roles">
+        路由分发规则
+    </div>
+</div>

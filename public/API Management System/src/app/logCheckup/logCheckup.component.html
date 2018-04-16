@@ -1,1 +1,5 @@
-<p>这是查看日志的界面，展示形式类似上网清单</p>
+<button (click)="goBack()" class="btn btn-default btn-sm">返回</button>
+<br/>
+<div class="table-responsive">
+    <ng2-smart-table [settings]="settings" [source]="data" (deleteConfirm)="onDeleteConfirm($event)"></ng2-smart-table>
+</div>
