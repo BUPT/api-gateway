@@ -1,4 +1,4 @@
-import { Component, OnInit,NgModule } from '@angular/core';
+import { Component, OnInit, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
@@ -21,71 +21,74 @@ import { combineAPIComponent } from '../APIs/combineAPI/combineAPI.component';
 import { routeManagementComponent } from '../routeManagement/routeManagement.component';
 import { versionManagementComponent } from '../versionManagement/versionManagement.component';
 import { healthCheckupComponent } from '../healthCheckup/healthCheckup.component';
-import { performanceMonitoringAllComponent} from '../performanceMonitoringAll/performanceMonitoringAll.component';
-import { logCheckupComponent} from '../logCheckup/logCheckup.component';
-import { performanceMonitoringComponent} from '../performanceMonitoring/performanceMonitoring.component';
+import { performanceMonitoringAllComponent } from '../performanceMonitoringAll/performanceMonitoringAll.component';
+import { logCheckupComponent } from '../logCheckup/logCheckup.component';
+import { performanceMonitoringComponent } from '../performanceMonitoring/performanceMonitoring.component';
+import { flowControlComponent } from 'app/flowControl/flowControl.component';
 
 const tablesRoutes: Routes = [
     {
-        path:'main/:id',
-        component:NavComponent,
+        path: 'main/:id',
+        component: NavComponent,
         children: [
-           { path: '', component: DashboardComponent },
-           { path: 'dashboard', component: DashboardComponent },
-           { path: 'lineCharts', component: lineChartsComponent },
-           { path: 'pieCharts', component: pieChartsComponent },
-           { path: 'datatable', component: DatatableComponent },
-           { path: 'bootstrap-static', component: BootstrapComponent },
-           { path: 'bootstrap-plugin', component: PluginComponent },
+            { path: '', component: DashboardComponent },
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'lineCharts', component: lineChartsComponent },
+            { path: 'pieCharts', component: pieChartsComponent },
+            { path: 'datatable', component: DatatableComponent },
+            { path: 'bootstrap-static', component: BootstrapComponent },
+            { path: 'bootstrap-plugin', component: PluginComponent },
 
-           { path: 'atomAPI', component: atomAPIComponent},
-           { path: 'combineAPI', component: combineAPIComponent},
-           { path: 'routeManagement', component:routeManagementComponent},
-           { path: 'atomAPI/versionManagement', component: versionManagementComponent},
-           { path: 'combineAPI/versionManagement', component: versionManagementComponent},
-           { path: 'healthCheckup', component: healthCheckupComponent},
-           { path: 'performanceMonitoringAll',component: performanceMonitoringAllComponent},
-           { path: 'performanceMonitoringAll/logCheckup',component: logCheckupComponent},
-           { path: 'atomAPI/performanceMonitoring',component: performanceMonitoringComponent},
-           { path: 'atomAPI/performanceMonitoring/logCheckup',component: logCheckupComponent},
-           { path: 'atomAPI/routeManagement', component:routeManagementComponent},
-           { path: 'combineAPI/performanceMonitoring',component: performanceMonitoringComponent},
-           { path: 'combineAPI/performanceMonitoring/logCheckup',component: logCheckupComponent},
-           { path: 'combineAPI/routeManagement', component:routeManagementComponent}
+            { path: 'atomAPI', component: atomAPIComponent },
+            { path: 'combineAPI', component: combineAPIComponent },
+            { path: 'routeManagement', component: routeManagementComponent },
+            { path: 'atomAPI/versionManagement', component: versionManagementComponent },
+            { path: 'combineAPI/versionManagement', component: versionManagementComponent },
+            { path: 'healthCheckup', component: healthCheckupComponent },
+            { path: 'performanceMonitoringAll', component: performanceMonitoringAllComponent },
+            { path: 'performanceMonitoringAll/logCheckup', component: logCheckupComponent },
+            { path: 'atomAPI/performanceMonitoring', component: performanceMonitoringComponent },
+            { path: 'atomAPI/performanceMonitoring/logCheckup', component: logCheckupComponent },
+            { path: 'atomAPI/routeManagement', component: routeManagementComponent },
+            { path: 'combineAPI/performanceMonitoring', component: performanceMonitoringComponent },
+            { path: 'combineAPI/performanceMonitoring/logCheckup', component: logCheckupComponent },
+            { path: 'combineAPI/routeManagement', component: routeManagementComponent },
+            { path: 'flowControl', component: flowControlComponent }
         ]
     }
 ]
 
 
 @NgModule({
-  imports: [
-      FormsModule,
-      CommonModule,
-      RouterModule.forChild(tablesRoutes),
-      ChartsModule,
-      PaginationModule.forRoot(),
-      Ng2SmartTableModule,
-      FileUploadModule
+    imports: [
+        FormsModule,
+        CommonModule,
+        RouterModule.forChild(tablesRoutes),
+        ChartsModule,
+        PaginationModule.forRoot(),
+        Ng2SmartTableModule,
+        FileUploadModule
 
-  ],
-  declarations: [
-    NavComponent,
-    DashboardComponent,
-    lineChartsComponent,
-    pieChartsComponent,
-    DatatableComponent,
-    BootstrapComponent,
-    PluginComponent,
+    ],
+    declarations: [
+        NavComponent,
+        DashboardComponent,
+        lineChartsComponent,
+        pieChartsComponent,
+        DatatableComponent,
+        BootstrapComponent,
+        PluginComponent,
 
-    atomAPIComponent,
-    combineAPIComponent,
-    routeManagementComponent,
-    versionManagementComponent,
-    healthCheckupComponent,
-    performanceMonitoringAllComponent,
-    logCheckupComponent,
-    performanceMonitoringComponent
-  ],
-  providers: []
+        atomAPIComponent,
+        combineAPIComponent,
+        routeManagementComponent,
+        versionManagementComponent,
+        healthCheckupComponent,
+        performanceMonitoringAllComponent,
+        logCheckupComponent,
+        performanceMonitoringComponent,
+        flowControlComponent
+    ],
+    providers: []
 })
 export class DashboardModule { }

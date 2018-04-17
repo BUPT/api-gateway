@@ -2,95 +2,87 @@
 <!-- 流控配置放左边 -->
 
 <ul id="myTab" class="nav nav-pills nav-justified">
-        <li class="active">
-            <a href="#cpuusage" data-toggle="tab">CPU利用率</a>
-        </li>
-        <li>
-            <a href="#memoryusage" data-toggle="tab">内存利用率</a>
-        </li>
-        
-        
-    </ul>
-    <!-- cpu利用率 -->
-    <div id="myTabContent" class="tab-content">
-    
-        <div class="tab-pane fade in active" id="cpuusage">
-              <div class="row">
-                 <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
-                    <!-- 控制数据的显示 -->
-                  <button type="button" class="btn btn-default transformchart" (click)="changeType()">图表转换</button>
-                  <!-- 饼图与甜甜圈的转换 --> 
-                <a class="btn btn-default downloaddata" role="button">
-                  <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
-                </a>
-                <button type="button" class="btn btn-default logwatch">日志查看</button>
-                  <!-- 点击跳到查看日志页面 -->
-                
-                </div>
-                <div class="row">
-                        <div class="col-md-offset-2 col-md-8 showchart">
-                           <canvas baseChart
-                                    [data]="pieChartData"
-                                    [labels]="pieChartLabels"
-                                    [chartType]="pieChartType"
-                                    (chartHover)="chartHovered($event)"
-                                    (chartClick)="chartClicked($event)">
+  <li class="active">
+    <a href="#cpuusage" data-toggle="tab">CPU利用率</a>
+  </li>
+  <li>
+    <a href="#memoryusage" data-toggle="tab">内存利用率</a>
+  </li>
 
-                            </canvas>
-                        </div>
-                </div>
-                <div class="row">      
-                        <div class="col-md-offset-2 col-md-8 showtable">
-                          <table class="table table-responsive table-condensed">
-                            <tr>
-                              <th *ngFor="let label of pieChartLabels">{{label}}</th>
-                            </tr>
-                            <tr>
-                              <td *ngFor="let data of pieChartData">{{data}}</td>
-                            </tr>
-                          </table>
-                          <!-- <button (click)="randomize()">update</button> -->
-                        </div>
-                </div>
-      </div>
-      <!-- 内存利用率 -->
-        <div class="tab-pane fade" id="memoryusage">
-          <div class="row">
-                <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
-                <!-- 控制数据的显示 -->
-                <button type="button" class="btn btn-default transformchart" (click)="changeType()">图表转换</button>
-                <!-- 控制饼图与甜甜圈的转换 --> 
-              <a class="btn btn-default downloaddata" role="button">
-                <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
-              </a>
-              <button type="button" class="btn btn-default logwatch">日志查看</button>
-                <!-- 点击跳到查看日志页面 -->
-              </div>
-                <div class="row">
-                        <div class="col-md-offset-2 col-md-8 showchart">
-                                <canvas baseChart
-                                    [data]="doughnutChartData"
-                                    [labels]="doughnutChartLabels"
-                                    [chartType]="doughnutChartType"
-                                    (chartHover)="chartHovered($event)"
-                                    (chartClick)="chartClicked($event)">
 
-                            </canvas>
-                        </div>
-                </div>
-                <div class="row">      
-                        <div class="col-md-offset-2 col-md-8 showtable">
-                          <table class="table table-responsive table-condensed">
-                            <tr>
-                              <th *ngFor="let label of doughnutChartLabels">{{label}}</th>
-                            </tr>
-                            <tr>
-                              <td *ngFor="let data of doughnutChartData">{{data}}</td>
-                            </tr>
-                          </table>
-                          <!-- <button (click)="randomize()">update</button> -->
-                        </div>
-                </div>
-      </div>
-    
+</ul>
+<!-- cpu利用率 -->
+<div id="myTabContent" class="tab-content">
+
+  <div class="tab-pane fade in active" id="cpuusage">
+    <div class="row">
+      <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
+      <!-- 控制数据的显示 -->
+      <button type="button" class="btn btn-default transformchart" (click)="changeType()">图表转换</button>
+      <!-- 饼图与甜甜圈的转换 -->
+      <a class="btn btn-default downloaddata" role="button">
+        <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
+      </a>
+      <button type="button" class="btn btn-default logwatch">日志查看</button>
+      <!-- 点击跳到查看日志页面 -->
+
     </div>
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8 showchart">
+        <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)">
+
+        </canvas>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8 showtable">
+        <table class="table table-responsive table-condensed">
+          <tr>
+            <th *ngFor="let label of pieChartLabels">{{label}}</th>
+          </tr>
+          <tr>
+            <td *ngFor="let data of pieChartData">{{data}}</td>
+          </tr>
+        </table>
+        <!-- <button (click)="randomize()">update</button> -->
+      </div>
+    </div>
+  </div>
+  <!-- 内存利用率 -->
+  <div class="tab-pane fade" id="memoryusage">
+    <div class="row">
+      <!-- <button type="button" class="btn btn-default datacompare">数据对比</button> -->
+      <!-- 控制数据的显示 -->
+      <button type="button" class="btn btn-default transformchart" (click)="changeType()">图表转换</button>
+      <!-- 控制饼图与甜甜圈的转换 -->
+      <a class="btn btn-default downloaddata" role="button">
+        <span class="glyphicon glyphicon-download" aria-hidden="true">下载数据</span>
+      </a>
+      <button type="button" class="btn btn-default logwatch">日志查看</button>
+      <!-- 点击跳到查看日志页面 -->
+    </div>
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8 showchart">
+        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)">
+
+        </canvas>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8 showtable">
+        <table class="table table-responsive table-condensed">
+          <tr>
+            <th *ngFor="let label of doughnutChartLabels">{{label}}</th>
+          </tr>
+          <tr>
+            <td *ngFor="let data of doughnutChartData">{{data}}</td>
+          </tr>
+        </table>
+        <!-- <button (click)="randomize()">update</button> -->
+      </div>
+    </div>
+  </div>
+
+</div>

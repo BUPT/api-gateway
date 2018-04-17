@@ -28,6 +28,7 @@ export class NavComponent implements OnInit {
   //public versionManagement = "";
   public healthCheckup = "";
   public performanceMonitoringAll = "";
+  public flowControl="";
 
   routers = [];
 
@@ -51,39 +52,40 @@ export class NavComponent implements OnInit {
     //this.versionManagement = "/main/"+this.para+"/versionManagement";
     this.healthCheckup = "/main/"+this.para+"/healthCheckup";
     this.performanceMonitoringAll ="/main/"+this.para+"/performanceMonitoringAll";
+    this.flowControl="/main/"+this.para+"/flowControl";
 
     this.routers = [
-      {
-        href: this.dashboard,
-        name: "Dashboard",
-        type: false
-      },
-      {
-        href: 'charts',
-        name: "Charts",
-        type: true,
-        child: [
-          {href: this.lineCharts, name: "Line Charts"},
-          {href: this.pieCharts, name: "Pie Charts"}
-        ]
-      },
-      {
-        href: 'tables',
-        name: "Tables",
-        type: true,
-        child: [
-          {href: this.datatable, name: "Data Tables"}
-        ]
-      },
-      {
-        href: 'bootstrap',
-        name: "Bootstrap",
-        type: true,
-        child: [
-          {href: this.bootstrap, name: "Static Components"},
-          {href: this.plugin, name: "Plugin Components"}
-        ]
-      },
+      // {
+      //   href: this.dashboard,
+      //   name: "Dashboard",
+      //   type: false
+      // },
+      // {
+      //   href: 'charts',
+      //   name: "Charts",
+      //   type: true,
+      //   child: [
+      //     {href: this.lineCharts, name: "Line Charts"},
+      //     {href: this.pieCharts, name: "Pie Charts"}
+      //   ]
+      // },
+      // {
+      //   href: 'tables',
+      //   name: "Tables",
+      //   type: true,
+      //   child: [
+      //     {href: this.datatable, name: "Data Tables"}
+      //   ]
+      // },
+      // {
+      //   href: 'bootstrap',
+      //   name: "Bootstrap",
+      //   type: true,
+      //   child: [
+      //     {href: this.bootstrap, name: "Static Components"},
+      //     {href: this.plugin, name: "Plugin Components"}
+      //   ]
+      // },
       {
         href: 'APIs',
         name: "API管理",
@@ -94,13 +96,18 @@ export class NavComponent implements OnInit {
         ]
       },
       {
+        href: this.flowControl,
+        name:"流量控制",
+        type:false
+      },
+      {
         href: this.routeManagement,
         name: "动态路由管理",
         type: false
       },
       {
         href: this.healthCheckup,
-        name:"健康检查",
+        name:"系统健康检查",
         type: false
       },
       {
