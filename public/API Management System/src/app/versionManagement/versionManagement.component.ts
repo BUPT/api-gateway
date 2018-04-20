@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,Output} from '@angular/core';
 import { NavComponent } from '../dashboard/nav.component';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { Location } from '@angular/common';
 import { VERSION } from '../testversiondata';
 import { Version } from 'app/version';
+import { Pagination } from '../pagination/pagination';
 declare var $: any;
 
 @Component({
@@ -33,10 +34,26 @@ export class versionManagementComponent implements OnInit {
     private location: Location
   ) { }
 
+  @Output()
+  public pagination: Pagination = Pagination.defaultPagination;
+
   ngOnInit() {
     // this.parent.setActiveByPath("versionManagement",this.parent.versionManagement);
     this.check();
+    this.initList();
+    this.pagination.changePage = (() => {
+      this.initList();
+    });
   };
+
+  private initList(): void {
+    let url: string = 'your-url';
+    let page = this.pagination.currentPage - 1;
+    this.pagination.totalItems = VERSION.length;
+    let head = page * this.pagination.pageItems;
+    let end = head + this.pagination.pageItems - 1;
+    this.versions = VERSION.slice(head, end);
+  }
 
   goBack(): void {
     this.location.back();
