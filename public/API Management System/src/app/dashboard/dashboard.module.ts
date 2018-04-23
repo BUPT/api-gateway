@@ -29,6 +29,7 @@ import { HttpModule, JsonpModule } from '@angular/http';
 import { ApiService } from '../APIs/api.service';
 import { creatAtomAPIComponent } from '../creatAtomAPI/createAtomAPI.compoment';
 import { flowControlComponent } from '../flowControl/flowControl.component';
+import { RouteService } from 'app/routeManagement/route.service';
 
 
 const tablesRoutes: Routes = [
@@ -104,6 +105,6 @@ const tablesRoutes: Routes = [
         flowControlComponent,
         PageComponent
     ],
-    providers: [ApiService]
+    providers: [ApiService,RouteService]
 })
 export class DashboardModule { }
