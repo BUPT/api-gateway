@@ -1,4 +1,4 @@
-import { Component, OnInit,NgModule } from '@angular/core';
+import { Component, OnInit, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
@@ -20,9 +20,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { routeManagementComponent } from '../routeManagement/routeManagement.component';
 import { versionManagementComponent } from '../versionManagement/versionManagement.component';
 import { healthCheckupComponent } from '../healthCheckup/healthCheckup.component';
-import { performanceMonitoringAllComponent} from '../performanceMonitoringAll/performanceMonitoringAll.component';
-import { logCheckupComponent} from '../logCheckup/logCheckup.component';
-import { performanceMonitoringComponent} from '../performanceMonitoring/performanceMonitoring.component';
+import { performanceMonitoringAllComponent } from '../performanceMonitoringAll/performanceMonitoringAll.component';
+import { logCheckupComponent } from '../logCheckup/logCheckup.component';
+import { performanceMonitoringComponent } from '../performanceMonitoring/performanceMonitoring.component';
 import { atomAPIComponent } from '../APIs/atomAPI/atom.component';
 import { combinationAPIComponent } from '../APIs/combinationAPI/combinationAPI';
 import { HttpModule, JsonpModule } from '@angular/http';
@@ -33,33 +33,34 @@ import { flowControlComponent } from '../flowControl/flowControl.component';
 
 const tablesRoutes: Routes = [
     {
-        path:'main/:id',
-        component:NavComponent,
+        path: 'main/:id',
+        component: NavComponent,
         children: [
-           { path: '', component: DashboardComponent },
-           { path: 'dashboard', component: DashboardComponent },
-           { path: 'lineCharts', component: lineChartsComponent },
-           { path: 'pieCharts', component: pieChartsComponent },
-           { path: 'datatable', component: DatatableComponent },
-           { path: 'bootstrap-static', component: BootstrapComponent },
-           { path: 'bootstrap-plugin', component: PluginComponent },
+            { path: '', component: DashboardComponent },
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'lineCharts', component: lineChartsComponent },
+            { path: 'pieCharts', component: pieChartsComponent },
+            { path: 'datatable', component: DatatableComponent },
+            { path: 'bootstrap-static', component: BootstrapComponent },
+            { path: 'bootstrap-plugin', component: PluginComponent },
 
-           { path: 'atomAPI', component: atomAPIComponent},
-           { path: 'combinationAPI', component: combinationAPIComponent},
-           { path: 'routeManagement', component:routeManagementComponent},
-           { path: 'atomAPI/versionManagement', component: versionManagementComponent},
-           { path: 'combinationAPI/versionManagement', component: versionManagementComponent},
-           { path: 'healthCheckup', component: healthCheckupComponent},
-           { path: 'performanceMonitoringAll',component: performanceMonitoringAllComponent},
-           { path: 'performanceMonitoringAll/logCheckup',component: logCheckupComponent},
-           { path: 'atomAPI/performanceMonitoring',component: performanceMonitoringComponent},
-           { path: 'atomAPI/performanceMonitoring/logCheckup',component: logCheckupComponent},
-           { path: 'atomAPI/routeManagement', component:routeManagementComponent},
-           { path: 'combineAPI/performanceMonitoring',component: performanceMonitoringComponent},
-           { path: 'combineAPI/performanceMonitoring/logCheckup',component: logCheckupComponent},
-           { path: 'combineAPI/routeManagement', component:routeManagementComponent},
-           //创建原子API
-           { path: 'atomAPI/createAtomAPI',component:creatAtomAPIComponent},
+            { path: 'atomAPI', component: atomAPIComponent },
+            { path: 'combinationAPI', component: combinationAPIComponent },
+            { path: 'routeManagement', component: routeManagementComponent },
+            { path: 'atomAPI/versionManagement', component: versionManagementComponent },
+            { path: 'combinationAPI/versionManagement', component: versionManagementComponent },
+            { path: 'healthCheckup', component: healthCheckupComponent },
+            { path: 'performanceMonitoringAll', component: performanceMonitoringAllComponent },
+            { path: 'performanceMonitoringAll/logCheckup', component: logCheckupComponent },
+            { path: 'atomAPI/performanceMonitoring', component: performanceMonitoringComponent },
+            { path: 'atomAPI/performanceMonitoring/logCheckup', component: logCheckupComponent },
+            { path: 'atomAPI/routeManagement', component: routeManagementComponent },
+            { path: 'combineAPI/performanceMonitoring', component: performanceMonitoringComponent },
+            { path: 'combineAPI/performanceMonitoring/logCheckup', component: logCheckupComponent },
+            { path: 'combineAPI/routeManagement', component: routeManagementComponent },
+            //创建原子API
+            { path: 'atomAPI/createAtomAPI', component: creatAtomAPIComponent },
+            { path: 'flowControl', component: flowControlComponent }
 
         ]
     }
@@ -67,42 +68,42 @@ const tablesRoutes: Routes = [
 
 
 @NgModule({
-  imports: [
-      FormsModule,
-      CommonModule,
-      RouterModule.forChild(tablesRoutes),
-      ChartsModule,
-      PaginationModule.forRoot(),
-      Ng2SmartTableModule,
-      FileUploadModule,
-      BrowserModule,
-      //调用后台接口就必须引入以下两个module。
-      HttpModule,
-      JsonpModule
+    imports: [
+        FormsModule,
+        CommonModule,
+        RouterModule.forChild(tablesRoutes),
+        ChartsModule,
+        PaginationModule.forRoot(),
+        Ng2SmartTableModule,
+        FileUploadModule,
+        BrowserModule,
+        //调用后台接口就必须引入以下两个module。
+        HttpModule,
+        JsonpModule
 
-  ],
-  declarations: [
-    NavComponent,
-    DashboardComponent,
-    lineChartsComponent,
-    pieChartsComponent,
-    DatatableComponent,
-    BootstrapComponent,
-    PluginComponent,
+    ],
+    declarations: [
+        NavComponent,
+        DashboardComponent,
+        lineChartsComponent,
+        pieChartsComponent,
+        DatatableComponent,
+        BootstrapComponent,
+        PluginComponent,
 
-    atomAPIComponent,
-    combinationAPIComponent,
-    routeManagementComponent,
-    versionManagementComponent,
-    healthCheckupComponent,
-    performanceMonitoringAllComponent,
-    logCheckupComponent,
-    performanceMonitoringComponent,
-    //创建原子API
-    creatAtomAPIComponent,
-    flowControlComponent,
-    PageComponent
-  ],
-  providers: [ApiService]
+        atomAPIComponent,
+        combinationAPIComponent,
+        routeManagementComponent,
+        versionManagementComponent,
+        healthCheckupComponent,
+        performanceMonitoringAllComponent,
+        logCheckupComponent,
+        performanceMonitoringComponent,
+        //创建原子API
+        creatAtomAPIComponent,
+        flowControlComponent,
+        PageComponent
+    ],
+    providers: [ApiService]
 })
 export class DashboardModule { }
