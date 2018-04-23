@@ -8,7 +8,8 @@ import {ChartsModule} from 'ng2-charts/ng2-charts';
 @Component({
     selector: 'app-analysis',
     templateUrl:"./analytics.html",
-
+    //这个路径是根据当前文件所在路径来的
+    styleUrls:['./css/home.css']
 })
 
 export class AnalysisComponent implements OnInit{

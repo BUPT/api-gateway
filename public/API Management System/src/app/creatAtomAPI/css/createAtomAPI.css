@@ -1,0 +1,177 @@
+div {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+
+.console-textbox {
+    display: inline-block;
+    vertical-align: middle;
+    height: 32px;
+    padding: 6px;
+    transition: none;
+    font-size: 12px;
+    line-height: 145%;
+    outline: none;
+    border: 1px solid #CCC;
+    background: #FFF;
+    color: #555;
+    border-radius: 4px;
+}
+
+.console-panel-header-line {
+    display: block;
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    height: 41px;
+    width: 3px;
+    overflow: hidden;
+    background: #778;
+    font-size: 0;
+    line-height: 0;
+}
+
+.console-width-4 {
+    width: 33.33333333% !important;
+}
+
+.console-form-body {
+    float: none;
+    padding: 0 15px;
+    margin-left: 36%;
+}
+
+.console-panel-header {
+    position: relative;
+    background: #F4F5F9;
+    border: 1px solid #E1E6EB;
+    /* border-bottom: none; */
+    padding: 0 12px 0 16px;
+    font-size: 14px;
+    height: 40px;
+    line-height: 38px;
+}
+
+.console-form-header {
+    float: left;
+    padding: 5px 0;
+    text-align: right;
+    width: 35%;
+    padding: 9px 15px;
+}
+
+.console-form-row {
+    display: block;
+    padding: 15px 0;
+}
+
+.console-panel {
+    border: 1px solid #E1E6EB;
+    /* text-align: center; */
+}
+
+.console-form {
+    background: #FFF;
+}
+
+.p {
+    font-size: 18px;
+    font-weight: bold;
+    border: 1px solid #E1E6EB;
+    width: 120px;
+    background: #00c1de;
+    color: #FFF;
+    text-align: center;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.back {
+    font-size: 10px;
+    font-weight: bold;
+    border: 1px solid #E1E6EB;
+    width: 100px;
+    background: #FFF;
+    color: rgb(26, 25, 25);
+    text-align: center;
+    height: 30px;
+    border-radius: 5px;
+}
+
+p {
+    margin-top: 5px;
+}
+
+.console-radio,
+.console-checkbox {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 28px;
+}
+
+.console-textarea {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 6px;
+    font-size: 12px;
+    line-height: 145%;
+    outline: none;
+    border: 1px solid #CCC;
+    background: #FFF;
+    color: #555;
+}
+
+.console-with-6 {
+    width: 50% !important;
+}
+
+.console-panel-body {
+    border: 1px solid #E1E6EB;
+    background: #FFF;
+}
+
+.console-mt4 {
+    margin-top: 16px;
+}
+
+.console-p4 {
+    padding: 16px;
+}
+
+.btn {
+    background-color: #00c1de !important;
+    color: #fff !important;
+}
+
+.btn:hover {
+    background-color: #69d5e6 !important;
+}
+
+.pre {
+    background-color: #7f8181 !important;
+    margin-right: 20px;
+}
+
+.pre:hover {
+    background-color: #9c9e9e !important;
+}
+
+.console-mr2 {
+    color: rgb(86, 154, 221);
+}
+
+th,
+td {
+    padding: 20px;
+    text-align: center;
+}
+
+tr {
+    border-bottom: 1px solid #E1E6EB;
+}
+
+.add {
+    padding: 15px;
+}

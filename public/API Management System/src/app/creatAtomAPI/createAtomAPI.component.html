@@ -1,0 +1,280 @@
+<h2>
+    创建原子API</h2>
+<hr>
+<div class="row">
+    <div class="p col-md-3">
+        <p>基本属性设置</p>
+    </div>
+    <button class="back col-md-3" style="float: right;" (click)="goBack()">返回</button>
+</div>
+<hr>
+<div id="nameDefinition">
+    <div class="console-panel">
+        <div class="console-panel-header">
+            <span class="console-panel-header-line"></span>
+            <div class="console-float-left">名称及描述</div>
+        </div>
+        <div class="console-panel-body">
+            <div class="console-form">
+                <div class="console-form-row">
+                    <div class="console-form-header">API名称</div>
+                    <div class="console-form-body">
+                        <input class="console-textbox console-with-4" type="text">
+                    </div>
+                </div>
+                <!-- <div class="console-form-row">
+                <div class="console-form-header">服务地址</div>
+                <div class="console-form-body">
+                    <input class="console-textbox console-with-4" type="text" placeholder="例如：http://www.baidu.com">
+                </div>
+            </div> -->
+                <!-- <div class="console-form-row">
+                <div class="console-form-header">端口号</div>
+                <div class="console-form-body">
+                    <input class="console-textbox console-with-4" type="text" placeholder="例如：8000">
+                </div>
+            </div> -->
+                <!-- <div class="console-form-row">
+                    <div class="console-form-header">API类型</div>
+                    <div class="console-form-body">
+                        <label class="console-radio">
+                            <input type="radio" name="type" value="public">
+                            <span>公开</span>
+                        </label>
+                        <label class="console-radio">
+                            <input type="radio" name="type" value="private" checked="checked">
+                            <span>私有</span>
+                        </label>
+                    </div>
+            </div> -->
+                <div class="console-form-row">
+                    <div class="console-form-header">地区</div>
+                    <div class="console-form-body">
+                        <!-- <input class="console-textbox console-with-4" type="text"> -->
+                        <select id="area" class="console-textbox console-with-4">
+                            <option id="" class="" value="">上海</option>
+                            <option id="" class="" value="passing">北京</option>
+                            <option id="" class="" value="failed">天津</option>
+                            <option id="" class="" value="failed">湖北</option>
+                            <option id="" class="" value="failed">内蒙古</option>
+                            <option id="" class="" value="failed">黑龙江</option>
+                            <option id="" class="" value="failed">福建</option>
+                            <option id="" class="" value="failed">辽宁</option>
+                            <option id="" class="" value="failed">江苏</option>
+                            <option id="" class="" value="failed">新疆</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="console-form-row">
+                    <div class="console-form-header">Http Method</div>
+                    <div class="console-form-body">
+                        <select id="area" class="console-textbox console-with-4">
+                            <option id="" class="" value="">GET</option>
+                            <option id="" class="" value="passing">POST</option>
+                            <option id="" class="" value="failed">PATCH</option>
+                            <option id="" class="" value="failed">DELETE</option>
+                            <option id="" class="" value="failed">PUT</option>
+                            <option id="" class="" value="failed">HEAD</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="console-form-row">
+                    <div class="console-form-header">API分类</div>
+                    <div class="console-form-body">
+                        <!-- <input class="console-textbox console-with-4" type="text"> -->
+                        <select id="select" class="console-textbox console-with-4">
+                            <option id="" class="" value="">号码改变类API</option>
+                            <option id="" class="" value="passing">消息API</option>
+                            <option id="" class="" value="failed">呼叫控制类</option>
+                            <option id="" class="" value="failed">外呼类API</option>
+                            <option id="" class="" value="failed">多方通话类API</option>
+                            <option id="" class="" value="failed">IVR类API</option>
+                            <option id="" class="" value="failed">QOS类API</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="console-form-row">
+                    <div class="console-form-header">描述</div>
+                    <div class="console-form-body">
+                        <textarea class="console-textarea console-with-6" type="text" rows="5" maxlength="2000" placeholder="必填，不超过2000个字符"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 下一步 -->
+    <div class="console-panel-body console-p4 console-mt4">
+        <div class="console-form">
+            <div class="console-form-row">
+                <div class="console-form-body">
+                    <a class="btn" (click)="nameNext()">下一步</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="request" style="display: none;">
+    <div class="console-panel">
+        <div class="console-panel-header">
+            <span class="console-panel-header-line"></span>
+            <div class="console-float-left">请求基础定义</div>
+        </div>
+        <div class="console-panel-body">
+            <div class="console-form">
+                <div class="console-form-row">
+                    <div class="console-form-header">API请求路径</div>
+                    <div class="console-form-body">
+                        <input class="console-textbox console-with-4" type="text" placeholder="例如：/index/test">
+                    </div>
+                </div>
+                <div class="console-form-row">
+                    <div class="console-form-header">服务地址</div>
+                    <div class="console-form-body">
+                        <input class="console-textbox console-with-4" type="text" placeholder="例如：http://www.baidu.com">
+                    </div>
+                </div>
+                <div class="console-form-row">
+                    <div class="console-form-header">端口号</div>
+                    <div class="console-form-body">
+                        <input class="console-textbox console-with-4" type="text" placeholder="例如：8000">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- 请求参数定义 -->
+    <div class="console-panel" style="margin-top: 20px;">
+        <div class="console-panel-header">
+            <span class="console-panel-header-line"></span>
+            <div class="console-float-left">请求参数定义</div>
+        </div>
+        <div class="console-panel-body">
+            <table id="tableParam" class="tableParam" style="width:100%">
+                <tr class="table-title">
+                    <th style="width: 30%">参数名称</th>
+                    <th style="width: 18%">参数类型</th>
+                    <th style="width: 12%">是否必填</th>
+                    <th style="width: 30%">描述</th>
+                    <th style="width: 10%">操作</th>
+                </tr>
+                <tr id="1">
+                    <td>
+                        <input maxlength="99" type="text" class="console-textbox">
+                    </td>
+                    <td>
+                        <select class="console-textbox console-with-4">
+                            <option id="" class="" value="">Int</option>
+                            <option id="" class="" value="passing">String</option>
+                            <option id="" class="" value="failed">Long</option>
+                            <option id="" class="" value="failed">Boolean</option>
+                            <option id="" class="" value="failed">Float</option>
+                            <option id="" class="" value="failed">Double</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>
+                        <input type="text" class="console-textbox">
+                    </td>
+                    <td>
+                        <a (click)="remove()" class="console-mr2">移除</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="add">
+            <div class="btn" style="padding: 3px;">
+                <i class="glyphicon glyphicon-plus"></i>
+                <a (click)="add()" style="color: #FFF;">增加一条</a>
+            </div>
+        </div>
+    </div>
+    <!-- 下一步 -->
+    <div class="console-panel-body console-p4 console-mt4">
+        <div class="console-form">
+            <div class="console-form-row">
+                <div class="console-form-body">
+                    <a class="btn pre" (click)="pre()">上一步</a>
+                    <a class="btn" (click)="paramNext()">下一步</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 返回结果定义 -->
+<div id="goBack" style="display: none;">
+    <div class="console-panel">
+        <div class="console-panel-header">
+            <span class="console-panel-header-line"></span>
+            <div class="console-float-left">返回结果基础定义</div>
+        </div>
+        <div class="console-panel-body">
+            <div class="console-form">
+                <div class="console-form-row">
+                    <div class="console-form-header">成功返回结果实例</div>
+                    <div class="console-form-body">
+                        <textarea class="console-textarea console-with-6" type="text" rows="5" placeholder="必填"></textarea>
+                    </div>
+                </div>
+                <div class="console-form-row">
+                    <div class="console-form-header">失败返回结果实例</div>
+                    <div class="console-form-body">
+                        <textarea class="console-textarea console-with-6" type="text" rows="5" placeholder="必填"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 请求参数定义 -->
+    <div class="console-panel" style="margin-top: 20px;">
+        <div class="console-panel-header">
+            <span class="console-panel-header-line"></span>
+            <div class="console-float-left">错误码定义</div>
+        </div>
+        <div class="console-panel-body">
+            <table id="tableGoBack" style="width:100%">
+                <tr class="table-title">
+                    <th style="width: 25%">错误码</th>
+                    <th style="width: 25%">错误信息</th>
+                    <th style="width: 25%">错误描述</th>
+                    <th style="width: 25%">操作</th>
+                </tr>
+                <tr>
+                    <td>
+                        <input maxlength="99" type="text" class="console-textbox" placeholder="例如：400">
+                    </td>
+                    <td>
+                        <input maxlength="99" type="text" class="console-textbox" placeholder="例如：page not found">
+                    </td>
+                    <td>
+                        <input type="text" class="console-textbox" style="width: 100%" placeholder="必填，不超过2000个字符">
+                    </td>
+                    <td>
+                        <a (click)="remove()" class="console-mr2">移除</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="add">
+            <div class="btn" style="padding: 3px;">
+                <i class="glyphicon glyphicon-plus"></i>
+                <a (click)="addBack()" style="color: #FFF;">增加一条</a>
+            </div>
+        </div>
+    </div>
+    <!-- 下一步 -->
+    <div class="console-panel-body console-p4 console-mt4">
+        <div class="console-form">
+            <div class="console-form-row">
+                <div class="console-form-body">
+                    <a class="btn pre" (click)="pres()">上一步</a>
+                    <a class="btn">创建</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
