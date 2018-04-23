@@ -3,4 +3,9 @@
 }
 table{
     font-size: 15px;
+    margin-bottom: 0px;
+}
+.scroll{
+    overflow-y: scroll;
+    height: 550px;
 }

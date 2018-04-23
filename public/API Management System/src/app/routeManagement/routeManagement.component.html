@@ -1,5 +1,6 @@
 <button (click)="goBack()" class="btn btn-default btn-sm">返回</button>
-<br/><br/>
+<br/>
+<br/>
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
@@ -25,30 +26,107 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>/callControl</td>
+                <tr *ngFor="let route of route_page">
+                    <td>{{route.user}}</td>
                     <td>
-                        <textarea class="form-control" rows="1" disabled="disabled">www.baidu.com</textarea>
+                        <textarea class="form-control" rows="1" disabled="disabled">{{route.service}}</textarea>
                     </td>
                     <td>
                         <a class="blue" (click)="modify($event)">修改</a>&nbsp;
-                        <a class="blue" (click)="yes($event)">确认</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>/message</td>
-                    <td>
-                        <textarea class="form-control" rows="1" disabled="disabled">www.sina.com</textarea>
-                    </td>
-                    <td>
-                        <a class="blue" (click)="modify($event)">修改</a>&nbsp;
-                        <a class="blue" (click)="yes($event)">确认</a>
+                        <a class="blue" (click)="yes($event,route)">确认</a>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <page [(pagination)]="pagination"> </page>
     </div>
     <div role="tabpanel" class="tab-pane" id="roles">
-        路由分发规则
+        <br/>
+        <div class="col-sm-8">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>API类别</th>
+                        <th>路由分发规则</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01</td>
+                        <td>呼叫控制类</td>
+                        <td>
+                            按照用户号码分发到归属省二级网络能力开放平台
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>02</td>
+                        <td>号码翻译类</td>
+                        <td>
+                            按照要被翻译的用户号码分发到归属省二级网络能力开放平台
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>03</td>
+                        <td>外呼类</td>
+                        <td>
+                            外呼一方按照被叫方号码分发到归属省二级网络能力开放平台；
+                            <br/>外呼两方按照通话主叫方号码分发到归属省二级网络能力开放平台
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>04</td>
+                        <td>多方通话类</td>
+                        <td>
+                            多方通话发起按照发起方号码分发到归属省二级网络能力开放平台；
+                            <br/>加入一方，退出一方，多方通话状态通知和结束多方通话按照已建立的会话路径进行转发
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>05</td>
+                        <td>IVR类</td>
+                        <td>
+                            按照已建立的会话路径进行转发
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>06</td>
+                        <td>消息类</td>
+                        <td>
+                            按照接收方号码分发到归属省二级网络能力开放平台
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>07</td>
+                        <td>管道类</td>
+                        <td>
+                            下发QoS按照用户终端公网IP地址分发到归属省二级网络能力开放平台
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:94px;">代号</th>
+                            <th>归属省二级网络能力开放平台</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="scroll">
+                <table class="table table-bordered" id="data">
+                    <tbody>
+                        <tr *ngFor="let province of provinces">
+                            <td style="width:94px;">{{province.code}}</td>
+                            <td>{{province.province}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

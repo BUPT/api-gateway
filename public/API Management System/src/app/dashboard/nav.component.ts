@@ -23,13 +23,12 @@ export class NavComponent implements OnInit {
   public plugin = "";
 
   public atomAPI = "";
-  public combineAPI = "";
+  public combinationAPI = "";
   public routeManagement = "";
   //public versionManagement = "";
   public healthCheckup = "";
   public performanceMonitoringAll = "";
-  public flowControl="";
-
+  public flowControl = "";
   routers = [];
 
 
@@ -47,13 +46,12 @@ export class NavComponent implements OnInit {
     this.plugin = "/main/"+this.para+"/bootstrap-plugin";
 
     this.atomAPI = "/main/"+this.para+"/atomAPI";
-    this.combineAPI = "/main/"+this.para+"/combineAPI";
+    this.combinationAPI = "/main/"+this.para+"/combinationAPI";
     this.routeManagement = "/main/"+this.para+"/routeManagement";
     //this.versionManagement = "/main/"+this.para+"/versionManagement";
     this.healthCheckup = "/main/"+this.para+"/healthCheckup";
     this.performanceMonitoringAll ="/main/"+this.para+"/performanceMonitoringAll";
-    this.flowControl="/main/"+this.para+"/flowControl";
-
+    this.flowControl = "/main/"+this.para+"/flowControl"
     this.routers = [
       // {
       //   href: this.dashboard,
@@ -92,13 +90,13 @@ export class NavComponent implements OnInit {
         type: true,
         child: [
           {href: this.atomAPI, name:"原子API"},
-          {href: this.combineAPI, name:"组合API"}
+          {href: this.combinationAPI, name:"组合API"}
         ]
       },
       {
         href: this.flowControl,
-        name:"流量控制",
-        type:false
+        name: "流控管理",
+        type: false
       },
       {
         href: this.routeManagement,
@@ -107,7 +105,7 @@ export class NavComponent implements OnInit {
       },
       {
         href: this.healthCheckup,
-        name:"系统健康检查",
+        name:"健康检查",
         type: false
       },
       {
