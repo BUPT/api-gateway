@@ -6,28 +6,20 @@ import { Observable } from 'rxjs';
 //差错处理
 import { catchError, map, tap } from 'rxjs/operators';
 import { Options } from 'selenium-webdriver/edge';
-import { Route } from '../routeManagement/route';
 
 const httpOptions = {
   headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' })
 };
 
 @Injectable()
-export class RouteService {
+export class LogService {
 
   constructor(public http: Http) { }
 
-  getAllRoutes() {
-    return this.http.get('/route/route/getAll')
+  getAllLog() {
+    return this.http.get('http://112.74.173.198:8080/viewLogPerformance')
       .map(res => {
         console.log(JSON.stringify(res));
-        return res;
-      });
-  }
-
-  updateRoute(datatosend){
-    return this.http.post('/route/route/update',datatosend)
-      .map(res => {
         return res;
       });
   }

@@ -51,7 +51,7 @@ export class versionManagementComponent implements OnInit {
     let page = this.pagination.currentPage - 1;
     this.pagination.totalItems = VERSION.length;
     let head = page * this.pagination.pageItems;
-    let end = head + this.pagination.pageItems - 1;
+    let end = head + this.pagination.pageItems;
     this.versions = VERSION.slice(head, end);
   }
 

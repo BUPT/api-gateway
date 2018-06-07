@@ -3,6 +3,9 @@ import { NavComponent } from '../dashboard/nav.component';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { Location } from '@angular/common';
+import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
+import { LogService } from './log.service';
+
 declare var $: any;
 
 @Component({
@@ -10,20 +13,38 @@ declare var $: any;
   templateUrl: './logCheckup.component.html',
 })
 export class logCheckupComponent implements OnInit {
+  use=[];
 
-
+  source: LocalDataSource;
 
   constructor(
     private parent: NavComponent,
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location
-  ) { }
+    private location: Location,
+    public LogService: LogService
+  ) {
+    this.source = new LocalDataSource(this.data);
+  }
 
 
 
   ngOnInit() {
     // this.parent.setActiveByPath("versionManagement",this.parent.versionManagement);
+
+    //得到所有的日志信息
+    this.LogService.getAllLog().subscribe(data => {
+      //转换成对象，stringfy()转换成字符串
+      var datas = JSON.parse(data['_body']);   
+      if (datas._result == true) {
+        for (let item of datas._datum){
+          this.use.push(item);
+        }
+      }
+      else {
+        alert("error！" + datas.error);
+      }
+    });
   };
 
   goBack(): void {
@@ -46,13 +67,17 @@ export class logCheckupComponent implements OnInit {
 
   settings = {
     columns: {
-      api: {
+      region: {
+        title: '地区',
+        filter: true
+      },
+      service: {
         title: 'API',
         filter: true
       },
-      type:{
-        title:'类型',
-        filter:true
+      type: {
+        title: '类型',
+        filter: true
       },
       time: {
         title: '被调用时间',
@@ -62,303 +87,35 @@ export class logCheckupComponent implements OnInit {
         title: 'HTTP方法',
         filter: true
       },
-      requireBag:{
-        title:'请求包大小',
-        filter:true
-      },
-      ip:{
-        title:'请求IP',
+      requireBag: {
+        title: '请求包大小(字节)',
         filter: true
       },
-      requestBag:{
-        title:'返回包大小(字节)',
-        filter:true
-      },
-      status:{
-        title:'返回状态码(字节)',
-        filter:true
-      },
-      length:{
-        title:'响应时间(ms)',
+      ip: {
+        title: '请求IP',
         filter: true
       },
-      XFF:{
-        title:'XXF头',
-        filter:true
+      requestBag: {
+        title: '返回包大小(字节)',
+        filter: true
+      },
+      status: {
+        title: '返回状态码',
+        filter: true
+      },
+      responseTime: {
+        title: '响应时间(ms)',
+        filter: true
       }
     },
     //mode: "inline",
     actions: false,
     noDataMessage: "没有符合条件的数据",
-    pager:{
-      perPage:15
+    pager: {
+      perPage: 15
     }
   };
 
-  data = [
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/callControl",
-      type:"组合API",
-      time: "2018-03-22 13:32:22",
-      method:"POST",
-      requireBag:"300",
-      ip:"13.24.78.78",
-      requestBag:"435",
-      status:"200",
-      length: "20",
-      XFF:"cbdjsougvnwl"     
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    },
-    {
-      api: "/numberChange",
-      type:"原子API",
-      time: "2018-04-05 23:42:12",
-      method:"GET",
-      requestBag:"234",
-      requireBag:"456",
-      status:"404",
-      length: "25",
-      ip:"13.24.33.78",
-      XFF:"caedcwevg"
-    }
-  ];
+  data = this.use; 
+
 }

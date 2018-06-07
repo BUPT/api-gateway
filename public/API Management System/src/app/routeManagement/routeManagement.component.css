@@ -9,3 +9,7 @@ table{
     overflow-y: scroll;
     height: 550px;
 }
+.note{
+    font-size:16px;
+    margin:20px;
+}

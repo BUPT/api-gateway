@@ -39,13 +39,18 @@ export class routeManagementComponent implements OnInit {
     //得到所有的路由信息
     this.RouteService.getAllRoutes().subscribe(data => {
       //转换成对象，stringfy()转换成字符串
-      this.routes = JSON.parse(data['_body']);
-
-      //分页
-      this.initList();
-      this.pagination.changePage = (() => {
+      var datas = JSON.parse(data['_body']);
+      if (datas.result == true) {
+        this.routes = datas.datum;
+        //分页
         this.initList();
-      });
+        this.pagination.changePage = (() => {
+          this.initList();
+        });
+      }
+      else {
+        alert("error！" + datas.error);
+      }
     });
 
   };
@@ -55,7 +60,7 @@ export class routeManagementComponent implements OnInit {
     let page = this.pagination.currentPage - 1;
     this.pagination.totalItems = this.routes.length;
     let head = page * this.pagination.pageItems;
-    let end = head + this.pagination.pageItems - 1;
+    let end = head + this.pagination.pageItems;
     this.route_page = this.routes.slice(head, end);
   }
 
@@ -67,11 +72,25 @@ export class routeManagementComponent implements OnInit {
 
   yes($event, route): void {
     var newurl = $($event.target).parent().parent().children('td').eq(1).children('textarea').val();
-    alert("修改成功！");
-    this.clickroute = route;
-    this.clickroute.service = newurl;
-    $($event.target).parent().parent().children('td').eq(1).children('textarea').val(newurl);
-    $($event.target).parent().parent().children('td').eq(1).children('textarea').attr("disabled", "disabled");
+    var datatosend = {
+      'user': route.user,
+      'service': newurl
+    }
+    this.RouteService.updateRoute(datatosend).subscribe(data => {
+      var datas = JSON.parse(data['_body']);
+      if (datas.result == true) {
+        alert("修改成功！");
+        this.clickroute = route;
+        this.clickroute.service = newurl;
+        $($event.target).parent().parent().children('td').eq(1).children('textarea').val(newurl);
+        $($event.target).parent().parent().children('td').eq(1).children('textarea').attr("disabled", "disabled");
+      }
+      else {
+        alert("error！" + datas.error);
+      }
+
+    });
+
   }
 
   goBack(): void {
