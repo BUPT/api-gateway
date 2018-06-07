@@ -39,7 +39,83 @@ export class performanceMonitoringComponent implements OnInit {
   goBack(): void {
     this.location.back();
   }
+  settings = {
+     actions: {
+        custom: [
+          {
+            name: 'view',
+            title: 'View ',
+          },
+          {
+            name: 'edit',
+            title: 'Edit ',
+          },
+          {
+            name: 'delete',
+            title: 'Delete ',
+          },
+          {
+            name: 'duplicate',
+            title: 'Duplicate ',
+          },
+        ],
+      },
+    columns: {
+      name: {
+        title: '名称',
+        filter: true
+      },
+      unit:{
+        title:'单位',
+        filter:true
+      },
+      limit: {
+        title: 'API流量限制',
+        filter: true
+      },
+      createtime: {
+        title: '创建时间',
+        filter: true
+      },
+      description:{
+        title:'描述',
+        filter:true
+      },
+      // button: {
+      //   title: 'Button',
+      //   type: 'custom',
+      //   //renderComponent: ButtonViewComponent,
+      //   onComponentInitFunction(instance) {
+      //     instance.save.subscribe(row => {
+      //       alert(`${row.name} saved!`)
+      //     });
+      //   }
+      // },
+    },
+    //mode: "inline",
+    noDataMessage: "没有符合条件的数据",
+    pager:{
+      perPage:15
+    }
+  };
+  data = [
+    {
+      name: "001",
+      unit:"秒",
+      limit: "500",
+      createtime:"2018/4/22",
+      requireBag:"300",
+      description:""
+    },
+    {
+      name: "002",
+      unit:"分",
+      limit: "50000",
+      createtime:"2018/4/22",
+      requireBag:"300",
+      description:"", 
 
+    }]
   // lineChart
   public lineChartData: Array<any> = [
     { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },

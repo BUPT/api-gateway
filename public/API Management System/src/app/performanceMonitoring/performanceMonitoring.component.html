@@ -206,7 +206,7 @@
                         <option value="anhui">安徽</option>
                       </select>
                 </div>  -->
-  <div class=" btn-group flowcontrol0" role="group">
+  <!-- <div class=" btn-group flowcontrol0" role="group">
     <label>描述</label>
     <input type="text" placeholder="请输入描述">
   </div>
@@ -227,9 +227,12 @@
     <a class="btn  btn-info" role="button">
       <span class="glyphicon glyphicon-ok" aria-hidden="true">添加</span>
     </a>
+  </div> -->
+  <div class="table table-striped  table-responsive flowcontroltable">
+      <ng2-smart-table [settings]="settings" [source]="data" (deleteConfirm)="onDeleteConfirm($event)"></ng2-smart-table>
   </div>
 
-  <table class="table table-striped  table-responsive flowcontroltable">
+    <!--<table class="table table-striped  table-responsive flowcontroltable">
     <thead>
       <tr>
         <th>名称</th>
@@ -241,7 +244,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
+    <tr>
         <td>001</td>
         <td>秒</td>
         <td>500</td>
@@ -270,7 +273,7 @@
             <span class="glyphicon glyphicon-pencil" aria-hidden="true">修改</span>
           </a>
         </td>
-      </tr>
+      </tr> 
     </tbody>
-  </table>
+  </table>-->
 </div>

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NavComponent } from '../dashboard/nav.component';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgClass } from '@angular/common';
+import {Http} from '@angular/http'
 declare var $: any;
-
 @Component({
   selector: 'app-health',
   templateUrl: './healthCheckup.component.html',
@@ -11,13 +11,20 @@ declare var $: any;
 })
 export class healthCheckupComponent implements OnInit {
 
-
-
   constructor(
     private parent: NavComponent,
     private route: ActivatedRoute,
-    private router: Router
-  ) { }
+    private router: Router,
+    private http:Http,
+  ) {}
+  //点击请求接口  可以成功
+  // url: string = 'http://112.74.173.198:8080/viewTopPerformance'; 
+  // click() { 
+  //   this.http.get(this.url).map(res => res.json()).subscribe(function (data) {//map方法转成正常的json格式的数据
+  //   console.log(data);
+  //   console.log(data._result);
+  //   })   
+  // } 
 
   ngOnInit() {
     this.parent.setActiveByPath(this.parent.healthCheckup, "");
