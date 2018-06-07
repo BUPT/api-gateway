@@ -137,9 +137,6 @@
                                     <a href="#" ng-bind="operate4" ng-click="debug()"></a>
                                 </li>
                                 <li class="divider"></li>
-                                <li>
-                                    <a href="#" ng-bind="operate3" ng-click="goback()"></a>
-                                </li>
                             </ul>
                         </li>
 
@@ -541,6 +538,8 @@
                             </svg>
                         </div>
                     </div>
+                    <br/>
+                    <button type="button" class="btn btn-primary btn-lg" ng-click="goback()" style="padding:0px;margin-left:-20px;">撤销</button>
                 </div>
                 <div class="cent">
                     <!-- 目标画布被一个 class="sdt-canvas" 的 <div> 标签包围，此标签的宽和高决定了目标画布的宽和高。目标画布本身是一个 id="sdt-drop-canvas" 的 <svg>标签 -->
