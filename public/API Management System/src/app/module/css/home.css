@@ -68,7 +68,9 @@ a,img{border:0;}
 
   .photo a span{
     font-size: 25px !important;
-    padding: 50px !important;
+    padding-top: 130px !important;
+    padding-left:30px !important;
+    padding-right:  30px !important;
   }
   #mice{
    margin: 0 auto;

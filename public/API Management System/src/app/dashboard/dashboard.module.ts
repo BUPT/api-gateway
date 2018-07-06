@@ -28,8 +28,13 @@ import { combinationAPIComponent } from '../APIs/combinationAPI/combinationAPI';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { ApiService } from '../APIs/api.service';
 import { creatAtomAPIComponent } from '../creatAtomAPI/createAtomAPI.compoment';
-import { flowControlComponent } from '../flowControl/flowControl.component';
 import { RouteService } from 'app/routeManagement/route.service';
+import { CreateAtomApiService } from '../creatAtomAPI/create-atom-api.service';
+import { LogService } from '../logCheckup/log.service';
+import { ModifyAtomApiComponent } from '../modify-atom-api/modify-atom-api.component';
+import { ModifyAtomApiService } from '../modify-atom-api/modify-atom-api.service';
+import { flowControlComponent } from '../flowControl/flowControl.component';
+import { FlowcontrolService } from '../flowControl/flowcontrol.service';
 
 
 const tablesRoutes: Routes = [
@@ -61,6 +66,8 @@ const tablesRoutes: Routes = [
             { path: 'combineAPI/routeManagement', component: routeManagementComponent },
             //创建原子API
             { path: 'atomAPI/createAtomAPI', component: creatAtomAPIComponent },
+            //修改原子API
+            { path: 'atomAPI/modifyAtomAPI/:mid', component: ModifyAtomApiComponent },
             { path: 'flowControl', component: flowControlComponent }
 
         ]
@@ -102,9 +109,11 @@ const tablesRoutes: Routes = [
         performanceMonitoringComponent,
         //创建原子API
         creatAtomAPIComponent,
+        // 修改原子API
+        ModifyAtomApiComponent,
         flowControlComponent,
         PageComponent
     ],
-    providers: [ApiService,RouteService]
+    providers: [ApiService, RouteService, CreateAtomApiService, LogService,ModifyAtomApiService,FlowcontrolService]
 })
 export class DashboardModule { }

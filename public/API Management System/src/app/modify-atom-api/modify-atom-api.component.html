@@ -1,0 +1,149 @@
+<h2>修改原子API</h2>
+<div class="row">
+    <button class="back col-md-3" style="float: right;" (click)="goBack()">返回</button>
+</div>
+<br/>
+<div id="nameDefinition">
+    <div class="console-panel">
+        <div class="console-panel-header">
+            <span class="console-panel-header-line"></span>
+            <div class="console-float-left">修改原子API属性</div>
+        </div>
+        <div>
+            <div class="console-panel-body">
+                <div class="console-form-row">
+                    <div class="console-form-header">API名称</div>
+                    <div class="console-form-body">
+                        <input class="console-textbox console-with-4" type="text" id="apiname" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="console-form-row">
+                    <div class="console-form-header">地区</div>
+                    <div class="console-form-body">
+                        <select id="areas" class="console-textbox console-with-4" [ngModel]="Areadata" (ngModelChange)="Areadata=$event;setArea()">
+                            <option value="">请选择</option>
+                            <option *ngFor="let area of Areadatas" [value]='area'>{{area}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="console-form-row">
+                    <div class="console-form-header">Http Method</div>
+                    <div class="console-form-body">
+                        <select id="methods" class="console-textbox console-with-4" [ngModel]="Methoddata" (ngModelChange)="Methoddata=$event;setMethod()">
+                            <option value="">请点击选择</option>
+                            <option *ngFor="let Method of Methoddatas" [value]='Method'>{{Method}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="console-form-row">
+                    <div class="console-form-header">API分类</div>
+                    <div class="console-form-body">
+                        <select id="APITypes" class="console-textbox console-with-4" [ngModel]="APITypedata" (ngModelChange)="APITypedata=$event;setAPIType()">
+                            <option value="">请点击选择</option>
+                            <option *ngFor="let APIType of APITypedatas" [value]='APIType'>{{APIType}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="console-form-row">
+                    <div class="console-form-header">描述</div>
+                    <div class="console-form-body">
+                        <textarea class="console-textarea console-with-6" type="text" rows="5" maxlength="2000" id="apiDes" #des></textarea>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="modal-body" id="request">
+                    <div class="console-form-row">
+                        <div class="console-form-header">服务路径</div>
+                        <div class="console-form-body">
+                            <input class="console-textbox console-with-4" type="text" id="path" #path>
+                        </div>
+                    </div>
+                    <div class="console-form-row">
+                        <div class="console-form-header">服务地址</div>
+                        <div class="console-form-body">
+                            <input class="console-textbox console-with-4" type="text" id="address" #address>
+                        </div>
+                    </div>
+                    <div class="console-form-row">
+                        <div class="console-form-header">端口号</div>
+                        <div class="console-form-body">
+                            <input class="console-textbox console-with-4" type="text" id="port" #port>
+                        </div>
+                    </div>
+                    <!-- 请求参数定义 -->
+                    <div class="console-panel modify" style="margin-top: 20px;">
+                        <!-- <div class="console-panel-header">
+                              <span class="console-panel-header-line"></span>
+                              <div class="console-float-left">请求参数定义</div>
+                          </div> -->
+                        <table id="tableParam" class="tableParam" style="width:100%">
+                            <tr class="table-title">
+                                <th style="width: 10%">序号</th>
+                                <th style="width: 21%">参数名称</th>
+                                <th style="width: 18%">参数类型</th>
+                                <th style="width: 11%">是否必填</th>
+                                <th style="width: 30%">描述</th>
+                                <th style="width: 10%">操作</th>
+                            </tr>
+                        </table>
+                        <div class="add">
+                            <div class="btn" style="padding: 3px;">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                <a id="addParams" (click)="addParams()" style="color: #FFF;">增加一条</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <hr>
+                <!-- <div class="modal-body" style="display: none" id="error"> -->
+                <div class="console-form">
+                    <div class="console-form-row">
+                        <div class="console-form-header">成功返回结果实例</div>
+                        <div class="console-form-body">
+                            <textarea class="console-textarea console-with-6" type="text" rows="5" placeholder="必填" id="successResult" #successResult></textarea>
+                            <span id="tip6"></span>
+                        </div>
+                    </div>
+                    <div class="console-form-row">
+                        <div class="console-form-header">失败返回结果实例</div>
+                        <div class="console-form-body">
+                            <textarea class="console-textarea console-with-6" type="text" rows="5" placeholder="必填" id="errorResult" #errorResult></textarea>
+                            <span id="tip7"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="console-panel modify">
+                        <!-- <div class="console-panel-header">
+                              <span class="console-panel-header-line"></span>
+                              <div class="console-float-left">错误码定义</div>
+                          </div> -->
+                        <table id="tableGoBack" style="width:100%">
+                            <tr class="table-title">
+                                <th style="width: 10%">序号</th>
+                                <th style="width: 20%">错误码</th>
+                                <th style="width: 25%">错误信息</th>
+                                <th style="width: 25%">错误描述</th>
+                                <th style="width: 20%">操作</th>
+                            </tr>
+                        </table>
+                        <div class="add">
+                            <div class="btn" style="padding: 3px;">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                <a id="addError" (click)="addBack()" style="color: #FFF;">增加一条</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer add" style="text-align: center" id="errorFoot">
+            <button type="button" id="save" class="btn-success btn" (click)="save(des.value,path.value,address.value,port.value,successResult.value,errorResult.value)">保存</button>
+        </div>
+
+    </div>
+
+</div>

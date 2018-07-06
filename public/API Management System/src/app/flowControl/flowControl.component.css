@@ -18,3 +18,28 @@ hr{
 .showtable{
     margin-top: 50px;
 }
+.flowcontrol0,.flowconfirm{
+    margin-top: 2%;
+}
+.flowcontrol,.flowconfirm{
+    margin-top: 2%;
+    margin-left: 8%;
+}
+.describe{
+    font-size: 15px;
+}
+.box{
+    width: 100px;
+    height: 30px;
+}
+.box1{
+    width: 60px;
+    height: 30px;
+}
+.box2{
+    display: inline !important;
+    width: 200px;
+}
+.flowcontroltable{
+    margin-top: 2%;
+}

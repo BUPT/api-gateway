@@ -19,84 +19,42 @@
                 <div class="console-form-row">
                     <div class="console-form-header">API名称</div>
                     <div class="console-form-body">
-                        <input class="console-textbox console-with-4" type="text">
+                        <input class="console-textbox console-with-4" id="apiname" type="text" #apiname>
+                       <span id="tip1"></span>
                     </div>
                 </div>
-                <!-- <div class="console-form-row">
-                <div class="console-form-header">服务地址</div>
-                <div class="console-form-body">
-                    <input class="console-textbox console-with-4" type="text" placeholder="例如：http://www.baidu.com">
-                </div>
-            </div> -->
-                <!-- <div class="console-form-row">
-                <div class="console-form-header">端口号</div>
-                <div class="console-form-body">
-                    <input class="console-textbox console-with-4" type="text" placeholder="例如：8000">
-                </div>
-            </div> -->
-                <!-- <div class="console-form-row">
-                    <div class="console-form-header">API类型</div>
-                    <div class="console-form-body">
-                        <label class="console-radio">
-                            <input type="radio" name="type" value="public">
-                            <span>公开</span>
-                        </label>
-                        <label class="console-radio">
-                            <input type="radio" name="type" value="private" checked="checked">
-                            <span>私有</span>
-                        </label>
-                    </div>
-            </div> -->
                 <div class="console-form-row">
                     <div class="console-form-header">地区</div>
                     <div class="console-form-body">
-                        <!-- <input class="console-textbox console-with-4" type="text"> -->
-                        <select id="area" class="console-textbox console-with-4">
-                            <option id="" class="" value="">上海</option>
-                            <option id="" class="" value="passing">北京</option>
-                            <option id="" class="" value="failed">天津</option>
-                            <option id="" class="" value="failed">湖北</option>
-                            <option id="" class="" value="failed">内蒙古</option>
-                            <option id="" class="" value="failed">黑龙江</option>
-                            <option id="" class="" value="failed">福建</option>
-                            <option id="" class="" value="failed">辽宁</option>
-                            <option id="" class="" value="failed">江苏</option>
-                            <option id="" class="" value="failed">新疆</option>
+                        <select id="area" class="console-textbox console-with-4" [ngModel]="Areadata" (ngModelChange)="Areadata=$event;setArea()">
+                            <option value="">请选择</option>
+                            <option *ngFor="let area of Areadatas" [value]='area'>{{area}}</option>
                         </select>
                     </div>
                 </div>
                 <div class="console-form-row">
                     <div class="console-form-header">Http Method</div>
                     <div class="console-form-body">
-                        <select id="area" class="console-textbox console-with-4">
-                            <option id="" class="" value="">GET</option>
-                            <option id="" class="" value="passing">POST</option>
-                            <option id="" class="" value="failed">PATCH</option>
-                            <option id="" class="" value="failed">DELETE</option>
-                            <option id="" class="" value="failed">PUT</option>
-                            <option id="" class="" value="failed">HEAD</option>
+                        <select id="method" class="console-textbox console-with-4" [ngModel]="Methoddata" (ngModelChange)="Methoddata=$event;setMethod()">
+                            <option value="">请点击选择</option>
+                            <option *ngFor="let Method of Methoddatas" [value]='Method'>{{Method}}</option>
                         </select>
                     </div>
                 </div>
                 <div class="console-form-row">
                     <div class="console-form-header">API分类</div>
                     <div class="console-form-body">
-                        <!-- <input class="console-textbox console-with-4" type="text"> -->
-                        <select id="select" class="console-textbox console-with-4">
-                            <option id="" class="" value="">号码改变类API</option>
-                            <option id="" class="" value="passing">消息API</option>
-                            <option id="" class="" value="failed">呼叫控制类</option>
-                            <option id="" class="" value="failed">外呼类API</option>
-                            <option id="" class="" value="failed">多方通话类API</option>
-                            <option id="" class="" value="failed">IVR类API</option>
-                            <option id="" class="" value="failed">QOS类API</option>
+                        <select id="APIType" class="console-textbox console-with-4" [ngModel]="APITypedata" (ngModelChange)="APITypedata=$event;setAPIType()">
+                            <option value="">请点击选择</option>
+                            <option *ngFor="let APIType of APITypedatas" [value]='APIType'>{{APIType}}</option>
                         </select>
                     </div>
                 </div>
                 <div class="console-form-row">
                     <div class="console-form-header">描述</div>
                     <div class="console-form-body">
-                        <textarea class="console-textarea console-with-6" type="text" rows="5" maxlength="2000" placeholder="必填，不超过2000个字符"></textarea>
+                        <textarea class="console-textarea console-with-6" id="des" type="text" rows="5" maxlength="2000" placeholder="必填，不超过2000个字符" #des></textarea>
+                        <span id="tip2"></span>
                     </div>
                 </div>
             </div>
@@ -125,19 +83,22 @@
                 <div class="console-form-row">
                     <div class="console-form-header">API请求路径</div>
                     <div class="console-form-body">
-                        <input class="console-textbox console-with-4" type="text" placeholder="例如：/index/test">
+                        <input class="console-textbox console-with-4" id="path" type="text" placeholder="例如：/index/test" #path>
+                        <span id="tip3"></span>
                     </div>
                 </div>
                 <div class="console-form-row">
                     <div class="console-form-header">服务地址</div>
                     <div class="console-form-body">
-                        <input class="console-textbox console-with-4" type="text" placeholder="例如：http://www.baidu.com">
+                        <input class="console-textbox console-with-5" id="address" style="width: 35%" type="text" placeholder="例如：http://www.baidu.com" #address>
+                        <span id="tip4"></span>
                     </div>
                 </div>
                 <div class="console-form-row">
                     <div class="console-form-header">端口号</div>
                     <div class="console-form-body">
-                        <input class="console-textbox console-with-4" type="text" placeholder="例如：8000">
+                        <input class="console-textbox console-with-4" id="port" type="text" placeholder="例如：8000" #port>
+                        <span id="tip5"></span>
                     </div>
                 </div>
 
@@ -153,13 +114,14 @@
         <div class="console-panel-body">
             <table id="tableParam" class="tableParam" style="width:100%">
                 <tr class="table-title">
-                    <th style="width: 30%">参数名称</th>
+                    <th style="width: 6%">序号</th>
+                    <th style="width: 25%">参数名称</th>
                     <th style="width: 18%">参数类型</th>
-                    <th style="width: 12%">是否必填</th>
+                    <th style="width: 11%">是否必填</th>
                     <th style="width: 30%">描述</th>
                     <th style="width: 10%">操作</th>
                 </tr>
-                <tr id="1">
+                <!-- <tr id="1">
                     <td>
                         <input maxlength="99" type="text" class="console-textbox">
                     </td>
@@ -182,7 +144,7 @@
                     <td>
                         <a (click)="remove()" class="console-mr2">移除</a>
                     </td>
-                </tr>
+                </tr> -->
             </table>
         </div>
         <div class="add">
@@ -217,13 +179,15 @@
                 <div class="console-form-row">
                     <div class="console-form-header">成功返回结果实例</div>
                     <div class="console-form-body">
-                        <textarea class="console-textarea console-with-6" type="text" rows="5" placeholder="必填"></textarea>
+                        <textarea class="console-textarea console-with-6" type="text" rows="5" placeholder="必填" #successResult></textarea>
+                        <span id="tip6"></span>
                     </div>
                 </div>
                 <div class="console-form-row">
                     <div class="console-form-header">失败返回结果实例</div>
                     <div class="console-form-body">
-                        <textarea class="console-textarea console-with-6" type="text" rows="5" placeholder="必填"></textarea>
+                        <textarea class="console-textarea console-with-6" type="text" rows="5" placeholder="必填" #errorResult></textarea>
+                        <span id="tip7"></span>
                     </div>
                 </div>
             </div>
@@ -238,12 +202,13 @@
         <div class="console-panel-body">
             <table id="tableGoBack" style="width:100%">
                 <tr class="table-title">
-                    <th style="width: 25%">错误码</th>
+                    <th style="width: 10%">序号</th>
+                    <th style="width: 20%">错误码</th>
                     <th style="width: 25%">错误信息</th>
                     <th style="width: 25%">错误描述</th>
-                    <th style="width: 25%">操作</th>
+                    <th style="width: 20%">操作</th>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td>
                         <input maxlength="99" type="text" class="console-textbox" placeholder="例如：400">
                     </td>
@@ -256,7 +221,7 @@
                     <td>
                         <a (click)="remove()" class="console-mr2">移除</a>
                     </td>
-                </tr>
+                </tr> -->
             </table>
         </div>
         <div class="add">
@@ -272,7 +237,7 @@
             <div class="console-form-row">
                 <div class="console-form-body">
                     <a class="btn pre" (click)="pres()">上一步</a>
-                    <a class="btn">创建</a>
+                    <a class="btn" (click)="createAPI(apiname.value,des.value,path.value,address.value,port.value,successResult.value,errorResult.value)">创建</a>
                 </div>
             </div>
         </div>

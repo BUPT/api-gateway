@@ -62,8 +62,8 @@
     #area,
     #creatAPI,
     #creatAPIByJson {
-        display: block;
-        width: 100%;
+        /* display: block;
+        width: 100%; */
         height: 34px;
         padding: 6px 12px;
         font-size: 14px;
@@ -82,6 +82,8 @@
     .btn {
         background-color: #00c1de !important;
         color: #fff !important;
+        float: left;
+        margin-top: 3px;
     }
 
     p {
@@ -103,8 +105,15 @@
 
     .panel-title {
         font-size: 16px;
-        color: #369dd0;
+        color: #00c1df;
     }
+
+    /* .panel-title>a:hover {
+        color: #9fd3db;
+    }
+    .panel-title>a:active {
+        color: #9fd3db;
+    } */
 
     .console-mr2 {
         color: rgb(86, 154, 221);
@@ -181,6 +190,35 @@
         margin-bottom: 15px;
         color: black;
     }
+
+    hr {
+        background-color: #bbb8b8;
+        border-top: 1px solid #bbb8b8;
+    }
+
+    #cancel,
+    #save {
+        background-color: #00c1de !important;
+        color: #fff !important;
+        border-radius: 15%;
+    }
+
+    .modal-footer {
+        text-align: center;
+    }
+
+    @media (min-width: 768px) {
+        .modal-dialog {
+            width: 850px;
+            margin: 30px auto;
+        }
+    }
+
+    #addParams,
+    #addError {
+        background-color: #00c1de;
+        border: none;
+    }
 </style>
 <div class="contaier">
     <div class="row">
@@ -218,7 +256,7 @@
         <!-- 上传Swagger文件 -->
         <div class="col-md-2" style="float: right;">
             <div class="form-group">
-                <a data-toggle="modal" data-target="#bySwaggerModal" id="creatAPIBySwagger" class="btn">上传Swagger文件</a>
+                <a data-toggle="modal" data-target="#bySwaggerModal" id="creatAPIBySwagger" class="btn">上传Yaml文件</a>
             </div>
         </div>
         <!-- 上传Swagger文件的弹窗 -->
@@ -233,12 +271,12 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <input id="file-1" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="1">
+                            <input id="file-1" type="file" multiple class="file" (change) = "uploadFile($event)" data-overwrite-initial="false" data-min-file-count="1">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary">上传</button>
+                        <button type="button" class="btn btn-primary" (click)="submitUploadFile()">上传</button>
                     </div>
                 </div>
             </div>
@@ -251,39 +289,26 @@
     </div>
     <div class="row">
 
-        <div class="col-md-6" style="margin-top:30px">
+        <div class="col-md-6" style="margin-top:-30px">
             <div class="table-responsive">
-                <div class="col-md-4">
+                <div class="col-md-4" style="margin-bottom: 14px">
                     <div class="form-group">
-                        <input id="found" class="from-control" placeholder="请填写查找的API名字" type="text" #ApiName>
+                        <input id="found" class="from-control" placeholder="请填写查找的API名字" type="text" [ngModel]="search.name" #ApiName>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <select id="select" class="from-control" #APIType>
-                            <option id="" class="" value="">号码改变类API</option>
-                            <option id="" class="" value="passing">消息API</option>
-                            <option id="" class="" value="failed">呼叫控制类</option>
-                            <option id="" class="" value="failed">外呼类API</option>
-                            <option id="" class="" value="failed">多方通话类API</option>
-                            <option id="" class="" value="failed">IVR类API</option>
-                            <option id="" class="" value="failed">QOS类API</option>
+                        <select id="select" class="from-control" [ngModel]="APITypedata" (ngModelChange)="APITypedata=$event;setAPIType()">
+                            <option value="">请点击选择</option>
+                            <option *ngFor="let APIType of APITypedatas" [value]='APIType'>{{APIType}}</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <select id="area" class="from-control" #area>
-                            <option id="" class="" value="">上海</option>
-                            <option id="" class="" value="passing">北京</option>
-                            <option id="" class="" value="failed">天津</option>
-                            <option id="" class="" value="failed">湖北</option>
-                            <option id="" class="" value="failed">内蒙古</option>
-                            <option id="" class="" value="failed">黑龙江</option>
-                            <option id="" class="" value="failed">福建</option>
-                            <option id="" class="" value="failed">辽宁</option>
-                            <option id="" class="" value="failed">江苏</option>
-                            <option id="" class="" value="failed">新疆</option>
+                        <select id="area" class="from-control" [ngModel]="Areadata" (ngModelChange)="Areadata=$event;setArea()">
+                            <option value="">请选择</option>
+                            <option *ngFor="let area of Areadatas" [value]='area'>{{area}}</option>
                         </select>
                     </div>
                 </div>
@@ -303,7 +328,7 @@
                         </tr>
                         <tr *ngFor="let api of api_page" [class.selected]="api === selectedApi" (click)="onSelect(api)">
                             <td>
-                                <a class="console-mr">{{api.apiname}}</a>
+                                <a class="console-mr">{{api.name}}</a>
                             </td>
                             <td>{{api.des}}</td>
                             <td>
@@ -314,9 +339,9 @@
                                 <span class="text-explode">|</span>
                                 <a href="" class="console-mr2" routerLink=routeManagement>路由</a>
                                 <span class="text-explode">|</span>
-                                <a href="" class="console-mr2" routerLink=performanceMonitoring>性能</a>
+                                <a href="http://10.108.211.22:3000/d/apGZdCVmz/api?orgId=1" target="_blank" class="console-mr2">性能</a>
                                 <br>
-                                <a *ngIf="api.status=='已发布'" class="console-mr2" data-toggle="modal" data-target="#myModaloff" (click)="off($event,api)">下线</a>
+                                <a *ngIf="api.status=='已发布'" class="console-mr2" data-toggle="modal" data-target="#myModaloff" [class.selected]="api === offapi"  (click)="off($event,api)">下线</a>
                                 <!-- Modal -->
                                 <div class="modal fade" id="myModaloff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
                                     <div class="modal-dialog" role="document">
@@ -328,17 +353,18 @@
                                                 <h4 class="modal-title" id="myModalLabel1">API下线</h4>
                                             </div>
                                             <div class="modal-body">
-                                                你确定要下线此{{api.apiname}}API吗？
+                                                你确定要下线此<strong>API</strong>吗？
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
-                                                <button type="button" class="btn btn-primary" (click)="offYes()">Yes</button>
+                                                <button type="button" class="btn btn-primary" (click)="offYes()" data-dismiss="modal">Yes</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <span *ngIf="api.status=='已发布'" class="text-explode">|</span>
-                                <a  class="console-mr2" data-toggle="modal" data-target="#deleteModal" (click)="delete($event,api)" id="{{api.apiname}}">删除</a>
+
+                                <a class="console-mr2" data-toggle="modal" data-target="#deleteModal" (click)="delete($event,api)">删除</a>
                                 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -358,96 +384,31 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <span class="text-explode">|</span>
-                                <a href="" class="console-mr2">发布</a>
-                                <span class="text-explode">|</span>
-                                <a href="" class="console-mr2" data-toggle="modal" data-target="#modifyModal" (click)="modify($event,api)">修改</a>
-                                <div *ngIf="modifyApi">
-                                    <div class="modal fade" id="modifyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                    <h4 class="modal-title" id="myModalLabel">修改API</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="console-form-row">
-                                                        <div class="console-form-header">API名称</div>
-                                                        <div class="console-form-body">
-                                                            <input class="console-textbox console-with-4" type="text" value="{{modifyApi.apiname}}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="console-form-row">
-                                                        <div class="console-form-header">服务地址</div>
-                                                        <div class="console-form-body">
-                                                            <input class="console-textbox console-with-4" type="text" value="{{modifyApi.Address}}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="console-form-row">
-                                                        <div class="console-form-header">端口号</div>
-                                                        <div class="console-form-body">
-                                                            <input class="console-textbox console-with-4" type="text" value="{{modifyApi.ServicePort}}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="console-form-row">
-                                                        <div class="console-form-header">地区</div>
-                                                        <div class="console-form-body">
-                                                            <!-- <input class="console-textbox console-with-4" type="text"> -->
-                                                            <select id="area1" class="console-textbox console-with-4">
-                                                                <option id="" class="" value="">上海</option>
-                                                                <option id="" class="" value="passing">北京</option>
-                                                                <option id="" class="" value="failed">天津</option>
-                                                                <option id="" class="" value="failed">湖北</option>
-                                                                <option id="" class="" value="failed">内蒙古</option>
-                                                                <option id="" class="" value="failed">黑龙江</option>
-                                                                <option id="" class="" value="failed">福建</option>
-                                                                <option id="" class="" value="failed">辽宁</option>
-                                                                <option id="" class="" value="failed">江苏</option>
-                                                                <option id="" class="" value="failed">新疆</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="console-form-row">
-                                                        <div class="console-form-header">API分类</div>
-                                                        <div class="console-form-body">
-                                                            <!-- <input class="console-textbox console-with-4" type="text"> -->
-                                                            <select id="select1" class="console-textbox console-with-4" >
-                                                                <option id="" class="" value="">号码改变类API</option>
-                                                                <option id="" class="" value="passing">消息API</option>
-                                                                <option id="" class="" value="failed">呼叫控制类</option>
-                                                                <option id="" class="" value="failed">外呼类API</option>
-                                                                <option id="" class="" value="failed">多方通话类API</option>
-                                                                <option id="" class="" value="failed">IVR类API</option>
-                                                                <option id="" class="" value="failed">QOS类API</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="console-form-row">
-                                                        <div class="console-form-header">描述</div>
-                                                        <div class="console-form-body">
-                                                            <textarea class="console-textarea console-with-6" type="text" rows="5" maxlength="2000" value="{{modifyApi.des}}"></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
-                                                    <button type="button" class="btn btn-primary" (click)="Yes(api)">Yes</button>
-                                                </div>
+                                <a *ngIf="api.status=='已创建'" data-toggle="modal" data-target="#publishModal"  class="console-mr2">发布</a>
+                                <div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel">发布API</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                你确定要发布此<strong>API</strong>吗？
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
+                                                <button type="button" class="btn btn-primary" (click)="publish($event,api)" data-dismiss="modal">Yes</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <a class="btn-floating waves-effect waves-light">
-                                        <i class="glyphicon glyphicon-edit"></i>
-                                    </a>
-                                    <a href="" class="btn-floating waves-effect waves-light red modal-trigger">
-                                        <i class="glyphicon glyphicon-trash"></i>
-                                    </a>
-                                    <a href="" class="btn-floating waves-effect waves-light">
-                                        <i class="glyphicon glyphicon-tasks"></i>
-                                    </a> -->
+                                <span *ngIf="api.status=='已创建'" class="text-explode">|</span>
+                                <a [routerLink]="['modifyAtomAPI',api.id]" class="console-mr2" (click)='modify()'>修改</a>
+                               
                             </td>
                         </tr>
                     </table>
@@ -458,7 +419,7 @@
         </div>
 
 
-        <div class="col-md-6" style="border-left:1px #e6e6e6 solid;margin-top:30px">
+        <div class="col-md-6" style="border-left:1px #bbb8b8 solid;margin-top:30px">
             <div style="margin-left:30px">
                 <div *ngIf="selectedApi">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
@@ -475,17 +436,15 @@
                                     <table class="tab" class="basic">
                                         <tr class="table-title">
                                             <th style="width: 8%">api名称</th>
-                                            <th style="width: 12%">ID</th>
                                             <th style="width: 10%">类型</th>
                                             <th style="width: 10%">服务地址</th>
-                                            <th style="width: 10%">修改时间</th>
+                                            <th style="width: 10%">api地区</th>
                                         </tr>
                                         <tr>
-                                            <td>{{selectedApi.apiname}}</td>
-                                            <td>{{selectedApi.id}}</td>
+                                            <td>{{selectedApi.name}}</td>
                                             <td>{{selectedApi.APIType}}</td>
-                                            <td>{{selectedApi.Address}}</td>
-                                            <td>{{selectedApi.time}}</td>
+                                            <td>{{selectedApi.address}}</td>
+                                            <td>{{selectedApi.area}}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -497,82 +456,53 @@
                                     <h3 class="panel-title">
                                         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo" aria-expanded="true"
                                             aria-controls="collapseTwo">
-                                            公共参数
+                                            参数信息
                                         </a>
                                     </h3>
                                 </div>
                                 <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                     <div class="panel-body">
-                                        <div class="defined">公共参数基础定义</div>
+                                        <div class="defined">基础定义</div>
                                         <table class="tab" class="basic">
                                             <tr class="table-title">
-                                                <th style="width: 8%">协议</th>
+                                                <!-- <th style="width: 8%">服务地址</th> -->
                                                 <th style="width: 12%">请求方法</th>
                                                 <th style="width: 10%">请求路径</th>
-                                                <th style="width: 10%">请求模式</th>
+                                                <th style="width: 10%">请求端口号</th>
                                             </tr>
                                             <tr>
-                                                <td>http</td>
-                                                <td>get</td>
-                                                <td>http://test.com/api/searchApi</td>
-                                                <td>入参映射</td>
+                                                <td>{{selectedApi.method}}</td>
+                                                <td>{{selectedApi.path}}</td>
+                                                <td>{{selectedApi.port}}</td>
                                             </tr>
                                         </table>
                                         <hr>
                                         <div class="defined">参数信息</div>
-                                        <table class="tab" class="basic">
+                                        <table class="tab" class="basic" id="yamlAPI">
                                             <tr class="table-title">
                                                 <th style="width: 8%">参数名</th>
                                                 <th style="width: 12%">参数类型</th>
                                                 <th style="width: 10%">必填</th>
                                                 <th style="width: 10%">参数描述</th>
-                                                <th style="width: 10%">参数实例</th>
                                             </tr>
-                                            <tr>
-                                                <td>api</td>
-                                                <td>string</td>
+                                            <tr  *ngFor="let params of selectedApi.params" >
+                                                <td>{{params.paramsName}}</td>
+                                                <td>{{params.paramsType}}</td>
                                                 <td>
-                                                    <i class="glyphicon glyphicon-ok"></i>
+                                                    <i *ngIf="params.checkBox==true" class="glyphicon glyphicon-ok"></i>
+                                                    <i *ngIf="params.checkBox==false" class="glyphicon glyphicon-remove"></i>
                                                 </td>
-                                                <td>API的名称</td>
-                                                <td>callControll</td>
+                                                <td>{{params.paramsDes}}</td>
                                             </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="accordion2" role="tablist" aria-multiselectable="false" style="margin-top:5px">
-                            <div class="panel panel-default">
-                                <div class="panel-heading" role="tab" id="headingThree">
-                                    <h3 class="panel-title">
-                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree" aria-expanded="false"
-                                            aria-controls="collapseThree">
-                                            请求参数
-                                        </a>
-                                    </h3>
-                                </div>
-                                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                                    <div class="panel-body">
-                                        <table class="tab" class="basic">
-                                            <tr class="table-title">
-                                                <th style="width: 8%">参数名</th>
-                                                <th style="width: 12%">参数类型</th>
-                                                <th style="width: 10%">是否必须</th>
-                                                <th style="width: 10%">描述</th>
-                                            </tr>
-                                            <tr>
-                                                <td>ID</td>
-                                                <td>number</td>
-                                                <td>是</td>
-                                                <td>API标识符ID</td>
-                                            </tr>
-                                            <tr>
-                                                <td>URL</td>
-                                                <td>string</td>
-                                                <td>是</td>
-                                                <td>API路径url</td>
-                                            </tr>
+                                            <!-- <tr *ngFor="let argument of yamlAPI">
+                                                <td>{{index}}</td>
+                                                <td>{{argument[index]}}</td>
+                                                <td>
+                                                    <i *ngIf="params.checkBox==true" class="glyphicon glyphicon-ok"></i>
+                                                    <i *ngIf="params.checkBox==false" class="glyphicon glyphicon-remove"></i>
+                                                </td>
+                                                <td>{{params.paramsDes}}</td>
+                                            </tr> -->
                                         </table>
                                     </div>
                                 </div>
@@ -595,13 +525,11 @@
                                                 <th style="width: 8%">错误码</th>
                                                 <th style="width: 8%">错误信息</th>
                                                 <th style="width: 12%">错误描述</th>
-                                                <th style="width: 10%">解决方案</th>
                                             </tr>
-                                            <tr>
-                                                <td>404</td>
-                                                <td>page not found</td>
-                                                <td>页面找不到</td>
-                                                <td>查看路径是否正确</td>
+                                            <tr *ngFor="let error of selectedApi.errorCode">
+                                                <td>{{error.errorCodeId}}</td>
+                                                <td>{{error.errorMessageId}}</td>
+                                                <td>{{error.errorDesId}}</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -625,68 +553,13 @@
                                                 <span class="nav-label">API测试工具</span>
                                             </a>
                                         </li>
-                                        <!-- <table class="tab" class="basic">
-                                                        <tr class="table-title">
-                                                            <th style="width: 8%">api名称</th>
-                                                            <th style="width: 12%">ID</th>
-                                                            <th style="width: 10%">类型</th>
-                                                            <th style="width: 10%">分组</th>
-                                                            <th style="width: 10%">修改时间</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>name</td>
-                                                            <td>ID</td>
-                                                            <td>type</td>
-                                                            <td>group</td>
-                                                            <td>time</td>
-                                                        </tr>
-                                                    </table> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <table class="detail">
-                            <tr style="border: none">
-                                <th>服务名称：</th>
-                                <th>{{selectedApi.apiname}}</th>
-                            </tr>
-                            <tr>
-                                <th>服务ID：</th>
-                                <th>{{selectedApi.ServiceID}}</th>
-                            </tr>
-                            <tr>
-                                <th>服务地址：</th>
-                                <th>{{selectedApi.ServiceAddress}}</th>
-                            </tr>
-                            <tr>
-                                <th>服务所在节点地址：</th>
-                                <th>{{selectedApi.Address}}</th>
-                            </tr>
-                            <tr>
-                                <th>服务所在节点名称：</th>
-                                <th>{{selectedApi.Node}}</th>
-                            </tr>
-                            <tr>
-                                <th>服务端口：</th>
-                                <th>{{selectedApi.ServicePort}}</th>
-                            </tr>
-                            <tr>
-                                <th>数据中心所在地：</th>
-                                <th>{{selectedApi.DataCenter}}</th>
-                            </tr>
-                            <tr>
-                                <th>服务标签：</th>
-                                <th>{{selectedApi.ServiceTags}}</th>
-                            </tr>
-                            <tr>
-                                <th>是否激活重写标签功能：</th>
-                                <th>{{selectedApi.ServiceEnableTagOverride}}</th>
-                            </tr>
-    
-                        </table> -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- <app-childen [data]="data"></app-childen> -->

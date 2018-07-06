@@ -15,41 +15,124 @@
             <thead>
                 <tr>
                     <th>API名称</th>
-                    <th>单位</th>
-                    <th>API流量限制</th>
+                    <th>每秒访问次数</th>
+                    <th>每分访问次数</th>
+                    <th>每小时访问次数</th>
+                    <th>每天访问次数</th>
                     <th>创建时间</th>
-                    <th>描述</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>001</td>
-                    <td>秒</td>
-                    <td>500</td>
-                    <td>2018-4-15 14:35:23</td>
-                    <td></td>
+                    <tr>
+                            <td>YAML_ANOTHER</td>
+                            <td>100</td>
+                            <td>1000</td>
+                            <td>5000</td>
+                            <td>6000</td>
+                            <td>2018-06-12 19:43:03</td>
+                            <td>
+                                <a class="btn btn-info" role="button">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
+                                </a>
+                                <a class="btn  btn-info" role="button">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#apiflowcontrol" id="editapiflow" (click)="editapiflow($event,items)">编辑</span>
+                                </a>
+                            </td>
+                        </tr>   
+                        <tr>
+                            <td>单向语音呼叫0</td>
+                            <td>100</td>
+                            <td>1000</td>
+                            <td>5000</td>
+                            <td>6000</td>
+                            <td>2018-06-12 16:43:03</td>
+                            <td>
+                                <a class="btn btn-info" role="button">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
+                                </a>
+                                <a class="btn  btn-info" role="button">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#apiflowcontrol" id="editapiflow" (click)="editapiflow($event,items)">编辑</span>
+                                </a>
+                            </td>
+                        </tr>   
+                        <tr>
+                            <td>单向语音呼叫1</td>
+                            <td>100</td>
+                            <td>1000</td>
+                            <td>5000</td>
+                            <td>6000</td>
+                            <td>2018-06-12 18:23:03</td>
+                            <td>
+                                <a class="btn btn-info" role="button">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
+                                </a>
+                                <a class="btn  btn-info" role="button">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#apiflowcontrol" id="editapiflow" (click)="editapiflow($event,items)">编辑</span>
+                                </a>
+                            </td>
+                        </tr>  
+                        <tr>
+                            <td>短信验证码0</td>
+                            <td>100</td>
+                            <td>1000</td>
+                            <td>5000</td>
+                            <td>6000</td>
+                            <td>2018-06-12 15:30:00</td>
+                            <td>
+                                <a class="btn btn-info" role="button">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
+                                </a>
+                                <a class="btn  btn-info" role="button">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#apiflowcontrol" id="editapiflow" (click)="editapiflow($event,items)">编辑</span>
+                                </a>
+                            </td>
+                        </tr>                    
+                        <tr>
+                            <td>短信验证码1</td>
+                            <td>100</td>
+                            <td>1000</td>
+                            <td>5000</td>
+                            <td>6000</td>
+                            <td>2018-06-12 19:43:03</td>
+                            <td>
+                                <a class="btn btn-info" role="button">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
+                                </a>
+                                <a class="btn  btn-info" role="button">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#apiflowcontrol" id="editapiflow" (click)="editapiflow($event,items)">编辑</span>
+                                </a>
+                            </td>
+                        </tr>      
+                        <tr>
+                            <td>短信验证码</td>
+                            <td>100</td>
+                            <td>1000</td>
+                            <td>5000</td>
+                            <td>6000</td>
+                            <td>2018-06-12 10:37:23</td>
+                            <td>
+                                <a class="btn btn-info" role="button">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
+                                </a>
+                                <a class="btn  btn-info" role="button">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#apiflowcontrol" id="editapiflow" (click)="editapiflow($event,items)">编辑</span>
+                                </a>
+                            </td>
+                        </tr>                
+                <tr *ngFor="let items of flowarray">
+                    <td>testAPI</td>
+                    <td>{{items.secondLimitVisit}}</td>
+                    <td>{{items.minuteLimitVisit}}</td>
+                    <td>{{items.hourLimitVisit}}</td>
+                    <td>{{items.dayLimitVisit}}</td>
+                    <td>{{items.lastChangeTime}}</td>
                     <td>
                         <a class="btn btn-info" role="button">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
                         </a>
                         <a class="btn  btn-info" role="button">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true">修改</span>
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>002</td>
-                    <td>分</td>
-                    <td>5000000</td>
-                    <td>2018-4-15 14:35:23</td>
-                    <td></td>
-                    <td>
-                        <a class="btn btn-info" role="button">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
-                        </a>
-                        <a class="btn  btn-info" role="button">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true">修改</span>
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#apiflowcontrol" id="editapiflow" (click)="editapiflow($event,items)">编辑</span>
                         </a>
                     </td>
                 </tr>
@@ -59,8 +142,8 @@
 
     <div class="tab-pane fade" id="system">
         <div class="btn-group flowcontrol0" role="group">
-            <label>地域</label>
-            <select>
+            <label class="describe">地域</label>
+            <select class="box">
                 <option value="">请选择</option>
                 <option value="beijing">北京</option>
                 <option value="shanghai">上海</option>
@@ -70,75 +153,194 @@
             </select>
         </div>
         <div class=" btn-group flowcontrol" role="group">
-            <label>描述</label>
-            <input type="text" placeholder="请输入描述">
+            <label class="describe">描述</label>
+            <input type="text" placeholder="请输入描述" class="form-control box2">
         </div>
         <div class=" btn-group flowcontrol" role="group">
-            <label>每</label>
-            <select>
+            <label class="describe">每</label>
+            <select class="box1">
                 <option value="second">秒</option>
                 <option value="minute">分</option>
                 <option value="hour">时</option>
                 <option value="day">天</option>
                 <option value="week">周</option>
             </select>
-            <label>可访问</label>
-            <input type="text" placeholder="请输入限制次数">
-            <label>次</label>
+            <label class="describe">可访问</label>
+            <input type="text" placeholder="请输入限制次数" class="form-control box2">
+            <label class="describe">次</label>
         </div>
         <div class=" btn-group flowconfirm" role="group">
             <a class="btn  btn-info" role="button">
                 <span class="glyphicon glyphicon-ok" aria-hidden="true">添加</span>
             </a>
         </div>
-        <br/><br/>
+        <br/>
+        <br/>
 
         <table class="table table-striped  table-responsive flowcontroltable">
             <thead>
                 <tr>
-                    <th>序号</th>
-                    <th>单位</th>
-                    <th>API流量限制</th>
-                    <th>创建时间</th>
-                    <th>地域</th>
-                    <th>描述</th>
-                    <th>操作</th>
+                    <th class="col-md-1">序号</th>
+                    <th class="col-md-1">单位</th>
+                    <th class="col-md-2">API流量限制</th>
+                    <th class="col-md-2">创建时间</th>
+                    <th class="col-md-2">地域</th>
+                    <th class="col-md-2">描述</th>
+                    <th class="col-md-2">操作</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>001</td>
-                    <td>秒</td>
-                    <td>500</td>
-                    <td>2018-4-15 14:35:23</td>
-                    <td>北京</td>
-                    <td></td>
-                    <td>
+                    <tr >
+                            <td>001</td>
+                            <td>秒</td>
+                            <td>1000</td>
+                            <td>2018/06/13</td>
+                            <td>北京</td>
+                            <td>系统级每秒访问次数</td>
+                            <td>
+                                <a class="btn btn-info" role="button">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
+                                </a>
+                                <a class="btn  btn-info" role="button">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#allflowcontrol" id="editallflow" (click)="editallflow($event,item)">编辑</span>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                                <td>002</td>
+                                <td>分</td>
+                                <td>10000</td>
+                                <td>2018/06/13</td>
+                                <td>北京</td>
+                                <td>系统级每分访问次数</td>
+                                <td>
+                                    <a class="btn btn-info" role="button">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
+                                    </a>
+                                    <a class="btn  btn-info" role="button">
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#allflowcontrol" id="editallflow" (click)="editallflow($event,item)">编辑</span>
+                                    </a>
+                                </td>
+                            </tr>
+                <!-- <tr *ngFor="let item of flowarray">
+                    <td>{{item._id}}</td>
+                    <td>{{item.unit}}</td>
+                    <td>{{item.flowcontrol}}</td>
+                    <td>{{item.createtime}}</td>
+                    <td>{{item.region}}</td>
+                    <td>{{item.description}}</td> -->
+                    <!-- <td><input type="text" value="{{item._id}}" disabled></td>
+                    <td><input type="text" value="{{item.unit}}" disabled></td>
+                    <td><input type="text" value="{{item.flowcontrol}}" disabled></td>
+                    <td><input type="text" value="{{item.createtime}}" disabled></td>
+                    <td><input type="text" value="{{item.description}}" disabled></td> -->
+                    <!-- <td>
                         <a class="btn btn-info" role="button">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true" (click)="deleteflow($index)">删除</span>
                         </a>
                         <a class="btn  btn-info" role="button">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true">修改</span>
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="modal" data-target="#allflowcontrol" id="editallflow" (click)="editapiflow($event)">编辑</span>
                         </a>
                     </td>
-                </tr>
-                <tr>
-                    <td>002</td>
-                    <td>分</td>
-                    <td>5000000</td>
-                    <td>2018-4-15 14:35:23</td>
-                    <td>北京</td>
-                    <td></td>
-                    <td>
-                        <a class="btn btn-info" role="button">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
-                        </a>
-                        <a class="btn  btn-info" role="button">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true">修改</span>
-                        </a>
-                    </td>
-                </tr>
+                </tr> -->
             </tbody>
         </table>
     </div>
 </div>
+
+ <!-- API流量控制编辑的弹窗 -->
+ <div class="modal fade" id="apiflowcontrol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">API流量控制项编辑</h4>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group row">
+                            <label for="apiname" class="col-md-3">API名称</label>
+                            <input type="text" id="apiname" class="col-md-8" >
+                         </div>
+                         <div class="form-group row">
+                                 <label for="apiunit" class="col-md-3">每秒访问次数</label>
+                                 <input type="text" id="apiunit" class="col-md-8" #apiunit>
+                          </div>
+                          <div class="form-group row">
+                                 <label for="apiflowcontrol" class="col-md-3">每分访问次数</label>
+                                 <input type="text" id="apiflowcontrol1" class="col-md-8" #apiflowcontrol1>
+                          </div>
+                          <div class="form-group row">
+                                <label for="apiflowcontrol" class="col-md-3">每时访问次数</label>
+                                <input type="text" id="apiflowcontrol2" class="col-md-8" #apiflowcontrol2>
+                         </div>
+                         <div class="form-group row">
+                                <label for="apiflowcontrol" class="col-md-3">每天访问次数</label>
+                                <input type="text" id="apiflowcontrol3" class="col-md-8" #apiflowcontrol3>
+                         </div>
+                          <div class="form-group row">
+                                 <label for="apicreatetime" class="col-md-3">创建时间</label>
+                                 <input type="text" id="apicreatetime" class="col-md-8">
+                          </div>
+                          <!-- <div class="form-group row">
+                                 <label for="apiregion" class="col-md-3">地域</label>
+                                 <input type="text" id="apiregion" class="col-md-8">
+                          </div> -->
+                          <!-- <div class="form-group row">
+                                 <label for="apidescription" class="col-md-3">描述</label>
+                                 <input type="text" id="apidescription" class="col-md-8">
+                          </div> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" (click)="updatesure(apiunit.value,apiflowcontrol1.value,apiflowcontrol2.value,apiflowcontrol3.value)" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+  <!-- 系统流量控制编辑的弹窗 -->
+  <div class="modal fade" id="allflowcontrol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">系统流量控制项编辑</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                   <label for="allname" class="col-md-3">序号</label>
+                   <input type="text" id="allname" class="col-md-8">
+                </div>
+                <div class="form-group row">
+                        <label for="allunit" class="col-md-3">单位</label>
+                        <input type="text" id="allunit" class="col-md-8">
+                 </div>
+                 <div class="form-group row">
+                        <label for="allflowcontrol" class="col-md-3">API流量设置</label>
+                        <input type="text" id="allflowcontrol11" class="col-md-8">
+                 </div>
+                 <div class="form-group row">
+                        <label for="allcreatetime" class="col-md-3">创建时间</label>
+                        <input type="text" id="allcreatetime" class="col-md-8">
+                 </div>
+                 <div class="form-group row">
+                        <label for="allregion" class="col-md-3">地域</label>
+                        <input type="text" id="allregion" class="col-md-8">
+                 </div>
+                 <div class="form-group row">
+                        <label for="alldescription" class="col-md-3">描述</label>
+                        <input type="text" id="alldescription" class="col-md-8">
+                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div> 
