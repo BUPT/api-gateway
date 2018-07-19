@@ -164,7 +164,7 @@ export class atomAPIComponent implements OnInit {
   //前面的api是传给onselect函数的值，也就是传给页面的值。后面的Api是上面定义的Api.
   onSelect(api: Api): void {
     this.selectedApi = api;
-    console.log(this.selectedApi["params"]);
+    console.log(this.selectedApi["argument"]);
     if(this.selectedApi["params"] == undefined){
       this.yamlAPI = this.selectedApi["argument"];
    
@@ -177,26 +177,6 @@ export class atomAPIComponent implements OnInit {
     }
     this.selectedApi["params"] = params;
     }
-    
-
-    // if (yamlAPI["argument"]) {
-    //   var argument = yamlAPI["argument"];
-    //   alert(argument)
-    //   var objtr = document.createElement('tr');
-    //   for (var c in argument) {
-    //     objtr.innerHTML =
-    //     "<tr>"
-    //       "<td>"+c+"</td>" +
-    //       "<td></td>" +
-    //       "<td>" +
-    //       '<i * ngIf="params.checkBox==true" class="glyphicon glyphicon-ok" > </i>' +
-    //       '< i * ngIf="params.checkBox==false" class="glyphicon glyphicon-remove" > </i>' +
-    //       '< /td>' +
-    //       '< td > {{ params.paramsDes }}</td>'+
-    //       "</tr>"
-    //       document.getElementById("yamlAPI").appendChild(objtr);
-    //   }
-    // }
 }
   // 分页
   private initList(): void {
@@ -207,6 +187,15 @@ export class atomAPIComponent implements OnInit {
   let head = page * this.pagination.pageItems;
   let end = head + this.pagination.pageItems;
   this.api_page = this.api.slice(head, end);
+}
+//修改API
+modify(data):void{
+  if(data.status == '已发布') {
+    alert(' 请先将此API下线，然后在进行修改操作');
+  }
+  else{
+    this.router.navigate(["/main/" + 1 + "/atomAPI/modifyAtomAPI"],{queryParams:{'id':data.id}})
+  }
 }
 //根据名字查询一个API
 search(apiname: string) {
@@ -234,15 +223,6 @@ search(apiname: string) {
     this.initList();
   });
 }
-//删除按钮的提示
-onDeleteConfirm(event): void {
-  console.log("delete function");
-  if(window.confirm('Are you sure you want to delete?')) {
-  event.confirm.resolve();
-} else {
-  event.confirm.reject();
-}
-  }
 //下线传值
 off($event, api): void {
   this.offapi = api;
@@ -312,10 +292,10 @@ deleteYes(): void {
     .subscribe(res => {
       // this.data = res['_body'];
       alert("删除成功");
+      $("#" + this.deleteApi.id).remove();
     });
 };
 $('#deleteModal').modal('hide');
-location.reload();
   }
 setAPIType() {
   this.APIType = this.APITypedata;
@@ -332,30 +312,6 @@ cancel() {
   // location.reload();
 }
 
-// nameNext() {
-//   $("#request").css("display", "");
-//   $("#nameDefinition").css("display", "none");
-//   $("#nameFoot").css("display", "none");
-//   $("#requestFoot").css("display", "");
-// }
-// namePre() {
-//   $("#request").css("display", "none");
-//   $("#nameDefinition").css("display", "");
-//   $("#nameFoot").css("display", "");
-//   $("#requestFoot").css("display", "none");
-// }
-// paramsNext() {
-//   $("#request").css("display", "none");
-//   $("#error").css("display", "");
-//   $("#errorFoot").css("display", "");
-//   $("#requestFoot").css("display", "none");
-// }
-// paramsPre() {
-//   $("#request").css("display", "");
-//   $("#error").css("display", "none");
-//   $("#errorFoot").css("display", "none");
-//   $("#requestFoot").css("display", "");
-// }
 
 publish(): void {
   var serviceId = this.selectedApi.id;

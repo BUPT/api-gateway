@@ -8,6 +8,9 @@ import { Observable } from 'rxjs';
 const httpOptions = {
   headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' })
 };
+const httpOption = {
+  headers: new Headers({ 'Content-Type': 'text/plain' })
+};
 
 @Injectable()
 export class ApiService {
@@ -31,7 +34,7 @@ export class ApiService {
     let params = new URLSearchParams();
     params.append("dc","dc1");
     let data = params.toString();
-    return this.http.post('/api/queryServicesInDataCenterWithDetail',data,httpOptions)
+    return this.http.post('/api/queryServicesInDataCenterWithDetail',data,httpOption)
       .map(res => {
         return res;
       });

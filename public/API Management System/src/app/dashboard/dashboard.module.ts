@@ -35,6 +35,7 @@ import { ModifyAtomApiComponent } from '../modify-atom-api/modify-atom-api.compo
 import { ModifyAtomApiService } from '../modify-atom-api/modify-atom-api.service';
 import { flowControlComponent } from '../flowControl/flowControl.component';
 import { FlowcontrolService } from '../flowControl/flowcontrol.service';
+import { CombinationApiService } from '../APIs/combinationAPI/combination-api.service';
 
 
 const tablesRoutes: Routes = [
@@ -67,7 +68,7 @@ const tablesRoutes: Routes = [
             //创建原子API
             { path: 'atomAPI/createAtomAPI', component: creatAtomAPIComponent },
             //修改原子API
-            { path: 'atomAPI/modifyAtomAPI/:mid', component: ModifyAtomApiComponent },
+            { path: 'atomAPI/modifyAtomAPI', component: ModifyAtomApiComponent },
             { path: 'flowControl', component: flowControlComponent }
 
         ]
@@ -114,6 +115,6 @@ const tablesRoutes: Routes = [
         flowControlComponent,
         PageComponent
     ],
-    providers: [ApiService, RouteService, CreateAtomApiService, LogService,ModifyAtomApiService,FlowcontrolService]
+    providers: [ApiService, RouteService, CreateAtomApiService, LogService,ModifyAtomApiService,FlowcontrolService,CombinationApiService]
 })
 export class DashboardModule { }

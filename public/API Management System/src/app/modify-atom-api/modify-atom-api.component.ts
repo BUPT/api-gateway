@@ -44,17 +44,21 @@ export class ModifyAtomApiComponent implements OnInit {
   ) {
     // console.log(this.modifyAtomAPIService.data)
     //通过这种形式来接收父级页面传过来的值
-    this.route.params.subscribe((params) => {
-      console.log(params);
-    });
+    // this.route.params.subscribe((params) => {
+    //   console.log(params);
+    // });
   }
 
   ngOnInit() {
-    this.route.params.subscribe((params) => {
+    this.route.queryParams.subscribe(params=>{
+      this.serviceID = params['id'];
+      console.log(this.serviceID) ;
+      })
+    // this.route.params.subscribe((params) => {
 
-      this.serviceID = params["mid"];
+    //   this.serviceID = params["mid"];
 
-    });
+    // });
     this.modifyAtomAPIService.searchAPIByID(this.serviceID).subscribe(apidata => {
       console.log(apidata["_body"]);
       //apiRes字符串数组

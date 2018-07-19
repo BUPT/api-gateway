@@ -322,15 +322,15 @@
                     <table class="tab">
                         <tr class="table-title">
                             <th style="width: 8%">api列表</th>
-                            <th style="width: 12%">描述</th>
+                            <th style="width: 12%">请求方法</th>
                             <th style="width: 8%">状态</th>
                             <th style="width: 12%">操作</th>
                         </tr>
-                        <tr *ngFor="let api of api_page" [class.selected]="api === selectedApi" (click)="onSelect(api)">
+                        <tr *ngFor="let api of api_page" [class.selected]="api === selectedApi" (click)="onSelect(api)" id="{{api.id}}">
                             <td>
                                 <a class="console-mr">{{api.name}}</a>
                             </td>
-                            <td>{{api.des}}</td>
+                            <td>{{api.method}}</td>
                             <td>
                                 {{api.status}}
                             </td>
@@ -407,7 +407,7 @@
                                     </div>
                                 </div>
                                 <span *ngIf="api.status=='已创建'" class="text-explode">|</span>
-                                <a [routerLink]="['modifyAtomAPI',api.id]" class="console-mr2" (click)='modify()'>修改</a>
+                                <a class="console-mr2" (click)='modify(api)'>修改</a>
                                
                             </td>
                         </tr>
