@@ -14,7 +14,7 @@ declare var $: any;
 export class ModifyAtomApiComponent implements OnInit {
   @Input() api: Api;
   modifyApi;
-  APITypedatas: string[] = ['消息API', '呼叫控制类', '外呼类API', '多方通话类API', 'IVR类API', 'QOS类API'];
+  APITypedatas: string[] = ['消息类', '呼叫控制类', '外呼类', '多方通话类', 'IVR类', 'QOS类'];
   APITypedata: string = '';
   APIType: string = '';
   Areadatas: string[] = ['北京', '安徽', '重庆', '天津', '上海', '江苏', '福建', '广东', '广西', '甘肃', '贵州', '河北', '河南', '湖北', '湖南', '黑龙江', '海南', '吉林', '江西', '辽宁', '内蒙古', '宁夏', '青海', '四川', '山东'];
@@ -77,8 +77,8 @@ export class ModifyAtomApiComponent implements OnInit {
       $("#apiDes").val(this.modifyApi.des);
       $("#address").val(this.modifyApi.address);
       $("#port").val(this.modifyApi.port);
-      $("#successResult").val(this.modifyApi.successResult);
-      $("#errorResult").val(this.modifyApi.errorResult);
+      $("#successResult").val(this.modifyApi.response.successResult);
+      $("#errorResult").val(this.modifyApi.response.errorResult);
       var count = $("#areas option").length;
       //  alert(count);
       for (var i = 0; i < count; i++) {
@@ -111,8 +111,8 @@ export class ModifyAtomApiComponent implements OnInit {
       }
       let array = [];
       let arrayCheck = [];
-      if (this.modifyApi.params) {
-        for (var i = 0; i < this.modifyApi.params.length; i++) {
+      if (this.modifyApi.argument) {
+        for (var i = 0; i < this.modifyApi.argument.length; i++) {
           // alert(i);
           var trid = new Date().getTime();
           var objtr = document.createElement('tr');
@@ -122,7 +122,7 @@ export class ModifyAtomApiComponent implements OnInit {
           objtr.id = trid.toString();
           objtr.innerHTML = "<tr>" +
             "       <td ></td>" +
-            "       <td><input id = '" + i + "Name" + "' class='console-textbox' maxlength='99' type='text' value='" + this.modifyApi.params[i].paramsName + "'></td> " +
+            "       <td><input id = '" + i + "Name" + "' class='console-textbox' maxlength='99' type='text' value='" + this.modifyApi.argument[i].paramsName + "'></td> " +
             "       <td ><select id='" + i + "' class='console-textbox console-with-4 paramsType'>" +
             "       <option>Int</option>" +
             "       <option>String</option>" +
@@ -132,15 +132,15 @@ export class ModifyAtomApiComponent implements OnInit {
             "       <option>Double</option>" +
             "       </select></td>" +
             "       <td><input id = '" + i + "Check" + "' type = 'checkbox' value = ''></td>" +
-            "       <td><input id = '" + i + "Des" + "' type='text' value='" + this.modifyApi.params[i].paramsDes + "' class='console-textbox'></td> " +
+            "       <td><input id = '" + i + "Des" + "' type='text' value='" + this.modifyApi.argument[i].paramsDes + "' class='console-textbox'></td> " +
             "       <td><button id = '" + i + "deleteid" + "' class='deleteCss' type='button'>删除</button></td>" +
             "</tr>";
           document.getElementById("tableParam").appendChild(objtr);
-          array.push(this.modifyApi.params[i].paramsType);
+          array.push(this.modifyApi.argument[i].paramsType);
         }
 
         var deleteId = [];
-        for (var a = 0; a < this.modifyApi.params.length; a++) {
+        for (var a = 0; a < this.modifyApi.argument.length; a++) {
           $("#" + a + "deleteid").click(function () {
             $("#" + (a-1) + "deleteid").parent().parent().remove();
             var table = document.getElementById('tableParam');
@@ -151,7 +151,7 @@ export class ModifyAtomApiComponent implements OnInit {
           })
         }
 
-        for (var i = 0; i < this.modifyApi.params.length; i++) {
+        for (var i = 0; i < this.modifyApi.argument.length; i++) {
           var count = $("#" + i + " option").length;
           for (var j = 0; j < count; j++) {
             if ($("#" + i).get(0).options[j].text == array[i]) {
@@ -160,8 +160,8 @@ export class ModifyAtomApiComponent implements OnInit {
             }
           }
         }
-        for (var i = 0; i < this.modifyApi.params.length; i++) {
-          $($("#" + i + "Check")).attr('checked', this.modifyApi.params[i].checkBox);
+        for (var i = 0; i < this.modifyApi.argument.length; i++) {
+          $($("#" + i + "Check")).attr('checked', this.modifyApi.argument[i].checkBox);
         }
         var tableParam = document.getElementById('tableParam');
         var countchildren = tableParam.childElementCount;
@@ -412,6 +412,11 @@ export class ModifyAtomApiComponent implements OnInit {
 
   }
   save(des, path, address, port, successResult, errorResult) {
+    console.log(this.modifyApi.on);
+    var response = {
+      'successResult':successResult,
+      'errorResult':errorResult
+    }
     var tableParam = document.getElementById('tableParam');
     var countchildren1 = tableParam.childElementCount;
     var trid = "";
@@ -420,8 +425,8 @@ export class ModifyAtomApiComponent implements OnInit {
     var paraTypeid = "";
     var checkBoxid = "";
     var paramsList = new Array();
-    if(this.modifyApi.params){
-    for (var d = 0; d < this.modifyApi.params.length; d++) {
+    if(this.modifyApi.argument){
+    for (var d = 0; d < this.modifyApi.argument.length; d++) {
       var paramsOldMap = {
         "paramsName": $("#" + d + "Name").val(),
         "paramsDes": $("#" + d + "Des").val(),
@@ -432,7 +437,7 @@ export class ModifyAtomApiComponent implements OnInit {
     }
   }
     if (this.flag == true) {
-      for (let i = this.modifyApi.params.length + 1; i < countchildren1; i++) {
+      for (let i = this.modifyApi.argument.length + 1; i < countchildren1; i++) {
         trid = tableParam.children[i].id;
         // alert(trid);
         paramsNameid = trid + "paramsNameid";
@@ -496,12 +501,11 @@ export class ModifyAtomApiComponent implements OnInit {
     var APIType = $("#APITypes").find("option:selected").text();
     // alert(APIType);
     this.modifyAtomAPIService.modify(id, apiName, method, APIType,
-      area, path, address, port, successResult, errorResult, des, paramsList, errorList)
+      area, path, address, port,response, des, paramsList, errorList,this.modifyApi.on)
       .subscribe(addApi => {
-        console.log(addApi['_body']);
+        console.log(this.modifyApi.on);
         alert(addApi['_body']);
         this.location.back();
       })
-    // location.reload();
   }
 }

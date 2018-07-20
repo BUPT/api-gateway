@@ -186,7 +186,7 @@
 
         <div class="col-md-2" style="float: right;">
             <div class="form-group">
-                <a routerLink="/" id="creatAPI" class="btn">创建组合API</a>
+                <a href="http://10.108.210.102:30000/" target="_blank" id="creatAPI" class="btn">创建组合API</a>
             </div>
         </div>
     </div>
@@ -213,7 +213,7 @@
                             <th style="width: 8%">状态</th>
                             <th style="width: 12%">操作</th>
                         </tr>
-                        <tr *ngFor="let api of combinationAPI" [class.selected]="api === selectedApi" (click)="onSelect(api)" id="{{api.event}}">
+                        <tr *ngFor="let api of combinationAPI" [class.selected]="api === selectedApi" (click)="onSelect(api)" id="{{api.name}}">
                             <td>
                                 <a class="console-mr">{{api.name}}</a>
                             </td>
@@ -226,9 +226,9 @@
                                 <br>
                                 <a class="console-mr2" routerLink=performanceMonitoring>性能</a>
                                 <span *ngIf="api.status=='已发布'" class="text-explode">|</span>
-                                <a *ngIf="api.status=='已发布'" class="console-mr2" data-toggle="modal" data-target="#myModal">下线</a>
-                                <span *ngIf="api.status=='已创建'" class="text-explode">|</span>
-                                <a *ngIf="api.status=='已创建'" class="console-mr2">发布</a>
+                                <a *ngIf="api.status=='已发布'" class="console-mr2" data-toggle="modal" data-target="#myModal" (click)="off(api)">下线</a>
+                                <span *ngIf="api.status=='已创建'||api.status=='已下线'" class="text-explode">|</span>
+                                <a *ngIf="api.status=='已创建'||api.status=='已下线'" class="console-mr2" (click)="publish(api)">发布</a>
                                 <!-- Modal -->
                                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                     <div class="modal-dialog" role="document">
@@ -244,7 +244,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
-                                                <button type="button" class="btn btn-primary">Yes</button>
+                                                <button type="button" class="btn btn-primary" (click)='offline()'>Yes</button>
                                             </div>
                                         </div>
                                     </div>
@@ -298,13 +298,13 @@
                                     <table class="tab" class="basic">
                                         <tr class="table-title">
                                             <th style="width: 8%">api名称</th>
-                                            <th style="width: 12%">ID</th>
+                                            <th style="width: 8%">apiID</th>
                                             <th style="width: 10%">服务地址</th>
                                         </tr>
                                         <tr>
                                             <td>{{selectedApi.name}}</td>
-                                            <td>{{selectedApi.ID}}</td>
-                                            <td>{{selectedApi.URL}}</td>
+                                            <td>{{selectedApi.id}}</td>
+                                            <td>{{selectedApi.combinationUrl}}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -327,14 +327,16 @@
                                                 <th style="width: 12%">参数名</th>
                                                 <th style="width: 8%">参数类型</th>
                                                 <th style="width: 10%">是否必填</th>
+                                                <th style="width: 10%">参数描述</th>
                                             </tr>
-                                            <tr *ngFor="let params of selectedApi.params">
+                                            <tr *ngFor="let params of ComAPI">
                                                 <td>{{params.paramsName}}</td>
-                                                <td>{{params.paramsType.type}}</td>
+                                                <td>{{params.paramsType}}</td>
                                                 <td>
-                                                    <i *ngIf="params.paramsType.required==true" class="glyphicon glyphicon-ok"></i>
-                                                    <i *ngIf="params.paramsType.required==false" class="glyphicon glyphicon-remove"></i>
+                                                    <i *ngIf="params.checkBox==true" class="glyphicon glyphicon-ok"></i>
+                                                    <i *ngIf="params.checkBox==false" class="glyphicon glyphicon-remove"></i>
                                                 </td>
+                                                <td>{{params.paramsDes}}</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -362,7 +364,7 @@
                                             </tr>
                                             <tr *ngFor="let atom of selectedApi.atomic">
                                                 <td>{{atom.name}}</td>
-                                                <td>{{atom.URL}}</td>
+                                                <td>{{atom.atomUrl}}</td>
                                                 <td>{{atom.method}}</td>
                                                 <td>{{atom.type}}</td>
                                             </tr>
@@ -372,32 +374,30 @@
                             </div>
                         </div>
                         <div id="accordion4" role="tablist" aria-multiselectable="false" style="margin-top:5px">
-                            <div class="panel panel-default">
-                                <div class="panel-heading" role="tab" id="headingFour">
+                            <div *ngIf="selectedApi">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingFour">
 
-                                    <h3 class="panel-title">
-                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion4" href="#collapseFour" aria-expanded="false"
-                                            aria-controls="collapseFour">
-                                            响应值信息
-                                        </a>
-                                    </h3>
-                                </div>
-                                <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-                                    <div class="panel-body">
-                                        <table class="tab" class="basic">
-                                            <tr class="table-title">
-                                                <th style="width: 8%">响应值类型</th>
-                                                <th style="width: 12%">响应代表值</th>
-                                            </tr>
-                                            <tr>
-                                                <td>success</td>
-                                                <td>200</td>
-                                            </tr>
-                                            <tr>
-                                                <td>error</td>
-                                                <td>500</td>
-                                            </tr>
-                                        </table>
+                                        <h3 class="panel-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion4" href="#collapseFour" aria-expanded="false"
+                                                aria-controls="collapseFour">
+                                                响应值信息
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                                        <div class="panel-body">
+                                            <table class="tab" class="basic">
+                                                <tr class="table-title">
+                                                    <th style="width: 8%">成功响应值</th>
+                                                    <th style="width: 12%">失败响应值</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{selectedApi.response.successResult}}</td>
+                                                    <td>{{selectedApi.response.errorResult}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

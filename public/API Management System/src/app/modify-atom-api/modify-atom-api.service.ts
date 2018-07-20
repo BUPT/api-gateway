@@ -23,8 +23,8 @@ export class ModifyAtomApiService {
       });
   }
   modify(id:string, apiname :string,method:string,APIType:string,area:string,path:string,
-    address:string,port:string,successResult:string,errorResult:string,
-    des:string,paramslist?:string[],errorCode?:string[],tags?:string[],registerByJson?:string){
+    address:string,port:string,response:any,
+    des:string,paramslist:string[],errorCode:string[],on:string = null,tags?:string[],registerByJson?:string){
       let params = {};
       if(id) params["id"] = id;
       if(apiname) params["name"] = apiname;
@@ -35,10 +35,10 @@ export class ModifyAtomApiService {
       if(path) params["path"] = path;
       if(address) params["address"] = address;
       if(port) params["port"] = port;
-      if(successResult) params["successResult"] = successResult;
-      if(errorResult) params["errorResult"] = errorResult;
-      if(paramslist) params["params"] = paramslist;
+      if(response) params["response"] = response;
+      if(paramslist) params["argument"] = paramslist;
       if(errorCode) params["errorCode"] = errorCode;
+      if(on)params['on'] = on;
       var array = ["atom"];
       params["tags"] = array;
       params["registerByJson"] = "0";

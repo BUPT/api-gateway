@@ -12,24 +12,10 @@ export class CreateAtomApiService {
   
   addAPI(apiname :string = null,method:string = null,
     APIType:string = null,area:string = null,path:string =null,
-  address:string = null,port:string = null,successResult:string = null,errorResult:string = null,
+  address:string = null,port:string = null,response:any,
   des:string = null,paramslist:string[] = null,errorCode:string[] = null,tags?:string[],registerByJson?:string){
-    // let params = new URLSearchParams();
     let params = {}
     //前面是后台定义的数据库的字段，后面是前端自己定义的字段，进行相互匹配。
-    // if(apiname) params.append("apiname", apiname);
-    // if(APIType) params.append("APIType", APIType);
-    // if(area) params.append("area", area);
-    // if(method) params.append("method",method);
-    // if(des) params.append("des",des);
-    // if(path) params.append("path",path);
-    // if(address) params.append("Address",address);
-    // if(port) params.append("Serviceport",port);
-    // if(successResult) params.append("successResult",successResult);
-    // if(errorResult) params.append("errorResult",errorResult);
-    // if(paramslist) params.append("params",JSON.stringify(paramslist));
-    // if(errorCode) params.append("errorCode",JSON.stringify(errorCode));
-    
     if(apiname) params["name"] = apiname;
     if(APIType) params["APIType"] = APIType;
     if(area) params["area"] = area;
@@ -38,20 +24,12 @@ export class CreateAtomApiService {
     if(path) params["path"] = path;
     if(address) params["address"] = address;
     if(port) params["port"] = port;
-    if(successResult) params["successResult"] = successResult;
-    if(errorResult) params["errorResult"] = errorResult;
-    if(paramslist) params["params"] = paramslist;
+    if(response) params['response'] = response;
+    if(paramslist) params["argument"] = paramslist;
     if(errorCode) params["errorCode"] = errorCode;
-    // params.append("status","已创建")
-    // params["status"] = "已创建";
     var array = ["atom"];
     params["tags"] = array;
     params["registerByJson"] = "0";
-    // let body = params.toString();
-    // let data = [];
-    // // console.log(paramslist);
-    // data.push(body,paramslist,errorCode,array);
-    // let data = datas.toString();
     console.dir(params);
     //console.log(data);
     return this.http.post('/api/register', params, httpOptions)

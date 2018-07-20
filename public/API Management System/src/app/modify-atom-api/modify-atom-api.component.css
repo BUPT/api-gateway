@@ -19,7 +19,20 @@ div {
     color: #555;
     border-radius: 4px;
 }
-
+.APIname{
+    display: inline-block;
+    vertical-align: middle;
+    height: 32px;
+    padding: 6px;
+    transition: none;
+    font-size: 12px;
+    line-height: 145%;
+    outline: none;
+    border: 1px solid #CCC;
+    background: #d7d8db;
+    color: #555;
+    border-radius: 4px;
+}
 .console-panel-header-line {
     display: block;
     position: absolute;

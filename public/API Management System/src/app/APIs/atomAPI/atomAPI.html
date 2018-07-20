@@ -341,7 +341,7 @@
                                 <span class="text-explode">|</span>
                                 <a href="http://10.108.211.22:3000/d/apGZdCVmz/api?orgId=1" target="_blank" class="console-mr2">性能</a>
                                 <br>
-                                <a *ngIf="api.status=='已发布'" class="console-mr2" data-toggle="modal" data-target="#myModaloff" [class.selected]="api === offapi"  (click)="off($event,api)">下线</a>
+                                <a *ngIf="api.status=='已发布'" class="console-mr2" data-toggle="modal" data-target="#myModaloff" [class.selected]="api === offapi"  (click)="off(api)">下线</a>
                                 <!-- Modal -->
                                 <div class="modal fade" id="myModaloff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
                                     <div class="modal-dialog" role="document">
@@ -364,7 +364,7 @@
                                 </div>
                                 <span *ngIf="api.status=='已发布'" class="text-explode">|</span>
 
-                                <a class="console-mr2" data-toggle="modal" data-target="#deleteModal" (click)="delete($event,api)">删除</a>
+                                <a class="console-mr2" data-toggle="modal" data-target="#deleteModal" (click)="delete(api)">删除</a>
                                 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -386,7 +386,7 @@
                                 </div>
 
                                 <span class="text-explode">|</span>
-                                <a *ngIf="api.status=='已创建'" data-toggle="modal" data-target="#publishModal"  class="console-mr2">发布</a>
+                                <a *ngIf="api.status=='已创建'" data-toggle="modal" data-target="#publishModal"  class="console-mr2" (click)='publishMsg(api)'>发布</a>
                                 <div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -401,7 +401,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
-                                                <button type="button" class="btn btn-primary" (click)="publish($event,api)" data-dismiss="modal">Yes</button>
+                                                <button type="button" class="btn btn-primary" (click)="publish()" data-dismiss="modal">Yes</button>
                                             </div>
                                         </div>
                                     </div>
@@ -485,7 +485,7 @@
                                                 <th style="width: 10%">必填</th>
                                                 <th style="width: 10%">参数描述</th>
                                             </tr>
-                                            <tr  *ngFor="let params of selectedApi.params" >
+                                            <tr  *ngFor="let params of yamlAPI" >
                                                 <td>{{params.paramsName}}</td>
                                                 <td>{{params.paramsType}}</td>
                                                 <td>

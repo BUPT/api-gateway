@@ -26,7 +26,7 @@ export class creatAtomAPIComponent implements OnInit {
   Areadata: string = '';
   area: string = '';
   //API类型的数据
-  APITypedatas: string[] = ['消息API', '呼叫控制类', '外呼类API', '多方通话类API', 'IVR类API', 'QOS类API'];
+  APITypedatas: string[] = ['消息类', '呼叫控制类', '外呼类', '多方通话类', 'IVR类', 'QOS类'];
   APITypedata: string = '';
   APIType: string = '';
   //API方法的数据
@@ -73,7 +73,7 @@ export class creatAtomAPIComponent implements OnInit {
       if (apiname == "" || apiname == null) {
         $("#tip1").text("*请输入API名称");
         $("#tip1").css("color", "red");
-      }else if(pattern.test(apiname) == false){
+      } else if (pattern.test(apiname) == false) {
         $("#tip1").text("*只支持含有汉字、数字、字母、下划线且不能以下划线开头和结尾");
         $("#tip1").css("color", "red");
       } else {
@@ -86,7 +86,7 @@ export class creatAtomAPIComponent implements OnInit {
       if (address == null || address == "") {
         $("#tip4").text("*请输入API服务地址");
         $("#tip4").css("color", "red");
-      }else if(ad.test(address) == false){
+      } else if (ad.test(address) == false) {
         $("#tip4").text("*请输入合法的API服务地址");
         $("#tip4").css("color", "red");
       } else {
@@ -99,7 +99,7 @@ export class creatAtomAPIComponent implements OnInit {
       if (port == null || port == "") {
         $("#tip5").text("*请输入端口号");
         $("#tip5").css("color", "red");
-      }else if(po.test(port) == false){
+      } else if (po.test(port) == false) {
         $("#tip5").text("*请输入合法的端口号");
         $("#tip5").css("color", "red");
       } else {
@@ -156,6 +156,10 @@ export class creatAtomAPIComponent implements OnInit {
   createAPI(apiName, des, path, address, port, successResult, errorResult) {
     // alert($("#" + paraTypeid).find("option:selected").val());
     //字段的顺序要跟服务的字段相对应。
+    var response = {
+      'successResult': successResult,
+      'errorResult': errorResult
+    }
     var tableParam = document.getElementById('tableParam');
     var countchildren1 = tableParam.childElementCount;
     var trid = "";
@@ -202,11 +206,13 @@ export class creatAtomAPIComponent implements OnInit {
       errorList.push(errorMap);
     }
     console.log("errorList:", errorList);
+
     this.CreateAtomApiService.addAPI(apiName, this.Method, this.APIType,
-      this.area, path, address, port, successResult, errorResult, des, paramsList, errorList, )
+      this.area, path, address, port, response, des, paramsList, errorList)
       .subscribe(addApi => {
         this.data = addApi['_body'];
         alert(this.data);
+        this.location.back();
       })
   }
   //返回
@@ -321,7 +327,7 @@ export class creatAtomAPIComponent implements OnInit {
       if (address == null || address == "") {
         $("#tip4").text("*请输入API服务地址");
         $("#tip4").css("color", "red");
-      }else if(p.test(address) == false){
+      } else if (p.test(address) == false) {
         $("#tip4").text("*请输入合法的API服务地址");
         $("#tip4").css("color", "red");
       } else {
@@ -334,7 +340,7 @@ export class creatAtomAPIComponent implements OnInit {
       if (port == null || port == "") {
         $("#tip5").text("*请输入端口号");
         $("#tip5").css("color", "red");
-      }else if(po.test(port) == false){
+      } else if (po.test(port) == false) {
         $("#tip5").text("*请输入合法的端口号");
         $("#tip5").css("color", "red");
       } else {

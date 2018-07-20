@@ -15,6 +15,7 @@ export class combinationAPIComponent implements OnInit {
   selectedApi;//点击选择的组合API
   ComAPI;//组合API的参数
   deleteComAPIMsg;//删除组合API传参
+  offapi;//下线api传值
   constructor(
     public combinationService: CombinationApiService,
     public http: Http
@@ -27,6 +28,7 @@ export class combinationAPIComponent implements OnInit {
       var data = eval('(' + res['_body'] + ')');
       if (data.result == true) {
         this.combinationAPI = data.datum;
+        console.log(this.combinationAPI);
          // 分页
       this.initList();
       this.pagination.changePage = (() => {
@@ -39,17 +41,17 @@ export class combinationAPIComponent implements OnInit {
   };
   onSelect(api): void {
     this.selectedApi = api;
-    console.log(JSON.parse(this.selectedApi["argument"]));
-    this.ComAPI = JSON.parse(this.selectedApi["argument"]);
-    var params = [];
-    for (var c in this.ComAPI) {
-      var param = {};
-      param["paramsName"] = c;
-      param["paramsType"] = this.ComAPI[c];
-      params.push(param);
-    }
-    this.selectedApi["params"] = params;
-    console.log(params);
+    console.log(this.selectedApi["argument"]);
+    this.ComAPI = this.selectedApi["argument"];
+    // var params = [];
+    // for (var c in this.ComAPI) {
+    //   var param = {};
+    //   param["paramsName"] = c;
+    //   param["paramsType"] = this.ComAPI[c];
+    //   params.push(param);
+    // }
+    // this.selectedApi["params"] = params;
+    // console.log(params);
   }
   deleteCombinationAPI(api) {
     this.deleteComAPIMsg = api;
@@ -59,15 +61,49 @@ export class combinationAPIComponent implements OnInit {
     let params = new URLSearchParams();
     params.append('name', this.deleteComAPIMsg.name);
     let datatosend = params.toString()
-    this.http.get('http://10.108.213.206:30000/apis/delete', { search: datatosend }).map(res => res.json()).subscribe(res => {
+    this.http.get('http://10.108.210.102:30000/apis/delete', { search: datatosend }).map(res => res.json()).subscribe(res => {
       console.log(res);
       if (res.result == true) {
-        alert('组合API已经成功删除！');
         $("#deleteModal").modal('hide');
-        $("#" + this.deleteComAPIMsg.event).remove();
+        $("#" + this.deleteComAPIMsg.name).remove();
       }
       else {
         alert('删除出现错误！');
+      }
+    })
+  }
+  //发布
+  publish(api) {
+    let params = new URLSearchParams();
+    params.append('name', api.name);
+    let datatosend = params.toString()
+    this.http.get('http://10.108.210.102:30000/apis/online', { search: datatosend }).map(res => res.json()).subscribe(res => {
+      console.log(res);
+      if (res.result == true) {
+        alert('组合API发布成功！');
+        api.status = '已发布';
+      }
+      else {
+        alert('发布出现错误！');
+      }
+    })
+  }
+  off(api){
+    this.offapi = api;
+  }
+  //下线
+  offline() {
+    let params = new URLSearchParams();
+    params.append('name', this.offapi.name);
+    let datatosend = params.toString()
+    this.http.get('http://10.108.210.102:30000/apis/offline', { search: datatosend }).map(res => res.json()).subscribe(res => {
+      console.log(res);
+      if (res.result == true) {
+        this.offapi.status = '已下线';
+        $("#myModal").modal('hide');
+      }
+      else {
+        alert('下线出现错误！');
       }
     })
   }
