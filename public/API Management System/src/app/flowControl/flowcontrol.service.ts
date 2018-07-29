@@ -17,6 +17,9 @@ export class FlowcontrolService {
   //   return this.http.get('/chart/flowcontrol/finde').map(res=>res.json());
   // };
   getflowcontroldata(){
-    return this.http.get('http://10.108.208.51:8080/getRateLimits').map(res=>res.json());
+    return this.http.get('/flow/viewMaxVisitLimiting').map(res=>res.json());
+  };
+  editflowcontroldata(){
+    return this.http.get('/flow/changeLiveApiLimitingMap').map(res=>res.json());
   };
 }

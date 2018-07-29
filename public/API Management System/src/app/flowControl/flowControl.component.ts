@@ -1,4 +1,4 @@
-import { Component, OnInit ,Input} from '@angular/core';
+import { Component, OnInit ,Input,Output} from '@angular/core';
 import { NavComponent } from '../dashboard/nav.component';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgClass} from '@angular/common';
@@ -7,6 +7,7 @@ import {Flow} from './flowitem';
 import { Http } from '@angular/http/src/http';
 import { Headers } from '@angular/http/src/headers';
 import { URLSearchParams } from '@angular/http/src/url_search_params';
+import { Pagination } from '../pagination/pagination';
 
 const httpOptions = {
   headers:new Headers({'Content-Type':'application/x-www-form-urlencoded'})
@@ -24,14 +25,18 @@ declare var $: any;
 export class flowControlComponent implements OnInit {
 
   public flowarray=[];
-
+  //分页用
+  flow_page;
   constructor (
-    public http:Http,
+                 public http:Http,
                  private parent: NavComponent,
                  private route: ActivatedRoute,
                  private router: Router,
                  public FlowcontrolService:FlowcontrolService    
     ) {}
+    //分页相关
+    @Output()
+    public pagination: Pagination = Pagination.defaultPagination;
 
     ngOnInit(){
         this.parent.setActiveByPath(this.parent.flowControl,"");
@@ -39,13 +44,26 @@ export class flowControlComponent implements OnInit {
         this.FlowcontrolService.getflowcontroldata().subscribe((data)=>{
           //this.flowarray=data.data;
           if(data._result==true){
-            data._datum.lastChangeTime=this.timestampToTime(data._datum.lastChangeTime)
-            //alert(data._datum.lastChangeTime)
-            this.flowarray.push(data._datum);
-            //alert(data._datum.minuteLimitVisit);
+            for (let index = 0; index < Object.keys(data._datum).length; index++) {
+              data._datum[Object.keys(data._datum)[index]].name = Object.keys(data._datum)[index]
+              console.log(data._datum[Object.keys(data._datum)[index]]);
+              this.flowarray.push(data._datum[Object.keys(data._datum)[index]]);
+            }
+             //分页
+            this.initList();
+            this.pagination.changePage = (() => {
+              this.initList();
+            });
           }
         })
     };
+    private initList(): void {
+      let page = this.pagination.currentPage - 1;
+      this.pagination.totalItems = this.flowarray.length;
+      let head = page * this.pagination.pageItems;
+      let end = head + this.pagination.pageItems;
+      this.flow_page = this.flowarray.slice(head, end);
+    }
   //删除
   public deleteflow($index):void{ 
       this.flowarray.splice($index, 1);//跟上面说的一样在初始化的时候要用到this  
@@ -68,35 +86,45 @@ export class flowControlComponent implements OnInit {
       $("#apiflowcontrol1").val($($event.target).parents("tr").children('td').eq(2).text());
       $("#apiflowcontrol2").val($($event.target).parents("tr").children('td').eq(3).text());
       $("#apiflowcontrol3").val($($event.target).parents("tr").children('td').eq(4).text());
-      $("#apicreatetime").val($($event.target).parents("tr").children('td').eq(5).text()); 
+      //$("#apicreatetime").val($($event.target).parents("tr").children('td').eq(5).text()); 
       // $("#apidescription").val($($event.target).parents("tr").children('td').eq(4).text());
 
     //$("#apiname").val(items._id);
   }
 //编辑确定
- public updatesure(apiunit,apiflowcontrol1,apiflowcontrol2,apiflowcontrol3):void{
+ public updatesure(apiname,apiunit,apiflowcontrol1,apiflowcontrol2,apiflowcontrol3):void{
    //alert($("#apiname").val());
   let params = new URLSearchParams();
   // var apiunit = $("#apiunit").val();
   // var apiflowcontrol1 = $("#apiflowcontrol1").val();
   // var apiflowcontrol2 = $("#apiflowcontrol2").val();
   // var apiflowcontrol3 = $("#apiflowcontrol3").val();
-  params.append('secondLimitVisit',apiunit);
-  params.append('minuteLimitVisit',apiflowcontrol1);
-  params.append('hourLimitVisit',apiflowcontrol2);
-  params.append('dayLimitVisit',apiflowcontrol3);
-  params.append('monthLimitVisit','99999999999');
+  params.append('apiName',apiname);
+  params.append('level1Limit',apiunit);
+  params.append('level2Limit',apiflowcontrol1);
+  params.append('level3Limit',apiflowcontrol2);
+  params.append('level4Limit',apiflowcontrol3);
+  
 
   let datatosend = params.toString()
-  this.http.get('http://10.108.208.51:8080/changeRateLimits',{search:datatosend}).map(res=>res.json()).subscribe(res =>{
+  this.http.get('/flow/changeLiveApiLimitingMap',{search:datatosend}).map(res=>res.json()).subscribe(res =>{
       if(res["_result"]==true){
+        alert(res._reason);
         this.FlowcontrolService.getflowcontroldata().subscribe((data)=>{
           //this.flowarray=data.data;
           if(data._result==true){
-            data._datum.lastChangeTime=this.timestampToTime(data._datum.lastChangeTime)
-            this.flowarray[0]=data._datum;
-
-            //alert(data._datum.minuteLimitVisit);
+            if(data._result==true){
+              this.flowarray=[];
+              for (let index = 0; index < Object.keys(data._datum).length; index++) {
+                data._datum[Object.keys(data._datum)[index]].name = Object.keys(data._datum)[index]
+                console.log(data._datum[Object.keys(data._datum)[index]]);
+                this.flowarray.push(data._datum[Object.keys(data._datum)[index]]);
+              }
+              this.initList();
+              this.pagination.changePage = (() => {
+              this.initList();
+              });
+            }
           }
         })
       }
