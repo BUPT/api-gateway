@@ -157,8 +157,8 @@ export class atomAPIComponent implements OnInit {
       let options = new RequestOptions({ headers: headers });
       this.http.post("/api/registerByYaml", formData, options)
         .map(res => {
-          alert(res['_body']);
-          window.location.reload();
+          alert(res['_body']); 
+          // window.location.reload();
         })
         .catch(error => Observable.throw(error))
         .subscribe(

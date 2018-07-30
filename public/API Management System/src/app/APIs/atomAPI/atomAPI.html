@@ -335,9 +335,11 @@
                                 {{api.status}}
                             </td>
                             <td>
-                                <a href="" class="console-mr2" routerLink=versionManagement>管理</a>
+                                <!-- 跳转elk页面 -->
+                                <a href="" class="console-mr2" routerLink=versionManagement>日志</a>
                                 <span class="text-explode">|</span>
-                                <a href="" class="console-mr2" routerLink=routeManagement>路由</a>
+                                <!-- 跳转swagger页面带name参数 -->
+                                <a href="http://10.108.210.102:30000/dist?name={{api.name}}" target="_blank" class="console-mr2">测试</a>
                                 <span class="text-explode">|</span>
                                 <a href="http://10.108.211.22:3000/d/apGZdCVmz/api?orgId=1" target="_blank" class="console-mr2">性能</a>
                                 <br>
@@ -536,7 +538,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="accordion4" role="tablist" aria-multiselectable="false" style="margin-top:5px">
+                        <!-- <div id="accordion4" role="tablist" aria-multiselectable="false" style="margin-top:5px">
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingFive">
                                     <h3 class="panel-title">
@@ -556,7 +558,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
