@@ -271,7 +271,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <input id="file-1" type="file" multiple class="file" (change) = "uploadFile($event)" data-overwrite-initial="false" data-min-file-count="1">
+                            <input id="file-1" type="file" multiple class="file" (change)="uploadFile($event)" data-overwrite-initial="false" data-min-file-count="1">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -336,14 +336,17 @@
                             </td>
                             <td>
                                 <!-- 跳转elk页面 -->
-                                <a href="" class="console-mr2" routerLink=versionManagement>日志</a>
+                                <a href="http://36.155.126.15:45601/app/kibana#/discover?_g=()&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:apiName,key:apiName,negate:!f,params:(query:{{api.name}},type:phrase),type:phrase,value:{{api.name}}),query:(match:(apiName:(query:{{api.name}},type:phrase))))),index:apiName,interval:auto,query:(language:lucene,query:''),sort:!(_score,desc))"
+                                    class="console-mr2" target="_blank">日志</a>
                                 <span class="text-explode">|</span>
                                 <!-- 跳转swagger页面带name参数 -->
                                 <a href="http://10.108.210.102:30000/dist?name={{api.name}}" target="_blank" class="console-mr2">测试</a>
                                 <span class="text-explode">|</span>
-                                <a href="http://10.108.211.22:3000/d/apGZdCVmz/api?orgId=1" target="_blank" class="console-mr2">性能</a>
+                                <a href="http://36.155.126.15:45601/app/kibana#/dashboard/01722d30-9b7c-11e8-b157-378b49c30284?_g=()&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:apiName,key:apiName,negate:!f,params:(query:{{api.name}},type:phrase),type:phrase,value:{{api.name}}),query:(match:(apiName:(query:{{api.name}},type:phrase))))))"
+                                    target="_blank" class="console-mr2">性能</a>
                                 <br>
-                                <a *ngIf="api.status=='已发布'" class="console-mr2" data-toggle="modal" data-target="#myModaloff" [class.selected]="api === offapi"  (click)="off(api)">下线</a>
+                                <a *ngIf="api.status=='已发布'" class="console-mr2" data-toggle="modal" data-target="#myModaloff" [class.selected]="api === offapi"
+                                    (click)="off(api)">下线</a>
                                 <!-- Modal -->
                                 <div class="modal fade" id="myModaloff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
                                     <div class="modal-dialog" role="document">
@@ -388,7 +391,7 @@
                                 </div>
 
                                 <span class="text-explode">|</span>
-                                <a *ngIf="api.status=='已创建'" data-toggle="modal" data-target="#publishModal"  class="console-mr2" (click)='publishMsg(api)'>发布</a>
+                                <a *ngIf="api.status=='已创建'" data-toggle="modal" data-target="#publishModal" class="console-mr2" (click)='publishMsg(api)'>发布</a>
                                 <div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -410,7 +413,7 @@
                                 </div>
                                 <span *ngIf="api.status=='已创建'" class="text-explode">|</span>
                                 <a class="console-mr2" (click)='modify(api)'>修改</a>
-                               
+
                             </td>
                         </tr>
                     </table>
@@ -487,7 +490,7 @@
                                                 <th style="width: 10%">必填</th>
                                                 <th style="width: 10%">参数描述</th>
                                             </tr>
-                                            <tr  *ngFor="let params of yamlAPI" >
+                                            <tr *ngFor="let params of yamlAPI">
                                                 <td>{{params.paramsName}}</td>
                                                 <td>{{params.paramsType}}</td>
                                                 <td>
