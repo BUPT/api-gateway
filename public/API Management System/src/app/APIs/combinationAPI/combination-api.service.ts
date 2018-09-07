@@ -11,7 +11,7 @@ export class CombinationApiService {
     public http:Http
   ) { }
   getAllCombinationAPI() {
-    return this.http.get('http://10.108.210.102:30000/apis/getAllAPI')
+    return this.http.get('comAPI/apis/getAllAPI')
       .map(res => {
         return res;
       });

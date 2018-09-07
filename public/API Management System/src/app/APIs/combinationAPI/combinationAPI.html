@@ -225,13 +225,13 @@
                                     class="console-mr2" target="_blank">日志</a>
                                 <span class="text-explode">|</span>
                                 <!-- 跳转swagger页面带name参数 -->
-                                <a href="http://10.108.210.102:30000/dist?name={{api.name}}" target="_blank" class="console-mr2">测试</a>
+                                <a href="http://36.155.126.15:30000/dist?name={{api.name}}" target="_blank" class="console-mr2">测试</a>
                                 <span class="text-explode">|</span>
                                 <a href="http://36.155.126.15:45601/app/kibana#/dashboard/01722d30-9b7c-11e8-b157-378b49c30284?_g=()&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:apiName,key:apiName,negate:!f,params:(query:{{api.name}},type:phrase),type:phrase,value:{{api.name}}),query:(match:(apiName:(query:{{api.name}},type:phrase))))))"
                                     target="_blank" class="console-mr2">性能</a>
                                 <br>
                                 <a *ngIf="api.status=='已发布'" class="console-mr2" data-toggle="modal" data-target="#myModal" (click)="off(api)">下线</a>
-                                <span *ngIf="api.status=='已创建'||api.status=='已下线'" class="text-explode">|</span>
+                                <!-- <span *ngIf="api.status=='已创建'||api.status=='已下线'" class="text-explode">|</span> -->
                                 <a *ngIf="api.status=='已创建'||api.status=='已下线'" class="console-mr2" (click)="publish(api)">发布</a>
                                 <!-- Modal -->
                                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
