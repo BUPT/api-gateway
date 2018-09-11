@@ -250,7 +250,7 @@ export class atomAPIComponent implements OnInit {
   offYes(): void {
     var serviceId = this.offapi.id;
     console.log(serviceId);
-    var dc = "dc1";
+    var dc = "bupt";
     this.ApiService.serviceDown(serviceId, dc).subscribe(res => {
       this.offapi.status = '已创建';
     })
@@ -295,7 +295,7 @@ publishMsg(api){
 }
   publish(): void {
     var serviceId = this.publishApi.id;
-    var dc = "dc1";
+    var dc = "bupt";
     this.ApiService.serviceUp(serviceId, dc).subscribe(res => {
       console.log(res);
       this.publishApi.status = '已发布';
