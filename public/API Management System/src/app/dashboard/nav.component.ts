@@ -10,7 +10,7 @@ export class NavComponent implements OnInit {
 
   constructor (
     private route: ActivatedRoute,
-    private router: Router
+    public router: Router
   ) {}
 
   para = '';
@@ -100,19 +100,19 @@ export class NavComponent implements OnInit {
       },
       {
         href: this.routeManagement,
-        name: "动态路由管理",
+        name: "路由分发规则",
         type: false
       },
-      {
-        href: this.healthCheckup,
-        name:"健康检查",
-        type: false
-      },
-      {
-        href: this.performanceMonitoringAll,
-        name:"系统性能监控",
-        type:false
-      }
+      // {
+      //   href: this.healthCheckup,
+      //   name:"健康检查",
+      //   type: false
+      // },
+      // {
+      //   href: this.performanceMonitoringAll,
+      //   name:"系统性能监控",
+      //   type:false
+      // }
 
     ];
 

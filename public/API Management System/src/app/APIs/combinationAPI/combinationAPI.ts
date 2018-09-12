@@ -61,7 +61,7 @@ export class combinationAPIComponent implements OnInit {
     let params = new URLSearchParams();
     params.append('name', this.deleteComAPIMsg.name);
     let datatosend = params.toString()
-    this.http.get('http://10.108.210.102:30000/apis/delete', { search: datatosend }).map(res => res.json()).subscribe(res => {
+    this.http.get('comAPI/apis/delete', { search: datatosend }).map(res => res.json()).subscribe(res => {
       console.log(res);
       if (res.result == true) {
         $("#deleteModal").modal('hide');
@@ -77,7 +77,7 @@ export class combinationAPIComponent implements OnInit {
     let params = new URLSearchParams();
     params.append('name', api.name);
     let datatosend = params.toString()
-    this.http.get('http://10.108.210.102:30000/apis/online', { search: datatosend }).map(res => res.json()).subscribe(res => {
+    this.http.get('comAPI/apis/online', { search: datatosend }).map(res => res.json()).subscribe(res => {
       console.log(res);
       if (res.result == true) {
         alert('组合API发布成功！');
@@ -96,7 +96,7 @@ export class combinationAPIComponent implements OnInit {
     let params = new URLSearchParams();
     params.append('name', this.offapi.name);
     let datatosend = params.toString()
-    this.http.get('http://10.108.210.102:30000/apis/offline', { search: datatosend }).map(res => res.json()).subscribe(res => {
+    this.http.get('comAPI/apis/offline', { search: datatosend }).map(res => res.json()).subscribe(res => {
       console.log(res);
       if (res.result == true) {
         this.offapi.status = '已下线';

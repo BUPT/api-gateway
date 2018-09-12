@@ -83,16 +83,24 @@
 
 				</ul>
 			</li>
-			<li [ngClass]="{active:router.active}"> 
-				<a href="http://111.207.243.66:8001/APIindex.html" target="_blank">
+			<!-- 跳转刘清洋页面 -->
+			<li [ngClass]="{active:router.active}">
+				<a href="http://36.155.126.15:32068/dashboard/db/cluster?orgId=1" target="_blank">
+					<span class="nav-label">系统性能监控</span>
+				</a>
+			</li>
+			<li [ngClass]="{active:router.active}">
+				<a href="http://36.155.126.15:30000/" target="_blank">
 					<span class="nav-label">API组合编排系统</span>
 				</a>
 			</li>
-			<li [ngClass]="{active:router.active}"> 
-				<a href="http://www.baidu.com" target="_blank">
-					<span class="nav-label">自动化运维管理</span>
+			<!-- 跳转林总swagger -->
+			<li [ngClass]="{active:router.active}">
+				<a href="http://36.155.126.15:30000/dist/codegen.html#" target="_blank">
+					<span class="nav-label">SDK打包</span>
 				</a>
 			</li>
+
 
 
 		</ul>

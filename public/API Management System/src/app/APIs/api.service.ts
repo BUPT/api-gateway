@@ -32,7 +32,7 @@ export class ApiService {
   // }
   getAllAPI(dc?:string) {
     let params = new URLSearchParams();
-    params.append("dc","dc1");
+    params.append("dc","bupt");
     let data = params.toString();
     return this.http.post('/api/queryServicesInDataCenterWithDetail',data,httpOption)
       .map(res => {
